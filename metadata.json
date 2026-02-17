@@ -1,4 +1,5 @@
 {
   "name": "Johnny Silverhand: The Engram",
-  "description": "A Cyberpunk 2077 tribute site dedicated to the story and digital afterlife of Johnny Silverhand."
+  "description": "A Cyberpunk 2077 tribute site dedicated to the story and digital afterlife of Johnny Silverhand.",
+  "requestFramePermissions": []
 }
