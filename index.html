@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Johnny Silverhand: The Engram</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700;900&family=Rajdhani:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+      :root {
+        --cp-yellow: #fcee0a;
+        --cp-blue: #00f0ff;
+        --cp-red: #ff003c;
+        --cp-bg: #0b0b0b;
+      }
+      
+      body {
+        background-color: var(--cp-bg);
+        color: #e5e5e5;
+        font-family: 'Rajdhani', sans-serif;
+        overflow-x: hidden;
+        cursor: none; /* Hide default cursor for custom one */
+      }
+      
+      /* Re-enable cursor on touch devices where custom cursor might be annoying */
+      @media (hover: none) and (pointer: coarse) {
+        body {
+          cursor: auto;
+        }
+      }
+
+      h1, h2, h3, h4, .font-cyber {
+        font-family: 'Orbitron', sans-serif;
+      }
+
+      /* Scrollbar */
+      ::-webkit-scrollbar {
+        width: 6px;
+      }
+      ::-webkit-scrollbar-track {
+        background: #000;
+      }
+      ::-webkit-scrollbar-thumb {
+        background: var(--cp-red);
+      }
+      ::-webkit-scrollbar-thumb:hover {
+        background: var(--cp-blue);
+      }
+
+      /* CRT Scanline Effect with Flicker */
+      @keyframes scanline-flicker {
+        0% { opacity: 0.15; }
+        5% { opacity: 0.1; }
+        10% { opacity: 0.15; }
+        50% { opacity: 0.15; }
+        52% { opacity: 0.05; }
+        54% { opacity: 0.15; }
+        60% { opacity: 0.15; }
+        61% { opacity: 0.3; }
+        62% { opacity: 0.15; }
+        100% { opacity: 0.15; }
+      }
+
+      .scanlines {
+        background: linear-gradient(
+          to bottom,
+          rgba(255,255,255,0),
+          rgba(255,255,255,0) 50%,
+          rgba(0,0,0,0.3) 50%,
+          rgba(0,0,0,0.3)
+        );
+        background-size: 100% 4px;
+        position: fixed;
+        pointer-events: none;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        z-index: 50;
+        opacity: 0.15;
+        animation: scanline-flicker 4s infinite;
+      }
+
+      /* Film Noise Effect */
+      .noise-bg {
+        position: fixed;
+        top: -50%;
+        left: -50%;
+        right: -50%;
+        bottom: -50%;
+        width: 200%;
+        height: 200vh;
+        /* Updated to use CSS variable or fallback, managed via JS usually but keeping hardlink for stability if JS fails */
+        background: transparent url('http://assets.iceable.com/img/noise-transparent.png') repeat 0 0;
+        background-repeat: repeat;
+        animation: bg-animation .2s infinite;
+        opacity: .5;
+        visibility: visible;
+        pointer-events: none;
+        z-index: 40;
+      }
+
+      @keyframes bg-animation {
+          0% { transform: translate(0,0) }
+          10% { transform: translate(-5%,-5%) }
+          20% { transform: translate(-10%,5%) }
+          30% { transform: translate(5%,-10%) }
+          40% { transform: translate(-5%,15%) }
+          50% { transform: translate(-10%,5%) }
+          60% { transform: translate(15%,0) }
+          70% { transform: translate(0,10%) }
+          80% { transform: translate(-15%,0) }
+          90% { transform: translate(10%,5%) }
+          100% { transform: translate(5%,0) }
+      }
+
+      /* Cyberpunk Text Outline Effect */
+      .text-stroke-cyan {
+        -webkit-text-stroke: 1px var(--cp-blue);
+        color: transparent;
+      }
+      .text-stroke-red {
+        -webkit-text-stroke: 1px var(--cp-red);
+        color: transparent;
+      }
+      .text-stroke-thick {
+        -webkit-text-stroke: 2px var(--cp-blue);
+      }
+
+      /* Custom selection color */
+      ::selection {
+        background: var(--cp-blue);
+        color: black;
+      }
+      
+      .clip-corner {
+        clip-path: polygon(0 0, 100% 0, 100% 85%, 95% 100%, 0 100%);
+      }
+      
+      .clip-corner-inverse {
+        clip-path: polygon(5% 0, 100% 0, 100% 100%, 0 100%, 0 15%);
+      }
+
+      .clip-button {
+        clip-path: polygon(
+          10px 0, 100% 0, 
+          100% calc(100% - 10px), 
+          calc(100% - 10px) 100%, 
+          0 100%, 
+          0 10px
+        );
+      }
+
+      .cyber-card-hover:hover {
+        box-shadow: 0 0 15px rgba(0, 240, 255, 0.3);
+        border-color: var(--cp-blue);
+      }
+      
+      .perspective-1000 {
+        perspective: 1000px;
+      }
+    </style>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            fontFamily: {
+              cyber: ['Orbitron', 'sans-serif'],
+              sans: ['Rajdhani', 'sans-serif'],
+            },
+            colors: {
+              'cp-yellow': '#fcee0a',
+              'cp-blue': '#00f0ff',
+              'cp-red': '#ff003c',
+              'cp-bg': '#0b0b0b',
+            }
+          }
+        }
+      }
+    </script>
+    <script type="importmap">
+{
+  "imports": {
+    "react": "https://esm.sh/react@18.2.0?dev",
+    "react-dom/client": "https://esm.sh/react-dom@18.2.0/client?dev&deps=react@18.2.0",
+    "lucide-react": "https://esm.sh/lucide-react@0.344.0?deps=react@18.2.0",
+    "use-scramble": "https://esm.sh/use-scramble@2.2.15?deps=react@18.2.0",
+    "react-powerglitch": "https://esm.sh/react-powerglitch@1.0.0?deps=react@18.2.0",
+    "react-dom/": "https://esm.sh/react-dom@^19.2.4/",
+    "react/": "https://esm.sh/react@^19.2.4/"
+  }
+}
+</script>
+<link rel="stylesheet" href="/index.css">
+</head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/index.tsx"></script>
+  </body>
+</html>
