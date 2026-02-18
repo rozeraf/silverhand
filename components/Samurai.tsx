@@ -87,13 +87,16 @@ const Samurai: React.FC<SamuraiPageProps> = ({ onBack }) => {
 
   // Initialize Audio
   useEffect(() => {
-    // Note: We use the file path directly from ASSETS
+    // Create new audio instance
     audioRef.current = new Audio(currentTrack.file);
+    audioRef.current.volume = 0.5; // Start at 50% volume to not blast ears
     
     const updateProgress = () => {
       if (audioRef.current) {
         const duration = audioRef.current.duration || 1;
-        setProgress((audioRef.current.currentTime / duration) * 100);
+        if (!isNaN(duration)) {
+             setProgress((audioRef.current.currentTime / duration) * 100);
+        }
       }
     };
     
@@ -145,10 +148,14 @@ const Samurai: React.FC<SamuraiPageProps> = ({ onBack }) => {
   
   const handleSeek = (e: React.ChangeEvent<HTMLInputElement>) => {
     const val = Number(e.target.value);
+    // Update visuals immediately
+    setProgress(val);
+    
     if (audioRef.current) {
-      const duration = audioRef.current.duration || 1;
-      audioRef.current.currentTime = (val / 100) * duration;
-      setProgress(val);
+      const duration = audioRef.current.duration || 0;
+      if (duration > 0 && !isNaN(duration)) {
+         audioRef.current.currentTime = (val / 100) * duration;
+      }
     }
   };
 
@@ -198,7 +205,7 @@ const Samurai: React.FC<SamuraiPageProps> = ({ onBack }) => {
                     
                     {/* Glitch Overlay on Image */}
                     <div className="absolute inset-0 bg-[#ff003c] mix-blend-overlay opacity-0 group-hover:opacity-20 transition-opacity"></div>
-                    <div className="absolute inset-0 bg-[url('http://assets.iceable.com/img/noise-transparent.png')] opacity-30 mix-blend-overlay"></div>
+                    <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')] opacity-30 mix-blend-overlay"></div>
                     
                     {/* Corner accents */}
                     <div className="absolute top-0 left-0 w-8 h-8 border-t-2 border-l-2 border-[#fcee0a]"></div>
@@ -238,6 +245,7 @@ const Samurai: React.FC<SamuraiPageProps> = ({ onBack }) => {
                         type="range" 
                         min="0" 
                         max="100" 
+                        step="0.1"
                         value={progress} 
                         onChange={handleSeek}
                         className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
@@ -293,10 +301,30 @@ const Samurai: React.FC<SamuraiPageProps> = ({ onBack }) => {
 
       {/* --- RIGHT PANEL: INFO --- */}
       <div className="lg:w-7/12 h-full overflow-y-auto bg-[#030303] relative custom-scrollbar scroll-smooth">
+          
+          {/* BACKGROUND ELEMENTS FOR RIGHT PANEL */}
+          <div className="absolute inset-0 pointer-events-none overflow-hidden">
+             {/* Grid */}
+             <div className="absolute inset-0 bg-[linear-gradient(rgba(255,0,60,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(255,0,60,0.03)_1px,transparent_1px)] bg-[size:40px_40px] opacity-20"></div>
+             
+             {/* Large Watermark Logo */}
+             <div className="absolute -top-20 -right-20 w-[600px] h-[600px] opacity-[0.03] rotate-12">
+                 <img src={ASSETS.samuraiLogo} alt="" className="w-full h-full object-contain invert" />
+             </div>
+
+             {/* Decorative Gradient Blobs */}
+             <div className="absolute top-1/3 left-0 w-96 h-96 bg-[#ff003c] rounded-full mix-blend-screen filter blur-[120px] opacity-[0.05]"></div>
+             <div className="absolute bottom-0 right-0 w-64 h-64 bg-[#00f0ff] rounded-full mix-blend-screen filter blur-[100px] opacity-[0.05]"></div>
+             
+             {/* Decorative Tech Lines */}
+             <div className="absolute top-40 right-10 w-[2px] h-32 bg-gradient-to-b from-transparent via-[#333] to-transparent"></div>
+             <div className="absolute bottom-40 left-10 w-[2px] h-32 bg-gradient-to-b from-transparent via-[#333] to-transparent"></div>
+          </div>
+
           {/* Top Fade Overlay */}
           <div className="sticky top-0 h-20 bg-gradient-to-b from-[#030303] to-transparent z-20 pointer-events-none"></div>
 
-          <div className="max-w-4xl mx-auto p-8 lg:p-16 pt-0">
+          <div className="max-w-4xl mx-auto p-8 lg:p-16 pt-0 relative z-10">
               
               {/* Header Section */}
               <div className="flex flex-col md:flex-row justify-between items-start mb-16 border-b-2 border-[#333] pb-8 relative">
