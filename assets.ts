@@ -22,4 +22,6 @@ export const ASSETS = {
     "https://i.etsystatic.com/45478307/r/il/2e1f03/5165531545/il_fullxfull.5165531545_8mso.jpg", // Абстрактный кибер-рукав или протез
   malorianGun:
     "https://storage.modworkshop.net/mods/images/132636_1668291848_1922616252580f415a274d98a2c717e5.webp", // Иконка или изображение пистолета
+  biographyPortrait:
+    "https://i.pinimg.com/736x/82/c3/06/82c3067e23439050d53c8477a16ceec8.jpg",
 };
