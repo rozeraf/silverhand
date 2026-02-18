@@ -7,14 +7,40 @@ interface Track {
   title: string;
   duration: string;
   file: string;
+  cover?: string; // Optional specific cover for the track
 }
 
 const TRACKS: Track[] = [
-  { title: "Chippin' In", duration: "3:33", file: "chippin_in.mp3" },
-  { title: "Never Fade Away", duration: "3:09", file: "never_fade_away.mp3" },
-  { title: "A Like Supreme", duration: "3:50", file: "a_like_supreme.mp3" },
-  { title: "Archangel", duration: "4:12", file: "archangel.mp3" },
-  { title: "Black Dog", duration: "4:22", file: "black_dog.mp3" },
+  { 
+    title: "Chippin' In", 
+    duration: "3:33", 
+    file: ASSETS.music.chippinIn,
+    cover: ASSETS.albumCovers.chippinIn
+  },
+  { 
+    title: "Never Fade Away", 
+    duration: "3:09", 
+    file: ASSETS.music.neverFadeAway,
+    cover: ASSETS.albumCovers.neverFadeAway
+  },
+  { 
+    title: "A Like Supreme", 
+    duration: "3:50", 
+    file: ASSETS.music.aLikeSupreme,
+    cover: ASSETS.albumCovers.aLikeSupreme
+  },
+  { 
+    title: "Archangel", 
+    duration: "4:12", 
+    file: ASSETS.music.archangel 
+    // No specific cover, will fallback to main album
+  },
+  { 
+    title: "Black Dog", 
+    duration: "4:22", 
+    file: ASSETS.music.blackDog,
+    cover: ASSETS.albumCovers.blackDog
+  },
 ];
 
 const MEMBERS = [
@@ -61,7 +87,8 @@ const Samurai: React.FC<SamuraiPageProps> = ({ onBack }) => {
 
   // Initialize Audio
   useEffect(() => {
-    audioRef.current = new Audio(`/music/${currentTrack.file}`);
+    // Note: We use the file path directly from ASSETS
+    audioRef.current = new Audio(currentTrack.file);
     
     const updateProgress = () => {
       if (audioRef.current) {
@@ -92,10 +119,10 @@ const Samurai: React.FC<SamuraiPageProps> = ({ onBack }) => {
   useEffect(() => {
     if (audioRef.current) {
       const wasPlaying = isPlaying;
-      audioRef.current.src = `/music/${TRACKS[currentTrackIdx].file}`;
+      audioRef.current.src = TRACKS[currentTrackIdx].file;
       audioRef.current.load();
       if (wasPlaying) {
-        audioRef.current.play().catch(e => console.log("Audio file missing?", e));
+        audioRef.current.play().catch(e => console.log("Audio file missing or blocked?", e));
       }
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -105,7 +132,7 @@ const Samurai: React.FC<SamuraiPageProps> = ({ onBack }) => {
   useEffect(() => {
     if (audioRef.current) {
       if (isPlaying) {
-        audioRef.current.play().catch(e => console.warn("Check public/music folder", e));
+        audioRef.current.play().catch(e => console.warn("Ensure audio files exist in public/music folder", e));
       } else {
         audioRef.current.pause();
       }
@@ -124,6 +151,9 @@ const Samurai: React.FC<SamuraiPageProps> = ({ onBack }) => {
       setProgress(val);
     }
   };
+
+  // Determine active cover image
+  const activeCover = currentTrack.cover || ASSETS.samuraiAlbum;
 
   return (
     <div className="fixed inset-0 z-[100] bg-[#030303] text-white flex flex-col lg:flex-row overflow-hidden animate-[fadeIn_0.5s_ease-out]">
@@ -160,9 +190,10 @@ const Samurai: React.FC<SamuraiPageProps> = ({ onBack }) => {
 
                 <div className="relative h-full w-full border-2 border-[#333] bg-black overflow-hidden shadow-[0_0_50px_rgba(255,0,60,0.15)] group-hover:shadow-[0_0_80px_rgba(255,0,60,0.3)] transition-shadow duration-500">
                     <img 
-                        src={ASSETS.samuraiAlbum} 
+                        key={currentTrack.title} // Force re-render animation on track change
+                        src={activeCover} 
                         alt="Album" 
-                        className={`w-full h-full object-cover transition-all duration-700 ${isPlaying ? 'scale-110 contrast-125 saturate-150' : 'grayscale scale-100'}`}
+                        className={`w-full h-full object-cover transition-all duration-700 animate-[fadeIn_0.5s_ease-out] ${isPlaying ? 'scale-110 contrast-125 saturate-150' : 'grayscale scale-100'}`}
                     />
                     
                     {/* Glitch Overlay on Image */}

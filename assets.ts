@@ -27,9 +27,28 @@ export const ASSETS = {
   biographyPortrait:
     "https://mediaproxy.tvtropes.org/width/1200/https://static.tvtropes.org/pmwiki/pub/images/3376891_johnnysilverhand.png",
 
-  // Секция Samurai
+  // Секция Samurai (Лого и Общее фото)
   samuraiLogo:
     "https://upload.wikimedia.org/wikipedia/commons/thumb/2/23/Samurai_logo_Cyberpunk_2077.svg/2560px-Samurai_logo_Cyberpunk_2077.svg.png",
   samuraiAlbum:
-    "https://i.scdn.co/image/ab67616d0000b273010b998df4924a619053229d", // Обложка Chippin In / Samurai
+    "https://i.scdn.co/image/ab67616d0000b273010b998df4924a619053229d", // Дефолтная обложка
+
+  // МУЗЫКАЛЬНЫЕ ТРЕКИ
+  // Примечание: Для локальной работы файлы .mp3 должны лежать в папке public/music/
+  music: {
+    chippinIn: "/music/chippin_in.mp3",
+    neverFadeAway: "/music/never_fade_away.mp3",
+    aLikeSupreme: "/music/a_like_supreme.mp3",
+    archangel: "/music/archangel.mp3",
+    blackDog: "/music/black_dog.mp3",
+  },
+
+  // ОБЛОЖКИ АЛЬБОМОВ / СИНГЛОВ
+  albumCovers: {
+    chippinIn: "https://upload.wikimedia.org/wikipedia/en/6/60/Cyberpunk_2077_-_Chippin%27_In.jpg",
+    neverFadeAway: "https://i.scdn.co/image/ab67616d0000b273516556e42b262d04a4341505",
+    aLikeSupreme: "https://i1.sndcdn.com/artworks-Z1X2c11432-0-t500x500.jpg",
+    blackDog: "https://i.scdn.co/image/ab67616d0000b2733979505c21df22dc8f45f573",
+    // Если обложки нет, будет использоваться samuraiAlbum
+  }
 };
