@@ -6,6 +6,7 @@ import CustomCursor from './components/CustomCursor';
 
 // Lazy load non-critical components to improve initial load time
 const Biography = lazy(() => import('./components/Biography'));
+const Arsenal = lazy(() => import('./components/Arsenal'));
 const Engram = lazy(() => import('./components/Engram'));
 const Footer = lazy(() => import('./components/Footer'));
 
@@ -39,6 +40,7 @@ const App: React.FC = () => {
           </div>
         }>
           <Biography />
+          <Arsenal />
           <Engram />
         </Suspense>
       </main>

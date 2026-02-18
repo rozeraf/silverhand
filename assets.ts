@@ -16,4 +16,8 @@ export const ASSETS = {
 
   // Текстура шума (зернистость на фоне)
   noiseTexture: "http://assets.iceable.com/img/noise-transparent.png",
+
+  // Секция Арсенал
+  silverArm: "https://images.unsplash.com/photo-1535378437327-1e5828469cb8?q=80&w=1000&auto=format&fit=crop", // Абстрактный кибер-рукав или протез
+  malorianGun: "https://static.wikia.nocookie.net/cyberpunk/images/0/07/Malorian_Arms_3516_Icon_CP2077.png", // Иконка или изображение пистолета
 };
