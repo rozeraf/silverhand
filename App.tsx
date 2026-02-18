@@ -27,15 +27,15 @@ const App: React.FC = () => {
       <div className="scanlines"></div>
       <div className="noise-bg"></div>
       
-      {/* Samurai Page Overlay */}
+      {/* Samurai Page Overlay - Rendered on top, no hiding of main content to preserve scroll */}
       {showSamuraiPage && (
         <Suspense fallback={<div className="fixed inset-0 bg-black z-[100] flex items-center justify-center text-[#ff003c] font-cyber">INITIALIZING_MUSIC_DB...</div>}>
            <Samurai onBack={() => setShowSamuraiPage(false)} />
         </Suspense>
       )}
 
-      {/* Main App Content (Hidden or behind when Samurai page is open) */}
-      <div className={showSamuraiPage ? 'hidden' : 'block'}>
+      {/* Main App Content */}
+      <div>
           <Navbar onOpenSamurai={() => setShowSamuraiPage(true)} />
           
           <main>

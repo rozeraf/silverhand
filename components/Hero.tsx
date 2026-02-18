@@ -124,7 +124,7 @@ const Hero: React.FC<HeroProps> = ({ onOpenSamurai }) => {
         <div className="mt-8 max-w-xl border-l-2 border-[#ff003c] pl-6 ml-2 md:ml-4 bg-black/60 backdrop-blur-sm p-4 relative overflow-hidden group">
           <div className="absolute inset-0 bg-[#ff003c]/5 transform -translate-x-full group-hover:translate-x-0 transition-transform duration-500"></div>
           <h2 className="text-2xl font-cyber text-[#fcee0a] mb-2 relative">
-            ENGRAMM
+            ЭНГРАММА
           </h2>
           <p className="text-gray-300 font-mono text-sm md:text-base leading-relaxed relative">
             Рокербой. Террорист. Призрак в машине. <br />

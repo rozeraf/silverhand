@@ -85,7 +85,7 @@ const Engram: React.FC = () => {
                             ТИП ДАННЫХ
                             <span className="opacity-0 group-hover:opacity-100 transition-opacity text-[10px]">[SCAN]</span>
                         </h4>
-                        <p className="text-xs text-gray-400">Псевдо-личность, Конструктор</p>
+                        <p className="text-xs text-gray-400">Псевдо-личность, Конструкт</p>
                     </div>
                     <div className="bg-[#1a1a1a] p-4 border-b-2 border-[#00f0ff] hover:bg-[#222] transition-colors group cursor-crosshair">
                         <h4 className="text-[#00f0ff] text-sm font-bold mb-1 flex justify-between">

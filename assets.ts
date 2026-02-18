@@ -14,8 +14,8 @@ export const ASSETS = {
   // Картинка чипа/энграммы (Секция Engram)
   engramCard: "https://i.redd.it/xjga6t8mihaa1.jpg",
 
-  // Текстура шума (зернистость на фоне)
-  noiseTexture: "http://assets.iceable.com/img/noise-transparent.png",
+  // Текстура шума (зернистость на фоне) - Fixed HTTPS
+  noiseTexture: "https://www.transparenttextures.com/patterns/stardust.png",
 
   // Секция Арсенал
   silverArm:
