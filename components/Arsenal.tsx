@@ -2,6 +2,7 @@ import React from 'react';
 import { Shield, Crosshair, Cpu, AlertTriangle, Target } from 'lucide-react';
 import RevealOnScroll from './RevealOnScroll';
 import GlitchText from './GlitchText';
+import { ASSETS } from '../assets';
 
 const Arsenal: React.FC = () => {
   return (
@@ -44,8 +45,13 @@ const Arsenal: React.FC = () => {
                         СЕРЕБРЯНАЯ РУКА
                     </h3>
                     
-                    <div className="w-full h-40 bg-gradient-to-b from-[#222] to-[#111] mb-6 relative overflow-hidden flex items-center justify-center">
-                        <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1589254065878-42c9da9e2bc6?q=80&w=800&auto=format&fit=crop')] bg-cover bg-center opacity-40 grayscale group-hover:grayscale-0 transition-all duration-500"></div>
+                    {/* UPDATED: Using ASSETS.silverArm */}
+                    <div className="w-full h-40 bg-gradient-to-b from-[#222] to-[#111] mb-6 relative overflow-hidden flex items-center justify-center group">
+                        <div 
+                            className="absolute inset-0 bg-cover bg-center opacity-50 grayscale group-hover:grayscale-0 transition-all duration-500 transform group-hover:scale-110"
+                            style={{ backgroundImage: `url("${ASSETS.silverArm}")` }}
+                        ></div>
+                        <div className="absolute inset-0 bg-black/20 group-hover:bg-transparent transition-colors"></div>
                         <div className="relative z-10 border border-white/20 px-4 py-1 bg-black/50 backdrop-blur-sm text-xs font-mono text-white">
                             MODEL: MILITECH_PROTOTYPE
                         </div>
@@ -91,25 +97,35 @@ const Arsenal: React.FC = () => {
 
             {/* CARD 3: MALORIAN ARMS (Featured) */}
             <RevealOnScroll direction="right" delay={300} className="lg:col-span-1 md:col-span-2">
-                <div className="h-full bg-[#0b0b0b] border-2 border-[#00f0ff] p-6 relative overflow-hidden group">
+                <div className="h-full bg-[#0b0b0b] border-2 border-[#00f0ff] p-6 relative overflow-hidden group flex flex-col">
                     {/* Animated Scanline Background */}
                     <div className="absolute inset-0 bg-[linear-gradient(rgba(0,240,255,0.02)_1px,transparent_1px)] bg-[size:100%_4px] pointer-events-none"></div>
                     
-                    <div className="flex justify-between items-start relative z-10">
+                    <div className="flex justify-between items-start relative z-10 shrink-0">
                         <h3 className="text-2xl md:text-3xl font-cyber font-black text-[#00f0ff] italic">
                             MALORIAN ARMS 3516
                         </h3>
                         <Crosshair className="text-[#00f0ff] animate-spin-slow" size={28} />
                     </div>
 
-                    <div className="my-6 border-y border-[#00f0ff]/30 py-4">
+                    {/* ADDED: Weapon Image */}
+                    <div className="relative w-full h-56 my-6 flex items-center justify-center bg-gradient-to-r from-black via-[#00f0ff]/5 to-black border-y border-[#00f0ff]/20 shrink-0 overflow-hidden">
+                        <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/diagmonds-light.png')] opacity-10"></div>
+                        <img 
+                            src={ASSETS.malorianGun} 
+                            alt="Malorian Arms 3516" 
+                            className="h-full w-full object-contain p-4 drop-shadow-[0_0_15px_rgba(0,240,255,0.3)] transition-transform duration-500 group-hover:scale-105 group-hover:drop-shadow-[0_0_25px_rgba(0,240,255,0.6)]"
+                        />
+                    </div>
+
+                    <div className="mb-4 py-2 shrink-0">
                         <div className="flex flex-col gap-2">
                              <div className="flex justify-between text-xs font-mono text-[#00f0ff]">
                                 <span>TYPE: SEMI-AUTO</span>
                                 <span>AMMO: 14mm</span>
                              </div>
                              <div className="w-full bg-[#00f0ff]/10 h-1">
-                                <div className="bg-[#00f0ff] h-full w-3/4"></div>
+                                <div className="bg-[#00f0ff] h-full w-3/4 shadow-[0_0_10px_#00f0ff]"></div>
                              </div>
                              <div className="flex justify-between text-xs font-mono text-gray-400 mt-2">
                                 <span>MODES: RICOCHET // WALL-PIERCE // BURN</span>
@@ -117,11 +133,7 @@ const Arsenal: React.FC = () => {
                         </div>
                     </div>
 
-                    <p className="text-gray-300 text-sm mb-4 leading-relaxed">
-                        Единственное в своём роде оружие, изготовленное на заказ. Полуавтоматический пистолет со встроенным смартлинком.
-                    </p>
-                    
-                    <div className="bg-[#00f0ff]/10 p-4 border border-[#00f0ff]/50 relative">
+                    <div className="bg-[#00f0ff]/10 p-4 border border-[#00f0ff]/50 relative mt-auto">
                         <div className="absolute -top-2 -left-2 w-4 h-4 border-t border-l border-[#00f0ff]"></div>
                         <div className="absolute -bottom-2 -right-2 w-4 h-4 border-b border-r border-[#00f0ff]"></div>
                         
