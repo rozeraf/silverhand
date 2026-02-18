@@ -8,6 +8,7 @@ import CustomCursor from './components/CustomCursor';
 const Biography = lazy(() => import('./components/Biography'));
 const Arsenal = lazy(() => import('./components/Arsenal'));
 const Engram = lazy(() => import('./components/Engram'));
+const Samurai = lazy(() => import('./components/Samurai'));
 const Footer = lazy(() => import('./components/Footer'));
 
 const App: React.FC = () => {
@@ -40,6 +41,7 @@ const App: React.FC = () => {
           </div>
         }>
           <Biography />
+          <Samurai />
           <Arsenal />
           <Engram />
         </Suspense>

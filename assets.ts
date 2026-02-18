@@ -22,14 +22,24 @@ export const ASSETS = {
     "https://i.etsystatic.com/45478307/r/il/2e1f03/5165531545/il_fullxfull.5165531545_8mso.jpg", // Абстрактный кибер-рукав или протез
   malorianGun:
     "https://storage.modworkshop.net/mods/images/132636_1668291848_1922616252580f415a274d98a2c717e5.webp", // Иконка или изображение пистолета
+<<<<<<< HEAD
 
+=======
+  
+>>>>>>> 410844f91608e6d40bdf9b7e067ad25af467fca4
   // Секция Биография (Портрет слева)
   biographyPortrait:
     "https://mediaproxy.tvtropes.org/width/1200/https://static.tvtropes.org/pmwiki/pub/images/3376891_johnnysilverhand.png",
 
   // Секция Samurai
+<<<<<<< HEAD
   samuraiLogo:
     "https://upload.wikimedia.org/wikipedia/commons/thumb/2/23/Samurai_logo_Cyberpunk_2077.svg/2560px-Samurai_logo_Cyberpunk_2077.svg.png",
   samuraiAlbum:
     "https://i.scdn.co/image/ab67616d0000b273010b998df4924a619053229d", // Обложка Chippin In / Samurai
 };
+=======
+  samuraiLogo: "https://upload.wikimedia.org/wikipedia/commons/thumb/2/23/Samurai_logo_Cyberpunk_2077.svg/2560px-Samurai_logo_Cyberpunk_2077.svg.png",
+  samuraiAlbum: "https://i.scdn.co/image/ab67616d0000b273010b998df4924a619053229d", // Обложка Chippin In / Samurai
+};
+>>>>>>> 410844f91608e6d40bdf9b7e067ad25af467fca4
