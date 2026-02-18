@@ -2,8 +2,13 @@ import React, { useEffect, useRef } from "react";
 import GlitchText from "./GlitchText";
 import { ChevronDown, Crosshair, Battery, Wifi } from "lucide-react";
 import { ASSETS } from "../assets";
+import SamuraiButton from "./SamuraiButton";
 
-const Hero: React.FC = () => {
+interface HeroProps {
+  onOpenSamurai: () => void;
+}
+
+const Hero: React.FC<HeroProps> = ({ onOpenSamurai }) => {
   const coordsRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -12,10 +17,6 @@ const Hero: React.FC = () => {
 
       const x = e.clientX;
       const y = e.clientY;
-
-      // Calculate coordinates based on Arasaka Tower location (approx)
-      // Base: 35.6895° N, 139.6917° E
-      // We vary them slightly based on screen position to simulate targeting system
 
       const latOffset = (y / window.innerHeight - 0.5) * 0.01;
       const lngOffset = (x / window.innerWidth - 0.5) * 0.01;
@@ -131,25 +132,26 @@ const Hero: React.FC = () => {
           </p>
         </div>
 
-        {/* Action Button */}
-        <div className="mt-12 ml-2 md:ml-4">
+        {/* Action Buttons */}
+        <div className="mt-12 ml-2 md:ml-4 flex flex-col sm:flex-row gap-6">
           <a
             href="#bio"
-            className="group relative inline-flex items-center justify-center px-8 py-4 bg-transparent overflow-hidden"
+            className="group relative inline-flex items-center justify-center px-8 py-4 bg-transparent overflow-hidden border border-[#fcee0a] min-w-[200px]"
           >
-            {/* Button Background Shapes */}
-            <div className="absolute inset-0 bg-[#fcee0a] transform skew-x-[-20deg] group-hover:bg-[#00f0ff] transition-colors duration-300"></div>
-            <div className="absolute inset-0 border-2 border-black transform skew-x-[-20deg] translate-x-1 translate-y-1 opacity-50"></div>
-
+            <div className="absolute inset-0 bg-[#fcee0a] transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left"></div>
+            
             {/* Text */}
-            <span className="relative font-cyber font-bold text-black text-xl tracking-widest flex items-center gap-2">
-              INITIATE{" "}
+            <span className="relative font-cyber font-bold text-[#fcee0a] group-hover:text-black text-lg tracking-widest flex items-center gap-2 transition-colors">
+              INITIATE
               <ChevronDown
-                size={24}
+                size={20}
                 className="group-hover:translate-y-1 transition-transform"
               />
             </span>
           </a>
+
+          {/* New SAMURAI Button */}
+          <SamuraiButton onClick={onOpenSamurai} />
         </div>
       </div>
 
