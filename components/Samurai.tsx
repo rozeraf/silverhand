@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { Play, Pause, SkipBack, SkipForward, Disc, Mic2, Guitar, Drum, Music4, X, ArrowLeft } from 'lucide-react';
+import { Play, Pause, SkipBack, SkipForward, Disc, Mic2, Guitar, Drum, Music4, ArrowLeft, BarChart3, Radio, ListMusic } from 'lucide-react';
 import GlitchText from './GlitchText';
 import { ASSETS } from '../assets';
 
@@ -18,11 +18,11 @@ const TRACKS: Track[] = [
 ];
 
 const MEMBERS = [
-  { name: "Johnny Silverhand", role: "Vocals / Guitar", icon: <Mic2 size={14} /> },
-  { name: "Kerry Eurodyne", role: "Vocals / Guitar", icon: <Guitar size={14} /> },
-  { name: "Nancy (Bes Isis)", role: "Keyboards", icon: <Music4 size={14} /> },
-  { name: "Denny", role: "Drums", icon: <Drum size={14} /> },
-  { name: "Henry", role: "Bass", icon: <Guitar size={14} /> },
+  { name: "Johnny Silverhand", role: "Vocals / Guitar", icon: <Mic2 size={16} /> },
+  { name: "Kerry Eurodyne", role: "Vocals / Guitar", icon: <Guitar size={16} /> },
+  { name: "Nancy (Bes Isis)", role: "Keyboards", icon: <Music4 size={16} /> },
+  { name: "Denny", role: "Drums", icon: <Drum size={16} /> },
+  { name: "Henry", role: "Bass", icon: <Guitar size={16} /> },
 ];
 
 interface SamuraiPageProps {
@@ -49,7 +49,7 @@ const Samurai: React.FC<SamuraiPageProps> = ({ onBack }) => {
     
     const handleEnded = () => {
         setIsPlaying(false);
-        handleNext(); // Auto play next could be added here logic wise
+        handleNext(); 
     };
 
     audioRef.current.addEventListener('timeupdate', updateProgress);
@@ -103,164 +103,267 @@ const Samurai: React.FC<SamuraiPageProps> = ({ onBack }) => {
   };
 
   return (
-    <div className="fixed inset-0 z-[100] bg-[#050505] text-white flex flex-col lg:flex-row overflow-hidden animate-[fadeIn_0.5s_ease-out]">
-      {/* Background Decor */}
-      <div className="absolute inset-0 z-0 pointer-events-none opacity-20 bg-[url('https://www.transparenttextures.com/patterns/diagmonds-light.png')]"></div>
-      
-      {/* LEFT PANEL: PLAYER (Fixed) */}
-      <div className="lg:w-5/12 h-full relative border-r border-[#333] bg-[#0b0b0b] flex flex-col z-10 shadow-[20px_0_50px_rgba(0,0,0,0.8)]">
+    <div className="fixed inset-0 z-[100] bg-[#030303] text-white flex flex-col lg:flex-row overflow-hidden animate-[fadeIn_0.5s_ease-out]">
+      {/* Background Ambience */}
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_50%,rgba(255,0,60,0.05),transparent_50%)] pointer-events-none"></div>
+      <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')] opacity-10 pointer-events-none"></div>
+
+      {/* --- LEFT PANEL: PLAYER --- */}
+      <div className="lg:w-5/12 h-full relative border-r border-[#222] bg-[#080808] flex flex-col z-10 shadow-[20px_0_50px_rgba(0,0,0,0.9)] overflow-hidden">
         
+        {/* Decorative Grid Background for Player */}
+        <div className="absolute inset-0 bg-[linear-gradient(0deg,transparent_24%,rgba(255,255,255,.02)_25%,rgba(255,255,255,.02)_26%,transparent_27%,transparent_74%,rgba(255,255,255,.02)_75%,rgba(255,255,255,.02)_76%,transparent_77%,transparent),linear-gradient(90deg,transparent_24%,rgba(255,255,255,.02)_25%,rgba(255,255,255,.02)_26%,transparent_27%,transparent_74%,rgba(255,255,255,.02)_75%,rgba(255,255,255,.02)_76%,transparent_77%,transparent)] bg-[size:50px_50px] pointer-events-none"></div>
+
         {/* Top Bar */}
-        <div className="p-6 flex justify-between items-center border-b border-[#333]">
-           <button onClick={onBack} className="flex items-center gap-2 text-gray-400 hover:text-[#fcee0a] transition-colors group">
-              <ArrowLeft size={20} className="group-hover:-translate-x-1 transition-transform" />
-              <span className="font-cyber text-sm tracking-widest">BACK TO CITY</span>
+        <div className="p-6 flex justify-between items-center border-b border-[#222] bg-[#0a0a0a]/80 backdrop-blur-md relative z-20">
+           <button onClick={onBack} className="flex items-center gap-2 text-gray-400 hover:text-[#fcee0a] transition-all group uppercase font-cyber text-xs tracking-widest border border-transparent hover:border-[#fcee0a] px-3 py-1 rounded-sm">
+              <ArrowLeft size={16} className="group-hover:-translate-x-1 transition-transform" />
+              EXIT_DB
            </button>
-           <div className="text-[#ff003c] font-cyber text-xs animate-pulse">LIVE_CONNECTION</div>
+           <div className="flex items-center gap-2">
+             <div className="w-2 h-2 rounded-full bg-[#ff003c] animate-pulse"></div>
+             <span className="text-[#ff003c] font-cyber text-xs tracking-widest">LIVE_FEED</span>
+           </div>
         </div>
 
-        {/* Player Body */}
-        <div className="flex-1 flex flex-col items-center justify-center p-8 lg:p-12 relative overflow-hidden">
-             {/* Visualizer Background */}
-             <div className="absolute inset-0 flex items-end justify-center gap-2 opacity-10 pointer-events-none pb-20 px-10">
-                 {isPlaying && [...Array(20)].map((_, i) => (
-                    <div key={i} className="w-full bg-[#ff003c] animate-pulse transition-all" style={{ height: `${Math.random() * 80}%`, animationDuration: `${0.2 + Math.random() * 0.4}s` }}></div>
-                 ))}
+        {/* Player Core */}
+        <div className="flex-1 flex flex-col items-center justify-center p-8 lg:p-12 relative z-10">
+             
+             {/* Album Art Container */}
+             <div className="relative w-full max-w-[320px] aspect-square mb-10 group perspective-1000">
+                {/* Spinning Ring */}
+                <div className={`absolute inset-[-20px] rounded-full border border-dashed border-[#333] ${isPlaying ? 'animate-spin-slow' : ''}`}></div>
+                <div className={`absolute inset-[-10px] rounded-full border border-[#fcee0a]/20 ${isPlaying ? 'animate-spin-reverse-slow' : ''}`}></div>
+
+                <div className="relative h-full w-full border-2 border-[#333] bg-black overflow-hidden shadow-[0_0_50px_rgba(255,0,60,0.15)] group-hover:shadow-[0_0_80px_rgba(255,0,60,0.3)] transition-shadow duration-500">
+                    <img 
+                        src={ASSETS.samuraiAlbum} 
+                        alt="Album" 
+                        className={`w-full h-full object-cover transition-all duration-700 ${isPlaying ? 'scale-110 contrast-125 saturate-150' : 'grayscale scale-100'}`}
+                    />
+                    
+                    {/* Glitch Overlay on Image */}
+                    <div className="absolute inset-0 bg-[#ff003c] mix-blend-overlay opacity-0 group-hover:opacity-20 transition-opacity"></div>
+                    <div className="absolute inset-0 bg-[url('http://assets.iceable.com/img/noise-transparent.png')] opacity-30 mix-blend-overlay"></div>
+                    
+                    {/* Corner accents */}
+                    <div className="absolute top-0 left-0 w-8 h-8 border-t-2 border-l-2 border-[#fcee0a]"></div>
+                    <div className="absolute bottom-0 right-0 w-8 h-8 border-b-2 border-r-2 border-[#fcee0a]"></div>
+                </div>
+
+                {/* Status Overlay */}
+                <div className="absolute -bottom-6 left-0 w-full flex justify-between items-end font-mono text-[10px] text-[#00f0ff] uppercase tracking-widest">
+                    <span>Codec: MP3_320</span>
+                    <span>{isPlaying ? 'PLAYING...' : 'PAUSED'}</span>
+                </div>
              </div>
 
-             {/* Album Art */}
-             <div className="relative w-full max-w-sm aspect-square bg-black border-2 border-[#333] mb-8 group shadow-[0_0_30px_rgba(0,240,255,0.1)]">
-                <img 
-                    src={ASSETS.samuraiAlbum} 
-                    alt="Album" 
-                    className={`w-full h-full object-cover transition-all duration-700 ${isPlaying ? 'scale-105 contrast-125 saturate-150' : 'grayscale scale-100'}`}
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-60"></div>
+             {/* Track Details */}
+             <div className="w-full max-w-[320px] mb-8 text-center relative">
+                <h2 className="text-3xl font-cyber font-bold text-white mb-2 truncate drop-shadow-[0_0_5px_rgba(255,255,255,0.5)]">
+                    {currentTrack.title}
+                </h2>
+                <p className="text-[#ff003c] font-mono text-xs tracking-[0.4em] uppercase">
+                    SAMURAI // SILVERHAND
+                </p>
+             </div>
+
+             {/* Progress Bar styled as Tech Component */}
+             <div className="w-full max-w-[320px] mb-8 relative group">
+                <div className="flex justify-between text-[10px] font-mono text-gray-500 mb-1">
+                    <span>{(audioRef.current?.currentTime || 0).toFixed(1)}</span>
+                    <span>{currentTrack.duration}</span>
+                </div>
+                <div className="relative h-2 bg-[#1a1a1a] border border-[#333] overflow-hidden">
+                    <div 
+                        className="absolute top-0 left-0 h-full bg-[#fcee0a] shadow-[0_0_10px_#fcee0a]" 
+                        style={{ width: `${progress}%` }}
+                    ></div>
+                    {/* Input range overlay for interaction */}
+                    <input 
+                        type="range" 
+                        min="0" 
+                        max="100" 
+                        value={progress} 
+                        onChange={handleSeek}
+                        className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+                    />
+                </div>
+                <div className="absolute top-1/2 -left-2 w-1 h-3 bg-[#333] transform -translate-y-1/2"></div>
+                <div className="absolute top-1/2 -right-2 w-1 h-3 bg-[#333] transform -translate-y-1/2"></div>
+             </div>
+
+             {/* Controls */}
+             <div className="flex justify-center items-center gap-8 w-full max-w-[320px]">
+                <button 
+                    onClick={handlePrev} 
+                    className="text-gray-500 hover:text-[#00f0ff] transition-all hover:scale-110 active:scale-95"
+                >
+                    <SkipBack size={28} />
+                </button>
                 
-                {/* Playing Indicator Overlay */}
-                <div className="absolute bottom-4 left-4">
-                    <GlitchText text="SAMURAI" className="text-3xl font-black italic" color="red" />
-                    <div className="text-[#fcee0a] font-mono text-xs mt-1 tracking-[0.3em]">CHROME ROCK</div>
-                </div>
+                <button 
+                    onClick={togglePlay}
+                    className="w-16 h-16 bg-transparent border-2 border-[#fcee0a] text-[#fcee0a] rounded-sm flex items-center justify-center hover:bg-[#fcee0a] hover:text-black transition-all hover:shadow-[0_0_20px_#fcee0a] active:scale-95 group relative"
+                >
+                    {/* Decorative corners inside button */}
+                    <div className="absolute top-1 left-1 w-2 h-2 border-t border-l border-current opacity-50"></div>
+                    <div className="absolute bottom-1 right-1 w-2 h-2 border-b border-r border-current opacity-50"></div>
+                    
+                    {isPlaying ? <Pause size={32} fill="currentColor" /> : <Play size={32} fill="currentColor" className="ml-1" />}
+                </button>
+                
+                <button 
+                    onClick={handleNext} 
+                    className="text-gray-500 hover:text-[#00f0ff] transition-all hover:scale-110 active:scale-95"
+                >
+                    <SkipForward size={28} />
+                </button>
              </div>
-
-             {/* Controls Area */}
-             <div className="w-full max-w-sm relative z-20">
-                <div className="flex justify-between items-end mb-4">
-                    <div>
-                        <h2 className="text-2xl font-cyber font-bold text-white mb-1 truncate">{currentTrack.title}</h2>
-                        <div className="flex gap-2">
-                             <span className="text-xs font-mono text-[#00f0ff] bg-[#00f0ff]/10 px-1">TRACK_0{currentTrackIdx + 1}</span>
-                             <span className="text-xs font-mono text-gray-500">STEREO</span>
-                        </div>
-                    </div>
-                    <div className="text-right font-mono text-[#fcee0a] text-lg">
-                        {(audioRef.current?.currentTime || 0).toFixed(1)} <span className="text-xs text-gray-500">/ {currentTrack.duration}</span>
-                    </div>
-                </div>
-
-                {/* Progress */}
-                <input 
-                    type="range" 
-                    min="0" 
-                    max="100" 
-                    value={progress} 
-                    onChange={handleSeek}
-                    className="w-full h-2 bg-[#222] rounded-none appearance-none cursor-pointer mb-8 [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-4 [&::-webkit-slider-thumb]:h-4 [&::-webkit-slider-thumb]:bg-[#ff003c] [&::-webkit-slider-thumb]:border-2 [&::-webkit-slider-thumb]:border-white"
-                />
-
-                {/* Buttons */}
-                <div className="flex justify-center items-center gap-8">
-                    <button onClick={handlePrev} className="text-gray-400 hover:text-white hover:scale-110 transition-transform"><SkipBack size={32} /></button>
-                    <button 
-                        onClick={togglePlay}
-                        className="w-20 h-20 bg-[#fcee0a] text-black clip-button flex items-center justify-center hover:bg-[#ff003c] hover:text-white transition-all shadow-[0_0_20px_rgba(252,238,10,0.3)]"
-                    >
-                        {isPlaying ? <Pause size={36} fill="currentColor" /> : <Play size={36} fill="currentColor" className="ml-1" />}
-                    </button>
-                    <button onClick={handleNext} className="text-gray-400 hover:text-white hover:scale-110 transition-transform"><SkipForward size={32} /></button>
-                </div>
+             
+             {/* Fake EQ Visualizer */}
+             <div className="mt-8 flex items-end justify-center gap-1 h-8 w-full max-w-[200px] opacity-40">
+                {[...Array(16)].map((_, i) => (
+                    <div 
+                        key={i} 
+                        className={`w-1 bg-[#ff003c] transition-all duration-100 ${isPlaying ? 'animate-pulse' : 'h-1'}`} 
+                        style={{ 
+                            height: isPlaying ? `${Math.max(10, Math.random() * 100)}%` : '20%',
+                            animationDelay: `${i * 0.05}s`
+                        }}
+                    ></div>
+                ))}
              </div>
         </div>
       </div>
 
-      {/* RIGHT PANEL: INFO (Scrollable) */}
-      <div className="lg:w-7/12 h-full overflow-y-auto bg-[#050505] relative custom-scrollbar">
-          <div className="max-w-3xl mx-auto p-8 lg:p-16">
+      {/* --- RIGHT PANEL: INFO --- */}
+      <div className="lg:w-7/12 h-full overflow-y-auto bg-[#030303] relative custom-scrollbar scroll-smooth">
+          {/* Top Fade Overlay */}
+          <div className="sticky top-0 h-20 bg-gradient-to-b from-[#030303] to-transparent z-20 pointer-events-none"></div>
+
+          <div className="max-w-4xl mx-auto p-8 lg:p-16 pt-0">
               
-              <div className="flex justify-end mb-12">
-                   <img src={ASSETS.samuraiLogo} alt="Logo" className="h-16 invert opacity-50" />
-              </div>
-
-              <div className="mb-16">
-                  <h1 className="text-5xl md:text-7xl font-cyber font-black text-white mb-6 uppercase leading-none">
-                      <span className="text-stroke-red text-transparent block">We are</span> 
-                      Samurai
-                  </h1>
-                  <p className="text-xl text-gray-300 font-sans leading-relaxed border-l-4 border-[#fcee0a] pl-6">
-                      Группа, которая отказалась продаваться. Музыка, которая стала гимном восстания. Мы играли не ради славы, а чтобы сжечь этот город дотла своим звуком.
-                  </p>
-              </div>
-
-              {/* History Section */}
-              <div className="space-y-12 mb-20 relative">
-                   <div className="absolute left-0 top-0 bottom-0 w-[1px] bg-gradient-to-b from-[#ff003c] to-transparent opacity-30"></div>
-                   
-                   {[
-                       { year: '2003', title: 'НАЧАЛО', text: 'Клуб "Rainbow Cadenza". Исполнительный директор Universal Джек Мастерс случайно заходит на гиг. Три недели спустя Samurai подписывают контракт, а "Blistering Love" разрывает Еврочарты.' },
-                       { year: '2008', title: 'РАСКОЛ', text: 'Клавишница Нэнси попадает в тюрьму за то, что выбросила мужа-абьюзера из окна. 7 месяцев простоя убили группу. Каждый пошел своей дорогой.' },
-                       { year: '2023', title: 'ЛЕГЕНДА', text: 'Джонни устраивает ядерный взрыв в Арасака-Тауэр. Группа становится мифом. Записи теряются в старой Сети.' },
-                       { year: '2077', title: 'ВОСКРЕСЕНИЕ', text: 'Второй шанс. Последний концерт в баре Red Dirt. Спустя 50 лет они снова вышли на сцену.' }
-                   ].map((item, i) => (
-                       <div key={i} className="pl-8 relative group">
-                           <div className="absolute left-[-5px] top-2 w-2.5 h-2.5 bg-[#0b0b0b] border border-[#ff003c] rotate-45 group-hover:bg-[#ff003c] transition-colors"></div>
-                           <span className="font-mono text-[#ff003c] text-sm tracking-widest">{item.year}</span>
-                           <h3 className="font-cyber text-2xl font-bold text-white mb-2">{item.title}</h3>
-                           <p className="text-gray-400 text-sm leading-relaxed">{item.text}</p>
+              {/* Header Section */}
+              <div className="flex flex-col md:flex-row justify-between items-start mb-16 border-b-2 border-[#333] pb-8 relative">
+                   <div>
+                       <div className="inline-flex items-center gap-2 mb-2 bg-[#ff003c]/10 px-3 py-1 border border-[#ff003c]/20 rounded-sm">
+                            <Radio size={14} className="text-[#ff003c] animate-pulse" />
+                            <span className="text-[#ff003c] font-mono text-[10px] tracking-widest uppercase">Encrypted Connection</span>
                        </div>
-                   ))}
+                       <h1 className="text-6xl md:text-8xl font-black font-cyber text-white uppercase leading-[0.85] tracking-tighter mb-4">
+                          <span className="block text-stroke-thick text-transparent opacity-30">We Are</span>
+                          <span className="relative inline-block">
+                             Samurai
+                             <span className="absolute -top-4 -right-8 text-2xl text-[#fcee0a] font-normal tracking-normal italic opacity-80 rotate-12">est. 2003</span>
+                          </span>
+                       </h1>
+                       <p className="max-w-md text-gray-400 font-mono text-sm leading-relaxed border-l-2 border-[#fcee0a] pl-4">
+                          Хромированный рок. Голос улиц. Мятеж, записанный на пленку. Единственная группа, которая сожгла город, чтобы доказать свою правоту.
+                       </p>
+                   </div>
+                   
+                   <div className="mt-6 md:mt-0 opacity-20 hover:opacity-100 transition-opacity duration-500">
+                        <img src={ASSETS.samuraiLogo} alt="Logo" className="w-32 md:w-48 invert" />
+                   </div>
               </div>
 
-              {/* Track List */}
-              <div className="mb-20">
-                  <h3 className="text-[#00f0ff] font-cyber text-xl mb-6 flex items-center gap-2">
-                        <Disc size={20} /> DISCOGRAPHY
-                  </h3>
-                  <div className="bg-[#111] border border-[#333]">
-                      {TRACKS.map((track, idx) => (
-                          <div 
-                              key={idx}
-                              onClick={() => setCurrentTrackIdx(idx)}
-                              className={`flex justify-between items-center p-4 border-b border-[#222] cursor-pointer hover:bg-[#1a1a1a] transition-colors group ${currentTrackIdx === idx ? 'bg-[#1a1a1a]' : ''}`}
-                          >
-                                <div className="flex items-center gap-4">
-                                    <span className="font-mono text-gray-600 w-4">0{idx + 1}</span>
-                                    <span className={`font-bold font-cyber ${currentTrackIdx === idx ? 'text-[#fcee0a]' : 'text-gray-300'} group-hover:text-white`}>{track.title}</span>
-                                </div>
-                                <span className="font-mono text-xs text-gray-500">{track.duration}</span>
+              <div className="grid grid-cols-1 md:grid-cols-12 gap-12">
+                  
+                  {/* Left Col: Tracklist */}
+                  <div className="md:col-span-7">
+                      <h3 className="text-white font-cyber text-xl mb-6 flex items-center gap-3">
+                            <ListMusic className="text-[#00f0ff]" size={20} /> 
+                            <span className="tracking-widest">DISCOGRAPHY</span>
+                      </h3>
+                      
+                      <div className="space-y-1">
+                          {TRACKS.map((track, idx) => (
+                              <div 
+                                  key={idx}
+                                  onClick={() => setCurrentTrackIdx(idx)}
+                                  className={`
+                                      group relative flex justify-between items-center p-4 border border-transparent 
+                                      cursor-pointer transition-all duration-300
+                                      ${currentTrackIdx === idx 
+                                          ? 'bg-[#111] border-[#fcee0a] text-[#fcee0a] shadow-[0_0_15px_rgba(252,238,10,0.1)]' 
+                                          : 'hover:bg-[#111] hover:border-[#333] hover:translate-x-2 text-gray-400'}
+                                  `}
+                              >
+                                    <div className="flex items-center gap-4 relative z-10">
+                                        <span className={`font-mono text-xs w-6 ${currentTrackIdx === idx ? 'text-[#fcee0a]' : 'text-[#333]'}`}>
+                                            0{idx + 1}
+                                        </span>
+                                        <span className="font-bold font-cyber text-lg tracking-wide uppercase group-hover:text-white transition-colors">
+                                            {track.title}
+                                        </span>
+                                    </div>
+                                    <div className="flex items-center gap-3 relative z-10">
+                                        {currentTrackIdx === idx && <BarChart3 size={16} className="animate-pulse" />}
+                                        <span className="font-mono text-xs opacity-60">{track.duration}</span>
+                                    </div>
+
+                                    {/* Hover Fill Effect */}
+                                    <div className="absolute inset-0 bg-[#ffffff03] transform scale-x-0 group-hover:scale-x-100 transition-transform origin-left z-0"></div>
+                              </div>
+                          ))}
+                      </div>
+                  </div>
+
+                  {/* Right Col: Timeline & Stats */}
+                  <div className="md:col-span-5 space-y-12">
+                      
+                      {/* Timeline */}
+                      <div>
+                          <h3 className="text-white font-cyber text-xl mb-6 flex items-center gap-3">
+                                <span className="w-2 h-2 bg-[#ff003c]"></span>
+                                <span className="tracking-widest">TIMELINE</span>
+                          </h3>
+                          <div className="relative border-l border-[#333] ml-3 space-y-8 pl-8 py-2">
+                               {[
+                                   { year: '2003', text: 'Formation in Night City' },
+                                   { year: '2008', text: 'Breakup after Nancy\'s arrest' },
+                                   { year: '2023', text: 'Johnny\'s Fall (Arasaka Tower)' },
+                                   { year: '2077', text: 'Reunion Gig at Red Dirt' }
+                               ].map((item, i) => (
+                                   <div key={i} className="relative group">
+                                       <div className="absolute -left-[37px] top-1.5 w-3 h-3 bg-[#0b0b0b] border border-[#555] rounded-full group-hover:border-[#ff003c] group-hover:bg-[#ff003c] transition-colors"></div>
+                                       <span className="text-[#ff003c] font-cyber font-bold text-sm block mb-1">{item.year}</span>
+                                       <span className="text-gray-400 font-mono text-xs leading-tight block group-hover:text-white transition-colors">{item.text}</span>
+                                   </div>
+                               ))}
                           </div>
-                      ))}
+                      </div>
+
+                      {/* Members */}
+                      <div>
+                          <h3 className="text-white font-cyber text-xl mb-6 tracking-widest">PERSONNEL</h3>
+                          <div className="grid grid-cols-1 gap-3">
+                                {MEMBERS.map((member, i) => (
+                                    <div key={i} className="flex items-center justify-between bg-[#111] p-3 border-l-2 border-transparent hover:border-[#00f0ff] transition-colors group">
+                                        <div className="flex items-center gap-3">
+                                            <div className="text-gray-600 group-hover:text-[#00f0ff] transition-colors">{member.icon}</div>
+                                            <span className="text-gray-300 font-bold text-sm uppercase group-hover:text-white">{member.name}</span>
+                                        </div>
+                                        <span className="text-[10px] font-mono text-gray-600 uppercase group-hover:text-[#00f0ff]">{member.role.split(' ')[0]}</span>
+                                    </div>
+                                ))}
+                          </div>
+                      </div>
+
                   </div>
+
               </div>
 
-              {/* Members */}
-              <div>
-                  <h3 className="text-[#fcee0a] font-cyber text-xl mb-6 flex items-center gap-2">
-                        <Mic2 size={20} /> LINEUP
-                  </h3>
-                  <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-                        {MEMBERS.map((member, i) => (
-                            <div key={i} className="bg-[#111] p-4 border border-[#333] hover:border-[#ff003c] transition-colors">
-                                <div className="text-[#ff003c] mb-2 opacity-80">{member.icon}</div>
-                                <div className="font-bold text-white text-sm uppercase mb-1">{member.name}</div>
-                                <div className="text-gray-500 text-[10px] font-mono uppercase">{member.role}</div>
-                            </div>
-                        ))}
+              {/* Footer Note */}
+              <div className="mt-20 border-t border-[#222] pt-8 flex justify-between items-end opacity-50 hover:opacity-100 transition-opacity">
+                  <div className="font-mono text-[10px] text-gray-500 max-w-xs">
+                      WARNING: LISTENING TO SUBVERSIVE MATERIAL MAY VIOLATE NCPD CODE 330.1. PROCEED AT OWN RISK.
                   </div>
-              </div>
-
-              <div className="mt-20 pt-10 border-t border-[#333] text-center">
-                  <p className="font-cyber text-gray-600 text-xs tracking-[0.5em]">SAMURAI NEVER DIES</p>
+                  <div className="text-right">
+                       <div className="font-cyber text-2xl font-bold text-[#333]">NIGHT CITY</div>
+                       <div className="font-mono text-xs text-[#ff003c]">ARCHIVES_2077</div>
+                  </div>
               </div>
           </div>
       </div>
