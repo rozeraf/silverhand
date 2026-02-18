@@ -117,7 +117,7 @@ const Arsenal: React.FC = () => {
                         <div className="absolute -top-2 -left-2 w-4 h-4 border-t border-l border-[#00f0ff]"></div>
                         <div className="absolute -bottom-2 -right-2 w-4 h-4 border-b border-r border-[#00f0ff]"></div>
                         
-                        <p className="text-[#00f0ff] text-xs font-bold mb-2">>>> ВНИМАНИЕ: ОТДАЧА</p>
+                        <p className="text-[#00f0ff] text-xs font-bold mb-2">&gt;&gt;&gt; ВНИМАНИЕ: ОТДАЧА</p>
                         <p className="text-white text-xs italic opacity-90">
                            "Джонни хотел получить настолько мощный пистолет, что его отдача <span className="text-[#ff003c]">сломала бы кисть</span> обычному человеку. Использовать Malorian в полную силу можно только удерживая его кибернетической серебряной рукой."
                         </p>
