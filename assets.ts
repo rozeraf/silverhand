@@ -18,6 +18,8 @@ export const ASSETS = {
   noiseTexture: "http://assets.iceable.com/img/noise-transparent.png",
 
   // Секция Арсенал
-  silverArm: "https://images.unsplash.com/photo-1535378437327-1e5828469cb8?q=80&w=1000&auto=format&fit=crop", // Абстрактный кибер-рукав или протез
-  malorianGun: "https://static.wikia.nocookie.net/cyberpunk/images/0/07/Malorian_Arms_3516_Icon_CP2077.png", // Иконка или изображение пистолета
+  silverArm:
+    "https://i.etsystatic.com/45478307/r/il/2e1f03/5165531545/il_fullxfull.5165531545_8mso.jpg", // Абстрактный кибер-рукав или протез
+  malorianGun:
+    "https://storage.modworkshop.net/mods/images/132636_1668291848_1922616252580f415a274d98a2c717e5.webp", // Иконка или изображение пистолета
 };
