@@ -1,15 +1,23 @@
 import React from 'react';
-import { Shield, Crosshair, Cpu, AlertTriangle } from 'lucide-react';
+import { Shield, Crosshair, Cpu, AlertTriangle, Target } from 'lucide-react';
 import RevealOnScroll from './RevealOnScroll';
 import GlitchText from './GlitchText';
 
 const Arsenal: React.FC = () => {
   return (
-    <section id="arsenal" className="py-24 bg-[#080808] relative border-t border-[#ff003c]/20">
+    <section id="arsenal" className="py-24 bg-[#080808] relative border-t border-[#ff003c]/20 overflow-hidden">
       {/* Decorative Elements */}
-      <div className="absolute left-0 top-1/4 w-2 h-32 bg-[#ff003c]"></div>
-      <div className="absolute right-0 bottom-1/4 w-2 h-32 bg-[#00f0ff]"></div>
+      <div className="absolute left-0 top-1/4 w-2 h-32 bg-[#ff003c] z-10"></div>
+      <div className="absolute right-0 bottom-1/4 w-2 h-32 bg-[#00f0ff] z-10"></div>
       
+      {/* Background Vector Watermark */}
+      <div className="absolute -right-20 -top-20 text-white opacity-[0.03] pointer-events-none transform rotate-12 z-0">
+        <Target size={600} strokeWidth={0.5} />
+      </div>
+      <div className="absolute -left-20 bottom-0 text-[#ff003c] opacity-[0.02] pointer-events-none transform -rotate-12 z-0">
+        <Crosshair size={500} strokeWidth={0.5} />
+      </div>
+
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         
         <RevealOnScroll className="mb-16">
