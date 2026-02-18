@@ -25,6 +25,29 @@ const MEMBERS = [
   { name: "Henry", role: "Bass", icon: <Guitar size={16} /> },
 ];
 
+const TIMELINE_EVENTS = [
+  {
+    year: '2003',
+    title: 'FORMATION',
+    description: 'Основана Джонни Сильверхендом и Керри Евродином в задних комнатах "Rainbow Cadenza". Их сырая энергия и антикорпоративные тексты мгновенно нашли отклик у бесправной молодежи Найт-Сити.'
+  },
+  {
+    year: '2008',
+    title: 'THE BREAKUP',
+    description: 'После того как клавишница Нэнси была арестована за то, что выбросила мужа-абьюзера из окна, группа распалась. 7 месяцев тюрьмы для неё означали конец Samurai.'
+  },
+  {
+    year: '2023',
+    title: 'ARASAKA TOWER',
+    description: 'Джонни возглавил ударную группу Militech, чтобы проникнуть в сердце Арасака-Тауэр и спасти Альт Каннингем. Миссия закончилась ядерным взрывом, уничтожившим центр города, и физической смертью Джонни.'
+  },
+  {
+    year: '2077',
+    title: 'THE REUNION',
+    description: 'Спустя десятилетия выжившие участники воссоединились для одного последнего концерта в баре Red Dirt. Используя тело Ви как проводник для Джонни, они сыграли "A Like Supreme" в последний раз.'
+  }
+];
+
 interface SamuraiPageProps {
   onBack: () => void;
 }
@@ -319,17 +342,24 @@ const Samurai: React.FC<SamuraiPageProps> = ({ onBack }) => {
                                 <span className="w-2 h-2 bg-[#ff003c]"></span>
                                 <span className="tracking-widest">TIMELINE</span>
                           </h3>
-                          <div className="relative border-l border-[#333] ml-3 space-y-8 pl-8 py-2">
-                               {[
-                                   { year: '2003', text: 'Formation in Night City' },
-                                   { year: '2008', text: 'Breakup after Nancy\'s arrest' },
-                                   { year: '2023', text: 'Johnny\'s Fall (Arasaka Tower)' },
-                                   { year: '2077', text: 'Reunion Gig at Red Dirt' }
-                               ].map((item, i) => (
-                                   <div key={i} className="relative group">
-                                       <div className="absolute -left-[37px] top-1.5 w-3 h-3 bg-[#0b0b0b] border border-[#555] rounded-full group-hover:border-[#ff003c] group-hover:bg-[#ff003c] transition-colors"></div>
-                                       <span className="text-[#ff003c] font-cyber font-bold text-sm block mb-1">{item.year}</span>
-                                       <span className="text-gray-400 font-mono text-xs leading-tight block group-hover:text-white transition-colors">{item.text}</span>
+                          <div className="relative border-l border-[#333] ml-3 space-y-6 pl-8 py-2">
+                               {TIMELINE_EVENTS.map((item, i) => (
+                                   <div key={i} className="relative group cursor-default">
+                                       <div className="absolute -left-[37px] top-1.5 w-3 h-3 bg-[#0b0b0b] border border-[#555] rounded-full group-hover:border-[#ff003c] group-hover:bg-[#ff003c] transition-all duration-300 shadow-[0_0_0_transparent] group-hover:shadow-[0_0_10px_#ff003c]"></div>
+                                       
+                                       <div className="flex flex-col">
+                                            <span className="text-[#ff003c] font-cyber font-bold text-sm mb-1 group-hover:text-[#fcee0a] transition-colors duration-300">{item.year}</span>
+                                            <span className="text-gray-300 font-bold text-sm block group-hover:text-white transition-colors duration-300">{item.title}</span>
+                                            
+                                            {/* Expandable Details */}
+                                            <div className="grid grid-rows-[0fr] group-hover:grid-rows-[1fr] transition-[grid-template-rows] duration-500 ease-out">
+                                                <div className="overflow-hidden">
+                                                    <p className="text-gray-500 font-mono text-xs leading-relaxed mt-2 border-l-2 border-[#ff003c] pl-3 opacity-0 group-hover:opacity-100 transition-opacity duration-500 delay-75">
+                                                        {item.description}
+                                                    </p>
+                                                </div>
+                                            </div>
+                                       </div>
                                    </div>
                                ))}
                           </div>
