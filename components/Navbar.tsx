@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from "react";
-import { Menu, X, Zap, Settings } from "lucide-react";
+import { Menu, X, Settings } from "lucide-react";
 import { useScramble } from "use-scramble";
 import SamuraiButton from "./SamuraiButton";
+import { ASSETS } from "../assets";
 
 interface NavbarProps {
   onOpenSamurai: () => void;
@@ -72,10 +73,10 @@ const Navbar: React.FC<NavbarProps> = ({ onOpenSamurai, onOpenSettings }) => {
             className="flex-shrink-0 flex items-center gap-2 cursor-pointer group"
             onMouseEnter={replayLogo}
           >
-            <Zap
-              className="text-[#ff003c] group-hover:text-[#00f0ff] transition-colors"
-              size={24}
-              fill="currentColor"
+            <img
+              src={ASSETS.navLogo}
+              alt="Samurai Logo"
+              className="h-8 w-8 object-contain invert transition-all duration-300 group-hover:invert-0 group-hover:drop-shadow-[0_0_8px_#ff003c]"
             />
             <span
               ref={logoRef}

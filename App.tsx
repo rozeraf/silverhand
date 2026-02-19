@@ -1,10 +1,11 @@
-import React, { useState, Suspense, lazy } from "react";
+import React, { useState, Suspense, lazy, useEffect } from "react";
 import LoadingScreen from "./components/LoadingScreen";
 import Navbar from "./components/Navbar";
 import Hero from "./components/Hero";
 import CustomCursor from "./components/CustomCursor";
 import SettingsModal from "./components/SettingsModal";
 import { useSettings } from "./context/SettingsContext";
+import { ASSETS } from "./assets";
 
 // Lazy load components
 const Biography = lazy(() => import("./components/Biography"));
@@ -28,6 +29,17 @@ const App: React.FC = () => {
 
   const [showSamuraiPage, setShowSamuraiPage] = useState(false);
   const [showSettings, setShowSettings] = useState(false);
+
+  // Set Favicon dynamically
+  useEffect(() => {
+    const link =
+      document.querySelector("link[rel*='icon']") ||
+      document.createElement("link");
+    (link as HTMLLinkElement).type = "image/png";
+    (link as HTMLLinkElement).rel = "icon";
+    (link as HTMLLinkElement).href = ASSETS.favicon;
+    document.getElementsByTagName("head")[0].appendChild(link);
+  }, []);
 
   // Функция, вызываемая после окончания загрузки
   const handleLoadingComplete = () => {

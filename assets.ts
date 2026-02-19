@@ -30,6 +30,11 @@ const getAsset = (filename: string) => {
 };
 
 export const ASSETS = {
+  // SYSTEM ASSETS
+  favicon: "https://i.redd.it/fut0xdm9jlg71.jpg",
+  navLogo:
+    "https://preview.redd.it/9phvcam9jlg71.jpg?width=640&crop=smart&auto=webp&s=5ec7666ad2ffe7e45ae6e3da90ca120696f8dba6",
+
   // Главный фон (Hero секция)
   heroBackground:
     "https://static0.thegamerimages.com/wordpress/wp-content/uploads/2021/01/cyberpunk-2077-johnny-silverhand-glasses.jpg?q=50&fit=crop&w=1600&h=900&dpr=1.5",

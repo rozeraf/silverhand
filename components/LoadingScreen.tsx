@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState } from "react";
 
 interface LoadingScreenProps {
   onComplete: () => void;
@@ -16,12 +16,12 @@ const LoadingScreen: React.FC<LoadingScreenProps> = ({ onComplete }) => {
     "SYNCHRONIZING MEMORY FRAGMENTS...",
     "SYSTEM BREACH DETECTED... IGNORING...",
     "OVERRIDING SECURITY PROTOCOLS...",
-    "WAKE THE F*** UP, SAMURAI..."
+    "WAKE THE F*** UP, SAMURAI...",
   ];
 
   useEffect(() => {
     let currentLog = 0;
-    
+
     // Progress Bar Timer
     const progressTimer = setInterval(() => {
       setProgress((prev) => {
@@ -36,7 +36,7 @@ const LoadingScreen: React.FC<LoadingScreenProps> = ({ onComplete }) => {
     // Logs Timer
     const logTimer = setInterval(() => {
       if (currentLog < bootSequence.length) {
-        setLogs(prev => [...prev, bootSequence[currentLog]]);
+        setLogs((prev) => [...prev, bootSequence[currentLog]]);
         currentLog++;
       } else {
         clearInterval(logTimer);
@@ -48,14 +48,16 @@ const LoadingScreen: React.FC<LoadingScreenProps> = ({ onComplete }) => {
       clearInterval(progressTimer);
       clearInterval(logTimer);
     };
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
     <div className="fixed inset-0 bg-black z-[100] flex flex-col items-center justify-center font-mono text-[#ff003c] p-8 overflow-hidden">
       <div className="w-full max-w-2xl border-2 border-[#ff003c] p-6 relative">
-        <div className="absolute top-0 left-0 bg-[#ff003c] text-black text-xs px-2 py-1 font-bold">BIOS_CHECK</div>
-        
+        <div className="absolute top-0 left-0 bg-[#ff003c] text-black text-xs px-2 py-1 font-bold">
+          BIOS_CHECK
+        </div>
+
         <div className="mb-8 space-y-2 h-64 overflow-y-auto font-cyber text-sm md:text-base">
           {logs.map((log, index) => (
             <div key={index} className="flex">
@@ -66,7 +68,7 @@ const LoadingScreen: React.FC<LoadingScreenProps> = ({ onComplete }) => {
         </div>
 
         <div className="relative w-full h-6 border border-[#ff003c] p-1">
-          <div 
+          <div
             className="h-full bg-[#ff003c] transition-all duration-100 ease-out"
             style={{ width: `${Math.min(progress, 100)}%` }}
           />
