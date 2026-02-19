@@ -62,7 +62,7 @@ const Arsenal: React.FC = () => {
                 ></div>
                 <div className="absolute inset-0 bg-black/20 group-hover:bg-transparent transition-colors"></div>
                 <div className="relative z-10 border border-white/20 px-3 py-1 bg-black/50 backdrop-blur-sm text-[10px] md:text-xs font-mono text-white">
-                  MODEL: MILITECH_PROTOTYPE
+                  MODEL: ARASAKA_PROTOTYPE
                 </div>
               </div>
 

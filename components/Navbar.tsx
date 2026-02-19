@@ -76,7 +76,7 @@ const Navbar: React.FC<NavbarProps> = ({ onOpenSamurai, onOpenSettings }) => {
             <img
               src={ASSETS.navLogo}
               alt="Samurai Logo"
-              className="h-8 w-8 object-contain invert transition-all duration-300 group-hover:invert-0 group-hover:drop-shadow-[0_0_8px_#ff003c]"
+              className="h-8 w-8 object-contain transition-all duration-300 group-hover:drop-shadow-[0_0_8px_#ff003c]"
             />
             <span
               ref={logoRef}

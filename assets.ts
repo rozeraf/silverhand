@@ -31,9 +31,8 @@ const getAsset = (filename: string) => {
 
 export const ASSETS = {
   // SYSTEM ASSETS
-  favicon: "https://i.redd.it/fut0xdm9jlg71.jpg",
-  navLogo:
-    "https://preview.redd.it/9phvcam9jlg71.jpg?width=640&crop=smart&auto=webp&s=5ec7666ad2ffe7e45ae6e3da90ca120696f8dba6",
+  favicon: "/assets/image 1(1).png",
+  navLogo: "/assets/image 1(1).png",
 
   // Главный фон (Hero секция)
   heroBackground:
