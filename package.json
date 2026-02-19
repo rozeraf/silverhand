@@ -13,7 +13,9 @@
     "lucide-react": "0.344.0",
     "use-scramble": "2.2.15",
     "react-powerglitch": "1.0.0",
-    "react-dom": "^19.2.4"
+    "react-dom": "^19.2.4",
+    "vite": "^7.3.1",
+    "@vitejs/plugin-react": "^5.1.4"
   },
   "devDependencies": {
     "@types/node": "^22.14.0",
