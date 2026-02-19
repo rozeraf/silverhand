@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Menu, X, Settings } from "lucide-react";
+import { Menu, X, Settings, Terminal as TerminalIcon } from "lucide-react";
 import { useScramble } from "use-scramble";
 import SamuraiButton from "./SamuraiButton";
 import { ASSETS } from "../assets";
@@ -7,9 +7,14 @@ import { ASSETS } from "../assets";
 interface NavbarProps {
   onOpenSamurai: () => void;
   onOpenSettings?: () => void;
+  onOpenTerminal?: () => void;
 }
 
-const Navbar: React.FC<NavbarProps> = ({ onOpenSamurai, onOpenSettings }) => {
+const Navbar: React.FC<NavbarProps> = ({
+  onOpenSamurai,
+  onOpenSettings,
+  onOpenTerminal,
+}) => {
   const [isOpen, setIsOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
 
@@ -104,7 +109,17 @@ const Navbar: React.FC<NavbarProps> = ({ onOpenSamurai, onOpenSettings }) => {
             </div>
 
             <div className="flex items-center gap-4">
-              {/* Settings Button (Desktop) */}
+              {/* Terminal Button */}
+              <button
+                onClick={onOpenTerminal}
+                className="text-gray-400 hover:text-[#00f0ff] transition-all duration-300 hover:scale-110"
+                aria-label="Terminal"
+                title="Access Terminal"
+              >
+                <TerminalIcon size={20} />
+              </button>
+
+              {/* Settings Button */}
               <button
                 onClick={onOpenSettings}
                 className="text-gray-400 hover:text-[#fcee0a] hover:rotate-90 transition-all duration-300"
@@ -151,15 +166,26 @@ const Navbar: React.FC<NavbarProps> = ({ onOpenSamurai, onOpenSettings }) => {
             </a>
           ))}
           <div className="pt-2 flex flex-col gap-4">
-            <button
-              onClick={() => {
-                onOpenSettings?.();
-                setIsOpen(false);
-              }}
-              className="flex items-center gap-2 text-gray-300 hover:text-[#fcee0a] font-cyber px-3 py-2"
-            >
-              <Settings size={18} /> SETTINGS
-            </button>
+            <div className="flex gap-4">
+              <button
+                onClick={() => {
+                  onOpenTerminal?.();
+                  setIsOpen(false);
+                }}
+                className="flex-1 flex items-center justify-center gap-2 text-gray-300 hover:text-[#00f0ff] font-cyber px-3 py-2 border border-gray-800 hover:border-[#00f0ff] transition-colors"
+              >
+                <TerminalIcon size={18} /> TERMINAL
+              </button>
+              <button
+                onClick={() => {
+                  onOpenSettings?.();
+                  setIsOpen(false);
+                }}
+                className="flex-1 flex items-center justify-center gap-2 text-gray-300 hover:text-[#fcee0a] font-cyber px-3 py-2 border border-gray-800 hover:border-[#fcee0a] transition-colors"
+              >
+                <Settings size={18} /> SETTINGS
+              </button>
+            </div>
             <SamuraiButton
               onClick={() => {
                 onOpenSamurai();

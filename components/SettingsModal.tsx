@@ -8,6 +8,7 @@ import {
   Zap,
   Activity,
   MousePointer2,
+  ChevronRight,
 } from "lucide-react";
 import GlitchText from "./GlitchText";
 import { useSettings } from "../context/SettingsContext";
@@ -15,9 +16,14 @@ import { useSettings } from "../context/SettingsContext";
 interface SettingsModalProps {
   isOpen: boolean;
   onClose: () => void;
+  onOpenTerminal?: () => void;
 }
 
-const SettingsModal: React.FC<SettingsModalProps> = ({ isOpen, onClose }) => {
+const SettingsModal: React.FC<SettingsModalProps> = ({
+  isOpen,
+  onClose,
+  onOpenTerminal,
+}) => {
   const {
     bootSequence,
     enableNoise,
@@ -130,6 +136,32 @@ const SettingsModal: React.FC<SettingsModalProps> = ({ isOpen, onClose }) => {
                 onChange={() => updateSetting("bootSequence", !bootSequence)}
                 icon={MonitorPlay}
               />
+            </div>
+
+            {/* Quick Link to Terminal */}
+            <div className="md:col-span-2 mt-2">
+              <button
+                onClick={onOpenTerminal}
+                className="w-full flex items-center justify-between p-3 border border-[#333] hover:border-[#00f0ff] hover:bg-[#00f0ff]/5 transition-all group"
+              >
+                <div className="flex items-center gap-3">
+                  <div className="p-2 bg-[#111] text-[#00f0ff] border border-[#333]">
+                    <Terminal size={18} />
+                  </div>
+                  <div className="text-left">
+                    <h4 className="text-white font-cyber text-sm tracking-wide">
+                      SYSTEM TERMINAL
+                    </h4>
+                    <p className="text-gray-500 text-[10px] font-mono">
+                      Access NetWatch console
+                    </p>
+                  </div>
+                </div>
+                <ChevronRight
+                  size={18}
+                  className="text-gray-500 group-hover:text-[#00f0ff] group-hover:translate-x-1 transition-all"
+                />
+              </button>
             </div>
 
             <div className="md:col-span-2 mt-4 md:mt-6 mb-2">

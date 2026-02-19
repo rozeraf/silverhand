@@ -1,5 +1,5 @@
 import React, { useState, Suspense, lazy, useEffect } from "react";
-import LoadingScreen from "./components/LoadingScreen";
+import Terminal from "./components/Terminal"; // Replaces LoadingScreen
 import Navbar from "./components/Navbar";
 import Hero from "./components/Hero";
 import CustomCursor from "./components/CustomCursor";
@@ -9,6 +9,7 @@ import { ASSETS } from "./assets";
 
 // Lazy load components
 const Biography = lazy(() => import("./components/Biography"));
+const ClassifiedSection = lazy(() => import("./components/ClassifiedSection"));
 const Arsenal = lazy(() => import("./components/Arsenal"));
 const Engram = lazy(() => import("./components/Engram"));
 const Samurai = lazy(() => import("./components/Samurai"));
@@ -17,18 +18,36 @@ const Footer = lazy(() => import("./components/Footer"));
 const App: React.FC = () => {
   const { enableNoise, enableScanlines, enableCustomCursor } = useSettings();
 
-  // Инициализируем состояние загрузки
-  // Логика первого запуска: если есть ключ has_visited, то false.
-  // Это состояние инициализируется один раз при монтировании App.
-  const [loading, setLoading] = useState(() => {
-    if (typeof window !== "undefined") {
-      return !localStorage.getItem("has_visited");
-    }
-    return true;
-  });
+  // State for Terminal Visibility
+  const [showTerminal, setShowTerminal] = useState(false);
+  const [skipBoot, setSkipBoot] = useState(false);
+
+  // State for Classified Content Access
+  const [isClassified, setIsClassified] = useState(false);
 
   const [showSamuraiPage, setShowSamuraiPage] = useState(false);
   const [showSettings, setShowSettings] = useState(false);
+
+  // Initial Boot Check
+  useEffect(() => {
+    // Check if user has visited before (for boot sequence)
+    const hasVisited = localStorage.getItem("has_visited");
+
+    // Check if user is already authorized for classified info
+    const classifiedStatus = localStorage.getItem("classified") === "true";
+    setIsClassified(classifiedStatus);
+
+    if (!hasVisited) {
+      // First visit: Show terminal with boot sequence
+      setShowTerminal(true);
+      setSkipBoot(false);
+      localStorage.setItem("has_visited", "true");
+    } else {
+      // Subsequent visits: Site loads normally, terminal closed
+      setShowTerminal(false);
+      setSkipBoot(true); // If opened manually later, skip boot
+    }
+  }, []);
 
   // Set Favicon dynamically
   useEffect(() => {
@@ -41,15 +60,15 @@ const App: React.FC = () => {
     document.getElementsByTagName("head")[0].appendChild(link);
   }, []);
 
-  // Функция, вызываемая после окончания загрузки
-  const handleLoadingComplete = () => {
-    setLoading(false);
-    localStorage.setItem("has_visited", "true");
+  const handleOpenTerminal = () => {
+    setSkipBoot(true); // Always skip boot when opening manually
+    setShowTerminal(true);
   };
 
-  if (loading) {
-    return <LoadingScreen onComplete={handleLoadingComplete} />;
-  }
+  const handleAuthSuccess = (unlockedClassified: boolean) => {
+    // Called by Terminal when login logic finishes
+    setIsClassified(unlockedClassified);
+  };
 
   return (
     <div
@@ -65,6 +84,18 @@ const App: React.FC = () => {
       <SettingsModal
         isOpen={showSettings}
         onClose={() => setShowSettings(false)}
+        onOpenTerminal={() => {
+          setShowSettings(false);
+          handleOpenTerminal();
+        }}
+      />
+
+      {/* Interactive Terminal (Replaces LoadingScreen) */}
+      <Terminal
+        isOpen={showTerminal}
+        onClose={() => setShowTerminal(false)}
+        skipBoot={skipBoot}
+        onAuthSuccess={handleAuthSuccess}
       />
 
       {/* Samurai Page Overlay */}
@@ -85,6 +116,7 @@ const App: React.FC = () => {
         <Navbar
           onOpenSamurai={() => setShowSamuraiPage(true)}
           onOpenSettings={() => setShowSettings(true)}
+          onOpenTerminal={handleOpenTerminal}
         />
 
         <main>
@@ -103,6 +135,10 @@ const App: React.FC = () => {
             }
           >
             <Biography />
+
+            {/* Classified Section - Only renders if authorized */}
+            {isClassified && <ClassifiedSection />}
+
             <Arsenal />
             <Engram />
           </Suspense>
