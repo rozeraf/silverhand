@@ -11,8 +11,9 @@ const musicFiles = import.meta.glob("./music/*.mp3", {
   import: "default",
 }) as Record<string, string>;
 
-// Динамический импорт всех webp из папки assets
-const assetFiles = import.meta.glob("./assets/*.webp", {
+// Динамический импорт всех изображений (webp, png, jpg, svg, ico) из папки assets
+// Расширен список расширений для поддержки фавиконов и логотипов
+const assetFiles = import.meta.glob("./assets/*.{webp,png,jpg,jpeg,svg,ico}", {
   eager: true,
   query: "?url",
   import: "default",
@@ -31,8 +32,8 @@ const getAsset = (filename: string) => {
 
 export const ASSETS = {
   // SYSTEM ASSETS
-  favicon: "/assets/image 1(1).png",
-  navLogo: "/assets/image 1(1).png",
+  favicon: getAsset("image 1(1).png"),
+  navLogo: getAsset("image 1(1).png"),
 
   // Главный фон (Hero секция)
   heroBackground:

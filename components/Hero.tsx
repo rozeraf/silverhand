@@ -34,7 +34,7 @@ const Hero: React.FC<HeroProps> = ({ onOpenSamurai }) => {
   return (
     <section
       id="hero"
-      className="relative h-screen min-h-[600px] w-full flex items-center justify-center overflow-hidden bg-black"
+      className="relative min-h-screen min-h-[600px] w-full flex items-center justify-center overflow-hidden bg-black"
     >
       {/* Dynamic Background Image - Managed in assets.ts */}
       <div
@@ -124,22 +124,25 @@ const Hero: React.FC<HeroProps> = ({ onOpenSamurai }) => {
           </div>
 
           {/* Overlapping Outline Text: SILVERHAND */}
-          <div className="ml-2 md:ml-24 -mt-2 md:-mt-6 relative z-0">
+          <div className="ml-2 md:ml-24 -mt-2 md:-mt-6 relative z-0 w-full">
             <GlitchText
               text="SILVERHAND"
               as="h1"
-              className="font-black leading-none tracking-tighter uppercase italic"
+              className="font-black leading-none tracking-tighter uppercase italic break-words"
               color="blue"
               variant="outline"
             />
             <style>{`
-                 #hero .text-stroke-cyan { font-size: clamp(3rem, 13vw, 10rem); }
+                 #hero .text-stroke-cyan { font-size: clamp(2.5rem, 10vw, 10rem); }
+                 @media (max-width: 400px) {
+                   #hero .text-stroke-cyan { font-size: clamp(2rem, 12vw, 4rem); }
+                 }
                `}</style>
           </div>
         </div>
 
         {/* Subtitle / Description */}
-        <div className="mt-8 md:mt-12 max-w-xl border-l-2 border-[#ff003c] pl-4 md:pl-6 ml-1 md:ml-4 bg-black/60 backdrop-blur-sm p-4 relative overflow-hidden group">
+        <div className="mt-8 md:mt-12 max-w-xl border-l-2 border-[#ff003c] pl-4 md:pl-6 ml-1 md:ml-4 bg-black/60 backdrop-blur-sm p-4 relative overflow-hidden group z-20">
           <div className="absolute inset-0 bg-[#ff003c]/5 transform -translate-x-full group-hover:translate-x-0 transition-transform duration-500"></div>
           <h2 className="text-xl md:text-2xl font-cyber text-[#fcee0a] mb-2 relative">
             ЭНГРАММА
@@ -151,10 +154,10 @@ const Hero: React.FC<HeroProps> = ({ onOpenSamurai }) => {
         </div>
 
         {/* Action Buttons */}
-        <div className="mt-8 md:mt-12 ml-1 md:ml-4 flex flex-col sm:flex-row gap-4 sm:gap-6 w-full sm:w-auto">
+        <div className="mt-8 md:mt-12 ml-1 md:ml-4 flex flex-col sm:flex-row gap-4 sm:gap-6 w-full sm:w-auto relative z-30">
           <a
             href="#bio"
-            className="group relative inline-flex items-center justify-center px-6 py-3 md:px-8 md:py-4 bg-transparent overflow-hidden border border-[#fcee0a] min-w-[200px] w-full sm:w-auto"
+            className="group relative inline-flex items-center justify-center px-6 py-3 md:px-8 md:py-4 bg-transparent overflow-hidden border border-[#fcee0a] min-w-[200px] w-full sm:w-auto cursor-pointer"
           >
             <div className="absolute inset-0 bg-[#fcee0a] transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left"></div>
 
@@ -169,7 +172,7 @@ const Hero: React.FC<HeroProps> = ({ onOpenSamurai }) => {
           </a>
 
           {/* New SAMURAI Button */}
-          <div className="w-full sm:w-auto">
+          <div className="w-full sm:w-auto relative z-30">
             <SamuraiButton
               onClick={onOpenSamurai}
               className="w-full sm:w-auto h-full"
@@ -179,7 +182,7 @@ const Hero: React.FC<HeroProps> = ({ onOpenSamurai }) => {
       </div>
 
       {/* Bottom Bar Gradient */}
-      <div className="absolute bottom-0 left-0 w-full h-24 md:h-32 bg-gradient-to-t from-[#0b0b0b] to-transparent z-10"></div>
+      <div className="absolute bottom-0 left-0 w-full h-24 md:h-32 bg-gradient-to-t from-[#0b0b0b] to-transparent z-10 pointer-events-none"></div>
 
       {/* Decorative Japanese Text Bottom Right */}
       <div className="absolute bottom-4 right-4 md:bottom-8 md:right-8 z-20 text-[#ff003c] opacity-80 writing-vertical text-2xl md:text-4xl font-bold select-none font-sans pointer-events-none">

@@ -162,7 +162,7 @@ const Biography: React.FC = () => {
               <div className="absolute top-0 left-0 w-2 h-2 bg-[#ff003c] group-hover:bg-[#fcee0a]"></div>
               <div className="absolute bottom-0 right-0 w-2 h-2 bg-[#ff003c] group-hover:bg-[#fcee0a]"></div>
 
-              <blockquote className="text-lg md:text-2xl lg:text-3xl font-cyber italic text-white/90 leading-tight">
+              <blockquote className="text-lg md:text-2xl lg:text-3xl font-cyber italic text-white/90 leading-tight uppercase">
                 "Wake the f**k up,{" "}
                 <span className="text-[#00f0ff]">Samurai</span>. We have a city{" "}
                 <span className="text-[#ff003c] animate-pulse">to burn</span>."

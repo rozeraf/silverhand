@@ -8,5 +8,14 @@ export default defineConfig({
     assetsDir: "assets",
     sourcemap: false,
   },
-  assetsInclude: ["**/*.mp3", "**/*.webp"],
+  // Явно указываем Vite, что эти расширения файлов нужно обрабатывать как статические ресурсы
+  assetsInclude: [
+    "**/*.mp3",
+    "**/*.webp",
+    "**/*.png",
+    "**/*.jpg",
+    "**/*.jpeg",
+    "**/*.svg",
+    "**/*.ico",
+  ],
 });
