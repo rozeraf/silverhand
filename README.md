@@ -59,7 +59,20 @@
 ### Настройки
 `SettingsContext` персистит пять булевых флагов в `localStorage["cyber_settings"]`. Эффекты (scanlines, noise, custom cursor, анимации, boot sequence) переключаются без перезагрузки.
 
-## Запуск
+## Деплой
+
+Проект разворачивается автоматически через GitHub Actions на Cloudflare Pages при пуше в `main`.
+
+```
+.github/workflows/pages-deployment.yaml
+  push → main
+    └── bun install && bun run build
+          └── wrangler pages deploy dist --project-name=silverhand
+```
+
+Необходимые секреты репозитория: `CLOUDFLARE_API_TOKEN`, `CLOUDFLARE_ACCOUNT_ID`.
+
+## Запуск локально
 
 ```bash
 bun install
