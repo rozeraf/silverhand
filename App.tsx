@@ -1,5 +1,5 @@
 import React, { useState, Suspense, lazy, useEffect } from "react";
-import Terminal from "./components/Terminal"; // Replaces LoadingScreen
+import Terminal from "./components/Terminal";
 import Navbar from "./components/Navbar";
 import Hero from "./components/Hero";
 import CustomCursor from "./components/CustomCursor";
@@ -7,7 +7,6 @@ import SettingsModal from "./components/SettingsModal";
 import { useSettings } from "./context/SettingsContext";
 import { ASSETS } from "./assets";
 
-// Lazy load components
 const Biography = lazy(() => import("./components/Biography"));
 const ClassifiedSection = lazy(() => import("./components/ClassifiedSection"));
 const Arsenal = lazy(() => import("./components/Arsenal"));
@@ -15,41 +14,30 @@ const Engram = lazy(() => import("./components/Engram"));
 const Samurai = lazy(() => import("./components/Samurai"));
 const Footer = lazy(() => import("./components/Footer"));
 
-const App: React.FC = () => {
+const App = () => {
   const { enableNoise, enableScanlines, enableCustomCursor } = useSettings();
 
-  // State for Terminal Visibility
   const [showTerminal, setShowTerminal] = useState(false);
   const [skipBoot, setSkipBoot] = useState(false);
-
-  // State for Classified Content Access
   const [isClassified, setIsClassified] = useState(false);
-
   const [showSamuraiPage, setShowSamuraiPage] = useState(false);
   const [showSettings, setShowSettings] = useState(false);
 
-  // Initial Boot Check
   useEffect(() => {
-    // Check if user has visited before (for boot sequence)
     const hasVisited = localStorage.getItem("has_visited");
-
-    // Check if user is already authorized for classified info
     const classifiedStatus = localStorage.getItem("classified") === "true";
     setIsClassified(classifiedStatus);
 
     if (!hasVisited) {
-      // First visit: Show terminal with boot sequence
       setShowTerminal(true);
       setSkipBoot(false);
       localStorage.setItem("has_visited", "true");
     } else {
-      // Subsequent visits: Site loads normally, terminal closed
       setShowTerminal(false);
-      setSkipBoot(true); // If opened manually later, skip boot
+      setSkipBoot(true);
     }
   }, []);
 
-  // Set Favicon dynamically
   useEffect(() => {
     const link =
       document.querySelector("link[rel*='icon']") ||
@@ -61,12 +49,11 @@ const App: React.FC = () => {
   }, []);
 
   const handleOpenTerminal = () => {
-    setSkipBoot(true); // Always skip boot when opening manually
+    setSkipBoot(true);
     setShowTerminal(true);
   };
 
   const handleAuthSuccess = (unlockedClassified: boolean) => {
-    // Called by Terminal when login logic finishes
     setIsClassified(unlockedClassified);
   };
 
@@ -76,11 +63,9 @@ const App: React.FC = () => {
     >
       {enableCustomCursor && <CustomCursor />}
 
-      {/* Global Effects Controlled by Settings */}
       {enableScanlines && <div className="scanlines"></div>}
       {enableNoise && <div className="noise-bg"></div>}
 
-      {/* Settings Modal */}
       <SettingsModal
         isOpen={showSettings}
         onClose={() => setShowSettings(false)}
@@ -90,7 +75,6 @@ const App: React.FC = () => {
         }}
       />
 
-      {/* Interactive Terminal (Replaces LoadingScreen) */}
       <Terminal
         isOpen={showTerminal}
         onClose={() => setShowTerminal(false)}
@@ -98,7 +82,6 @@ const App: React.FC = () => {
         onAuthSuccess={handleAuthSuccess}
       />
 
-      {/* Samurai Page Overlay */}
       {showSamuraiPage && (
         <Suspense
           fallback={
@@ -111,7 +94,6 @@ const App: React.FC = () => {
         </Suspense>
       )}
 
-      {/* Main App Content */}
       <div>
         <Navbar
           onOpenSamurai={() => setShowSamuraiPage(true)}
@@ -135,10 +117,7 @@ const App: React.FC = () => {
             }
           >
             <Biography />
-
-            {/* Classified Section - Only renders if authorized */}
             {isClassified && <ClassifiedSection />}
-
             <Arsenal />
             <Engram />
           </Suspense>

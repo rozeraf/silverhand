@@ -21,7 +21,7 @@ interface Track {
   title: string;
   duration: string;
   file: string;
-  cover?: string; // Optional specific cover for the track
+  cover?: string;
 }
 
 const TRACKS: Track[] = [
@@ -47,7 +47,6 @@ const TRACKS: Track[] = [
     title: "Archangel",
     duration: "4:12",
     file: ASSETS.music.archangel,
-    // No specific cover, will fallback to main album
   },
   {
     title: "Black Dog",
@@ -104,18 +103,16 @@ interface SamuraiPageProps {
   onBack: () => void;
 }
 
-const Samurai: React.FC<SamuraiPageProps> = ({ onBack }) => {
+const Samurai = ({ onBack }: SamuraiPageProps) => {
   const [currentTrackIdx, setCurrentTrackIdx] = useState(0);
   const [isPlaying, setIsPlaying] = useState(false);
   const [progress, setProgress] = useState(0);
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const currentTrack = TRACKS[currentTrackIdx];
 
-  // Initialize Audio
   useEffect(() => {
-    // Create new audio instance
     audioRef.current = new Audio(currentTrack.file);
-    audioRef.current.volume = 0.5; // Start at 50% volume to not blast ears
+    audioRef.current.volume = 0.5;
 
     const updateProgress = () => {
       if (audioRef.current) {
@@ -141,10 +138,8 @@ const Samurai: React.FC<SamuraiPageProps> = ({ onBack }) => {
         audioRef.current.removeEventListener("ended", handleEnded);
       }
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  // Handle Track Change
   useEffect(() => {
     if (audioRef.current) {
       const wasPlaying = isPlaying;
@@ -156,10 +151,8 @@ const Samurai: React.FC<SamuraiPageProps> = ({ onBack }) => {
           .catch((e) => console.log("Audio file missing or blocked?", e));
       }
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentTrackIdx]);
 
-  // Handle Play/Pause
   useEffect(() => {
     if (audioRef.current) {
       if (isPlaying) {
@@ -182,7 +175,6 @@ const Samurai: React.FC<SamuraiPageProps> = ({ onBack }) => {
 
   const handleSeek = (e: React.ChangeEvent<HTMLInputElement>) => {
     const val = Number(e.target.value);
-    // Update visuals immediately
     setProgress(val);
 
     if (audioRef.current) {
@@ -193,23 +185,17 @@ const Samurai: React.FC<SamuraiPageProps> = ({ onBack }) => {
     }
   };
 
-  // Determine active cover image
   const activeCover = currentTrack.cover || ASSETS.samuraiAlbum;
 
   return (
     <div className="fixed inset-0 z-[100] bg-[#030303] text-white flex flex-col lg:flex-row overflow-hidden animate-[fadeIn_0.5s_ease-out]">
-      {/* Background Ambience */}
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_50%,rgba(255,0,60,0.05),transparent_50%)] pointer-events-none"></div>
       <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')] opacity-10 pointer-events-none"></div>
 
-      {/* MOBILE SCROLL WRAPPER */}
       <div className="flex flex-col lg:flex-row w-full h-full overflow-y-auto lg:overflow-hidden">
-        {/* --- LEFT PANEL: PLAYER (Top on Mobile) --- */}
         <div className="w-full lg:w-5/12 h-auto lg:h-full relative border-b lg:border-b-0 lg:border-r border-[#222] bg-[#080808] flex flex-col z-10 lg:shadow-[20px_0_50px_rgba(0,0,0,0.9)] shrink-0">
-          {/* Decorative Grid Background for Player */}
           <div className="absolute inset-0 bg-[linear-gradient(0deg,transparent_24%,rgba(255,255,255,.02)_25%,rgba(255,255,255,.02)_26%,transparent_27%,transparent_74%,rgba(255,255,255,.02)_75%,rgba(255,255,255,.02)_76%,transparent_77%,transparent),linear-gradient(90deg,transparent_24%,rgba(255,255,255,.02)_25%,rgba(255,255,255,.02)_26%,transparent_27%,transparent_74%,rgba(255,255,255,.02)_75%,rgba(255,255,255,.02)_76%,transparent_77%,transparent)] bg-[size:50px_50px] pointer-events-none"></div>
 
-          {/* Top Bar */}
           <div className="p-4 md:p-6 flex justify-between items-center border-b border-[#222] bg-[#0a0a0a]/80 backdrop-blur-md relative z-20">
             <button
               onClick={onBack}
@@ -229,11 +215,8 @@ const Samurai: React.FC<SamuraiPageProps> = ({ onBack }) => {
             </div>
           </div>
 
-          {/* Player Core */}
           <div className="flex-1 flex flex-col items-center justify-center p-6 md:p-8 lg:p-12 relative z-10">
-            {/* Album Art Container - Smaller on mobile */}
             <div className="relative w-48 h-48 md:w-64 md:h-64 lg:w-full lg:max-w-[320px] lg:aspect-square mb-6 md:mb-10 group perspective-1000">
-              {/* Spinning Ring */}
               <div
                 className={`absolute inset-[-10px] md:inset-[-20px] rounded-full border border-dashed border-[#333] ${isPlaying ? "animate-spin-slow" : ""}`}
               ></div>
@@ -249,22 +232,18 @@ const Samurai: React.FC<SamuraiPageProps> = ({ onBack }) => {
                   className={`w-full h-full object-cover transition-all duration-700 animate-[fadeIn_0.5s_ease-out] ${isPlaying ? "scale-110 contrast-125 saturate-150" : "grayscale scale-100"}`}
                 />
 
-                {/* Glitch Overlay on Image */}
                 <div className="absolute inset-0 bg-[#ff003c] mix-blend-overlay opacity-0 group-hover:opacity-20 transition-opacity"></div>
 
-                {/* Corner accents */}
                 <div className="absolute top-0 left-0 w-6 h-6 md:w-8 md:h-8 border-t-2 border-l-2 border-[#fcee0a]"></div>
                 <div className="absolute bottom-0 right-0 w-6 h-6 md:w-8 md:h-8 border-b-2 border-r-2 border-[#fcee0a]"></div>
               </div>
 
-              {/* Status Overlay */}
               <div className="absolute -bottom-6 left-0 w-full flex justify-between items-end font-mono text-[10px] text-[#00f0ff] uppercase tracking-widest">
                 <span className="hidden md:inline">Codec: MP3_320</span>
                 <span>{isPlaying ? "PLAYING..." : "PAUSED"}</span>
               </div>
             </div>
 
-            {/* Track Details */}
             <div className="w-full max-w-[320px] mb-6 md:mb-8 text-center relative px-4">
               <h2 className="text-xl md:text-3xl font-cyber font-bold text-white mb-2 truncate drop-shadow-[0_0_5px_rgba(255,255,255,0.5)]">
                 {currentTrack.title}
@@ -274,7 +253,6 @@ const Samurai: React.FC<SamuraiPageProps> = ({ onBack }) => {
               </p>
             </div>
 
-            {/* Progress Bar styled as Tech Component */}
             <div className="w-full max-w-[320px] mb-6 md:mb-8 relative group px-4 lg:px-0">
               <div className="flex justify-between text-[10px] font-mono text-gray-500 mb-1">
                 <span>{(audioRef.current?.currentTime || 0).toFixed(1)}</span>
@@ -285,7 +263,6 @@ const Samurai: React.FC<SamuraiPageProps> = ({ onBack }) => {
                   className="absolute top-0 left-0 h-full bg-[#fcee0a] shadow-[0_0_10px_#fcee0a]"
                   style={{ width: `${progress}%` }}
                 ></div>
-                {/* Input range overlay for interaction */}
                 <input
                   type="range"
                   min="0"
@@ -300,7 +277,6 @@ const Samurai: React.FC<SamuraiPageProps> = ({ onBack }) => {
               <div className="absolute top-1/2 -right-2 w-1 h-3 bg-[#333] transform -translate-y-1/2"></div>
             </div>
 
-            {/* Controls */}
             <div className="flex justify-center items-center gap-6 md:gap-8 w-full max-w-[320px]">
               <button
                 onClick={handlePrev}
@@ -313,7 +289,6 @@ const Samurai: React.FC<SamuraiPageProps> = ({ onBack }) => {
                 onClick={togglePlay}
                 className="w-14 h-14 md:w-16 md:h-16 bg-transparent border-2 border-[#fcee0a] text-[#fcee0a] rounded-sm flex items-center justify-center hover:bg-[#fcee0a] hover:text-black transition-all hover:shadow-[0_0_20px_#fcee0a] active:scale-95 group relative"
               >
-                {/* Decorative corners inside button */}
                 <div className="absolute top-1 left-1 w-2 h-2 border-t border-l border-current opacity-50"></div>
                 <div className="absolute bottom-1 right-1 w-2 h-2 border-b border-r border-current opacity-50"></div>
 
@@ -342,14 +317,10 @@ const Samurai: React.FC<SamuraiPageProps> = ({ onBack }) => {
           </div>
         </div>
 
-        {/* --- RIGHT PANEL: INFO (Bottom on Mobile) --- */}
         <div className="w-full lg:w-7/12 h-auto lg:h-full overflow-visible lg:overflow-y-auto bg-[#030303] relative custom-scrollbar scroll-smooth">
-          {/* BACKGROUND ELEMENTS FOR RIGHT PANEL */}
           <div className="absolute inset-0 pointer-events-none overflow-hidden">
-            {/* Grid */}
             <div className="absolute inset-0 bg-[linear-gradient(rgba(255,0,60,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(255,0,60,0.03)_1px,transparent_1px)] bg-[size:40px_40px] opacity-20"></div>
 
-            {/* Large Watermark Logo */}
             <div className="absolute -top-20 -right-20 w-[600px] h-[600px] opacity-[0.03] rotate-12">
               <img
                 src={ASSETS.samuraiLogo}
@@ -358,18 +329,14 @@ const Samurai: React.FC<SamuraiPageProps> = ({ onBack }) => {
               />
             </div>
 
-            {/* Decorative Gradient Blobs */}
             <div className="absolute top-1/3 left-0 w-64 md:w-96 h-64 md:h-96 bg-[#ff003c] rounded-full mix-blend-screen filter blur-[100px] md:blur-[120px] opacity-[0.05]"></div>
 
-            {/* Decorative Tech Lines */}
             <div className="absolute top-40 right-10 w-[2px] h-32 bg-gradient-to-b from-transparent via-[#333] to-transparent hidden md:block"></div>
           </div>
 
-          {/* Top Fade Overlay */}
           <div className="sticky top-0 h-10 md:h-20 bg-gradient-to-b from-[#030303] to-transparent z-20 pointer-events-none"></div>
 
           <div className="max-w-4xl mx-auto p-6 md:p-8 lg:p-16 pt-0 relative z-10">
-            {/* Header Section */}
             <div className="flex flex-col md:flex-row justify-between items-start mb-12 md:mb-16 border-b-2 border-[#333] pb-8 relative">
               <div className="w-full">
                 <div className="inline-flex items-center gap-2 mb-2 bg-[#ff003c]/10 px-3 py-1 border border-[#ff003c]/20 rounded-sm">
@@ -406,7 +373,6 @@ const Samurai: React.FC<SamuraiPageProps> = ({ onBack }) => {
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-12 gap-8 md:gap-12">
-              {/* Left Col: Tracklist */}
               <div className="md:col-span-7">
                 <h3 className="text-white font-cyber text-lg md:text-xl mb-4 md:mb-6 flex items-center gap-3">
                   <ListMusic className="text-[#00f0ff]" size={20} />
@@ -419,7 +385,7 @@ const Samurai: React.FC<SamuraiPageProps> = ({ onBack }) => {
                       key={idx}
                       onClick={() => setCurrentTrackIdx(idx)}
                       className={`
-                                        group relative flex justify-between items-center p-3 md:p-4 border border-transparent 
+                                        group relative flex justify-between items-center p-3 md:p-4 border border-transparent
                                         cursor-pointer transition-all duration-300
                                         ${
                                           currentTrackIdx === idx
@@ -447,16 +413,13 @@ const Samurai: React.FC<SamuraiPageProps> = ({ onBack }) => {
                         </span>
                       </div>
 
-                      {/* Hover Fill Effect */}
                       <div className="absolute inset-0 bg-[#ffffff03] transform scale-x-0 group-hover:scale-x-100 transition-transform origin-left z-0"></div>
                     </div>
                   ))}
                 </div>
               </div>
 
-              {/* Right Col: Timeline & Stats */}
               <div className="md:col-span-5 space-y-12">
-                {/* Timeline */}
                 <div>
                   <h3 className="text-white font-cyber text-lg md:text-xl mb-4 md:mb-6 flex items-center gap-3">
                     <span className="w-2 h-2 bg-[#ff003c]"></span>
@@ -475,7 +438,6 @@ const Samurai: React.FC<SamuraiPageProps> = ({ onBack }) => {
                             {item.title}
                           </span>
 
-                          {/* Details */}
                           <div className="md:grid md:grid-rows-[0fr] md:group-hover:grid-rows-[1fr] transition-[grid-template-rows] duration-500 ease-out">
                             <div className="overflow-hidden">
                               <p className="text-gray-500 font-mono text-xs leading-relaxed mt-2 border-l-2 border-[#ff003c] pl-3 opacity-100 md:opacity-0 md:group-hover:opacity-100 transition-opacity duration-500 delay-75">
@@ -489,7 +451,6 @@ const Samurai: React.FC<SamuraiPageProps> = ({ onBack }) => {
                   </div>
                 </div>
 
-                {/* Members */}
                 <div>
                   <h3 className="text-white font-cyber text-lg md:text-xl mb-4 md:mb-6 tracking-widest">
                     PERSONNEL
@@ -518,7 +479,6 @@ const Samurai: React.FC<SamuraiPageProps> = ({ onBack }) => {
               </div>
             </div>
 
-            {/* Footer Note */}
             <div className="mt-16 md:mt-20 border-t border-[#222] pt-8 flex flex-col md:flex-row justify-between items-start md:items-end gap-4 opacity-70 md:opacity-50 md:hover:opacity-100 transition-opacity pb-8 md:pb-0">
               <div className="font-mono text-[10px] text-gray-500 max-w-xs">
                 WARNING: LISTENING TO SUBVERSIVE MATERIAL MAY VIOLATE NCPD CODE

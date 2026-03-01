@@ -5,7 +5,7 @@ interface TerminalProps {
   isOpen: boolean;
   onClose: () => void;
   skipBoot?: boolean;
-  onAuthSuccess?: (unlockedClassified: boolean) => void; // Updated callback signature
+  onAuthSuccess?: (unlockedClassified: boolean) => void;
 }
 
 const RESERVED_USERS = [
@@ -15,12 +15,12 @@ const RESERVED_USERS = [
 ];
 const SECRET_PASS = "8492-AFX";
 
-const Terminal: React.FC<TerminalProps> = ({
+const Terminal = ({
   isOpen,
   onClose,
   skipBoot = false,
   onAuthSuccess,
-}) => {
+}: TerminalProps) => {
   const [lines, setLines] = useState<string[]>([]);
   const [input, setInput] = useState("");
   const [isBooting, setIsBooting] = useState(!skipBoot);
@@ -32,19 +32,16 @@ const Terminal: React.FC<TerminalProps> = ({
   const inputRef = useRef<HTMLInputElement>(null);
   const scrollRef = useRef<HTMLDivElement>(null);
 
-  // Focus input on click
   const handleContainerClick = () => {
     if (!isBooting) inputRef.current?.focus();
   };
 
-  // Scroll to bottom on new lines
   useEffect(() => {
     if (scrollRef.current) {
       scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
     }
   }, [lines, isBooting]);
 
-  // Boot Sequence
   useEffect(() => {
     if (!isOpen) return;
 
@@ -91,7 +88,6 @@ const Terminal: React.FC<TerminalProps> = ({
   const handleCommand = (cmd: string) => {
     const trimmed = cmd.trim();
 
-    // If we are in password mode, we treat the whole input as the password
     if (authMode === "password") {
       setLines((prev) => [...prev, `> *****`]);
 
@@ -115,7 +111,6 @@ const Terminal: React.FC<TerminalProps> = ({
           "INCORRECT PASSPHRASE.",
           "SESSION TERMINATED. PLEASE LOGIN AGAIN.",
         ]);
-        // Reset auth mode completely, forcing user to type 'login <user>' again
         setAuthMode("none");
         setTempUser("");
       }
@@ -123,10 +118,9 @@ const Terminal: React.FC<TerminalProps> = ({
     }
 
     const [command, ...args] = trimmed.split(" ");
-    const argString = args.join(" "); // For usernames with spaces
+    const argString = args.join(" ");
     setLines((prev) => [...prev, `> ${trimmed}`]);
 
-    // Normal Command Mode
     switch (command.toLowerCase()) {
       case "help":
         setLines((prev) => [
@@ -188,10 +182,8 @@ const Terminal: React.FC<TerminalProps> = ({
             "ENTER PASSPHRASE:",
           ]);
         } else {
-          // Standard user login
           localStorage.setItem("username", argString);
           localStorage.setItem("authenticated", "true");
-          // Important: Clear classified status if logging in as a normal user
           localStorage.removeItem("classified");
 
           setLines((prev) => [
@@ -199,7 +191,7 @@ const Terminal: React.FC<TerminalProps> = ({
             `Authenticated as ${argString}.`,
             "Access granted to public archives.",
           ]);
-          if (onAuthSuccess) onAuthSuccess(false); // False means no classified access
+          if (onAuthSuccess) onAuthSuccess(false);
           setTimeout(onClose, 1000);
         }
         break;
@@ -225,12 +217,10 @@ const Terminal: React.FC<TerminalProps> = ({
       className="fixed inset-0 z-[150] bg-black font-mono text-[#ff003c] p-4 md:p-8 flex flex-col overflow-hidden"
       onClick={handleContainerClick}
     >
-      {/* Background FX */}
       <div className="absolute inset-0 bg-[linear-gradient(rgba(18,16,16,0)_50%,rgba(0,0,0,0.25)_50%),linear-gradient(90deg,rgba(255,0,0,0.06),rgba(255,0,0,0.02),rgba(255,0,0,0.06))] bg-[size:100%_2px,3px_100%] pointer-events-none z-0"></div>
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,transparent_50%,rgba(0,0,0,0.4)_100%)] pointer-events-none z-0"></div>
 
       <div className="relative z-10 w-full max-w-4xl mx-auto h-full flex flex-col border-2 border-[#ff003c] bg-black/90 shadow-[0_0_20px_rgba(255,0,60,0.2)]">
-        {/* Header */}
         <div className="flex items-center justify-between bg-[#ff003c] text-black px-4 py-1 shrink-0">
           <div className="flex items-center gap-2 font-bold">
             <TerminalIcon size={16} />
@@ -244,7 +234,6 @@ const Terminal: React.FC<TerminalProps> = ({
           </button>
         </div>
 
-        {/* Content Area */}
         <div
           ref={scrollRef}
           className="flex-1 overflow-y-auto p-4 md:p-6 font-cyber text-sm md:text-base space-y-1 custom-scrollbar"
@@ -255,7 +244,6 @@ const Terminal: React.FC<TerminalProps> = ({
             </div>
           ))}
 
-          {/* Input Line */}
           {!isBooting && (
             <form onSubmit={handleSubmit} className="flex items-center mt-2">
               <span className="mr-2 text-[#fcee0a]">
@@ -274,13 +262,11 @@ const Terminal: React.FC<TerminalProps> = ({
             </form>
           )}
 
-          {/* Blinking Cursor if booting */}
           {isBooting && (
             <div className="w-2 h-4 bg-[#ff003c] animate-pulse inline-block mt-2"></div>
           )}
         </div>
 
-        {/* Footer Status */}
         <div className="p-2 border-t border-[#ff003c]/30 text-xs text-[#fcee0a] flex justify-between uppercase">
           <span>STATUS: {isBooting ? "BOOTING..." : "ONLINE"}</span>
           <span>MEM: 64TB // ENCRYPTED</span>

@@ -19,11 +19,7 @@ interface SettingsModalProps {
   onOpenTerminal?: () => void;
 }
 
-const SettingsModal: React.FC<SettingsModalProps> = ({
-  isOpen,
-  onClose,
-  onOpenTerminal,
-}) => {
+const SettingsModal = ({ isOpen, onClose, onOpenTerminal }: SettingsModalProps) => {
   const {
     bootSequence,
     enableNoise,
@@ -93,7 +89,6 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
   return (
     <div className="fixed inset-0 z-[200] flex items-center justify-center bg-black/80 backdrop-blur-sm p-2 md:p-4 animate-[fadeIn_0.2s_ease-out]">
       <div className="relative w-[95%] max-w-2xl bg-[#0b0b0b] border-2 border-[#fcee0a] shadow-[0_0_20px_rgba(252,238,10,0.3)] clip-corner-inverse max-h-[90vh] flex flex-col">
-        {/* Header */}
         <div className="flex justify-between items-center p-3 md:p-4 border-b border-[#fcee0a]/30 bg-[#fcee0a]/5 shrink-0">
           <div className="flex items-center gap-2 text-[#fcee0a]">
             <Terminal size={18} className="md:w-5 md:h-5" />
@@ -109,7 +104,6 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
           </button>
         </div>
 
-        {/* Content */}
         <div className="p-4 md:p-8 overflow-y-auto custom-scrollbar">
           <div className="text-center mb-6 md:mb-8">
             <GlitchText
@@ -138,7 +132,6 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
               />
             </div>
 
-            {/* Quick Link to Terminal */}
             <div className="md:col-span-2 mt-2">
               <button
                 onClick={onOpenTerminal}
@@ -209,7 +202,6 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
             />
           </div>
 
-          {/* Info Status */}
           <div className="mt-6 md:mt-8 p-3 bg-[#111] border-l-2 border-[#ff003c] font-mono text-[10px] md:text-xs text-gray-400 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-1 sm:gap-0">
             <span>
               VRAM USAGE:{" "}
@@ -225,7 +217,6 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
           </div>
         </div>
 
-        {/* Footer */}
         <div className="p-3 md:p-4 border-t border-[#333] flex justify-end shrink-0 bg-[#0b0b0b]">
           <button
             onClick={onClose}

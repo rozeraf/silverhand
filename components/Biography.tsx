@@ -5,7 +5,7 @@ import RevealOnScroll from "./RevealOnScroll";
 import { TimelineEvent } from "../types";
 import { ASSETS } from "../assets";
 
-const Biography: React.FC = () => {
+const Biography = () => {
   const events: TimelineEvent[] = [
     {
       year: "2013",
@@ -35,11 +35,9 @@ const Biography: React.FC = () => {
       id="bio"
       className="py-16 md:py-24 bg-[#0b0b0b] relative overflow-hidden"
     >
-      {/* Background Grid */}
       <div className="absolute inset-0 bg-[linear-gradient(rgba(0,240,255,0.05)_1px,transparent_1px),linear-gradient(90deg,rgba(0,240,255,0.05)_1px,transparent_1px)] bg-[size:30px_30px] md:bg-[size:40px_40px] pointer-events-none"></div>
 
       <div className="max-w-7xl mx-auto px-4 md:px-8 relative z-10">
-        {/* Header */}
         <RevealOnScroll className="mb-12 md:mb-16 text-center lg:text-left">
           <span className="text-[#00f0ff] font-bold tracking-widest text-xs md:text-sm uppercase mb-2 block">
             История Легенды
@@ -53,14 +51,12 @@ const Biography: React.FC = () => {
         </RevealOnScroll>
 
         <div className="flex flex-col lg:flex-row gap-12 lg:gap-20">
-          {/* Left Column: Image - sticky on desktop, static on mobile */}
           <div className="lg:w-5/12 relative">
             <RevealOnScroll
               direction="right"
               className="relative lg:sticky lg:top-24"
             >
               <div className="relative border-2 border-[#333] p-2 bg-[#111] group max-w-sm mx-auto lg:max-w-none">
-                {/* Decorative corners */}
                 <div className="absolute -top-1 -left-1 w-4 h-4 border-t-2 border-l-2 border-[#ff003c] z-20"></div>
                 <div className="absolute -bottom-1 -right-1 w-4 h-4 border-b-2 border-r-2 border-[#fcee0a] z-20"></div>
 
@@ -70,10 +66,7 @@ const Biography: React.FC = () => {
                     alt="Johnny Silverhand Portrait"
                     className="w-full h-full object-cover filter grayscale contrast-125 group-hover:grayscale-0 transition-all duration-700"
                   />
-                  {/* Overlay Gradient */}
                   <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent opacity-80"></div>
-
-                  {/* Glitch Overlay */}
                   <div className="absolute inset-0 bg-[#ff003c] mix-blend-color-dodge opacity-0 group-hover:opacity-20 transition-opacity duration-100"></div>
 
                   <div className="absolute bottom-4 left-4 text-white z-10">
@@ -86,7 +79,6 @@ const Biography: React.FC = () => {
                   </div>
                 </div>
 
-                {/* Side Label */}
                 <div className="absolute -right-6 md:-right-8 top-10 transform rotate-90 origin-top-left text-[#333] font-cyber text-[10px] md:text-xs tracking-[0.3em]">
                   NIGHT_CITY_ARCHIVES
                 </div>
@@ -101,9 +93,7 @@ const Biography: React.FC = () => {
             </RevealOnScroll>
           </div>
 
-          {/* Right Column: Timeline */}
           <div className="lg:w-7/12 relative">
-            {/* Vertical Line */}
             <div className="absolute left-[11px] md:left-[19px] top-4 bottom-0 w-[2px] bg-gradient-to-b from-[#fcee0a] via-[#ff003c] to-[#00f0ff] opacity-30"></div>
 
             <div className="space-y-8 md:space-y-12">
@@ -114,19 +104,16 @@ const Biography: React.FC = () => {
                   direction="up"
                   className="relative pl-10 md:pl-16"
                 >
-                  {/* Timeline Dot */}
                   <div className="absolute left-0 top-1 w-6 h-6 md:w-10 md:h-10 rounded-full bg-[#0b0b0b] border-2 border-[#00f0ff] z-20 flex items-center justify-center shadow-[0_0_15px_rgba(0,240,255,0.3)] group-hover:border-[#fcee0a] transition-colors">
                     <div className="w-1.5 h-1.5 md:w-2 md:h-2 bg-[#fcee0a] rounded-full animate-pulse"></div>
                   </div>
 
-                  {/* Content Box */}
                   <div
                     className={`
-                                group bg-[#151515] border-l-4 ${index % 2 === 0 ? "border-[#ff003c]" : "border-[#fcee0a]"} 
+                                group bg-[#151515] border-l-4 ${index % 2 === 0 ? "border-[#ff003c]" : "border-[#fcee0a]"}
                                 p-4 md:p-6 relative transition-all duration-300 hover:bg-[#1f1f1f] cyber-card-hover clip-corner-inverse
                             `}
                   >
-                    {/* Corner Accents */}
                     <div className="absolute top-0 right-0 w-4 h-4 md:w-6 md:h-6 border-t border-r border-white/10 group-hover:border-[#00f0ff] transition-colors"></div>
                     <div className="absolute bottom-0 right-0 w-4 h-4 md:w-6 md:h-6 border-b border-r border-white/10 group-hover:border-[#00f0ff] transition-colors"></div>
 
@@ -151,7 +138,6 @@ const Biography: React.FC = () => {
               ))}
             </div>
 
-            {/* Quote Block */}
             <RevealOnScroll
               delay={400}
               className="mt-12 md:mt-20 p-6 md:p-8 border border-[#ff003c] bg-black/50 relative text-center backdrop-blur-sm group hover:border-[#fcee0a] transition-colors duration-500 mx-auto max-w-2xl"

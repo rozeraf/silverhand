@@ -25,20 +25,18 @@ const SettingsContext = createContext<SettingsContextType | undefined>(
   undefined,
 );
 
-export const SettingsProvider: React.FC<{ children: React.ReactNode }> = ({
+export const SettingsProvider = ({
   children,
+}: {
+  children: React.ReactNode;
 }) => {
   const [settings, setSettings] = useState<Settings>(() => {
     if (typeof window === "undefined") return defaultSettings;
 
     const saved = localStorage.getItem("cyber_settings");
 
-    // Compatibility check for previous "has_visited" logic
-    // If no settings exist but 'has_visited' exists, we should respect that for bootSequence
     if (!saved) {
       const hasVisited = localStorage.getItem("has_visited");
-      // If visited (true), bootSequence should be false (don't show intro).
-      // If not visited (null), bootSequence should be true (show intro).
       return {
         ...defaultSettings,
         bootSequence: !hasVisited,
@@ -51,7 +49,6 @@ export const SettingsProvider: React.FC<{ children: React.ReactNode }> = ({
   useEffect(() => {
     localStorage.setItem("cyber_settings", JSON.stringify(settings));
 
-    // Sync legacy key so App.tsx's initial state logic (which runs before context provider in some setups, or alongside) stays consistent
     if (settings.bootSequence) {
       localStorage.removeItem("has_visited");
     } else {

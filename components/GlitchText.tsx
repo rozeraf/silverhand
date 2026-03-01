@@ -11,29 +11,27 @@ interface GlitchTextProps {
   enableScramble?: boolean;
 }
 
-const GlitchText: React.FC<GlitchTextProps> = ({ 
-  text, 
-  as: Tag = 'h2', 
-  className = '', 
+const GlitchText = ({
+  text,
+  as: Tag = 'h2',
+  className = '',
   color = 'yellow',
   variant = 'solid',
   enableScramble = false
-}) => {
+}: GlitchTextProps) => {
   let textColorClass = 'text-white';
-  
+
   if (variant === 'solid') {
     if (color === 'yellow') textColorClass = 'text-[#fcee0a]';
     if (color === 'red') textColorClass = 'text-[#ff003c]';
     if (color === 'blue') textColorClass = 'text-[#00f0ff]';
   } else {
-    // Outline variants
-    if (color === 'yellow') textColorClass = 'text-stroke-cyan text-[#fcee0a]/10'; // slight tint fill
+    if (color === 'yellow') textColorClass = 'text-stroke-cyan text-[#fcee0a]/10';
     if (color === 'red') textColorClass = 'text-stroke-red';
     if (color === 'blue') textColorClass = 'text-stroke-cyan';
     if (color === 'white') textColorClass = 'text-stroke-cyan text-white/10';
   }
 
-  // Scramble effect (decoding text animation on mount)
   const { ref: scrambleRef } = useScramble({
     text: text,
     speed: 0.4,
@@ -47,7 +45,6 @@ const GlitchText: React.FC<GlitchTextProps> = ({
     playOnMount: enableScramble,
   });
 
-  // PowerGlitch effect (automatic and intense)
   const { ref: glitchRef } = useGlitch({
     playMode: 'always',
     createContainers: true,
@@ -58,8 +55,8 @@ const GlitchText: React.FC<GlitchTextProps> = ({
       easing: 'ease-in-out',
     },
     glitchTimeSpan: {
-      start: 0.6, 
-      end: 0.7, 
+      start: 0.6,
+      end: 0.7,
     },
     shake: {
       velocity: 15,
@@ -76,8 +73,8 @@ const GlitchText: React.FC<GlitchTextProps> = ({
   });
 
   return (
-    <Tag 
-      ref={glitchRef} 
+    <Tag
+      ref={glitchRef}
       className={`${className} ${textColorClass} inline-block`}
       style={{ lineHeight: 1.1, position: 'relative' }}
     >

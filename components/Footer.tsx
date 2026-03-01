@@ -1,9 +1,8 @@
 import React from "react";
 
-const Footer: React.FC = () => {
+const Footer = () => {
   return (
     <footer className="bg-black border-t-2 border-[#ff003c] pt-12 pb-8 relative overflow-hidden">
-      {/* Decorative Grid */}
       <div className="absolute top-0 right-0 p-4 opacity-20">
         <div className="grid grid-cols-4 gap-1">
           {[...Array(16)].map((_, i) => (

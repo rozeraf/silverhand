@@ -10,11 +10,7 @@ interface NavbarProps {
   onOpenTerminal?: () => void;
 }
 
-const Navbar: React.FC<NavbarProps> = ({
-  onOpenSamurai,
-  onOpenSettings,
-  onOpenTerminal,
-}) => {
+const Navbar = ({ onOpenSamurai, onOpenSettings, onOpenTerminal }: NavbarProps) => {
   const [isOpen, setIsOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
 
@@ -109,7 +105,6 @@ const Navbar: React.FC<NavbarProps> = ({
             </div>
 
             <div className="flex items-center gap-4">
-              {/* Terminal Button */}
               <button
                 onClick={onOpenTerminal}
                 className="text-gray-400 hover:text-[#00f0ff] transition-all duration-300 hover:scale-110"
@@ -119,7 +114,6 @@ const Navbar: React.FC<NavbarProps> = ({
                 <TerminalIcon size={20} />
               </button>
 
-              {/* Settings Button */}
               <button
                 onClick={onOpenSettings}
                 className="text-gray-400 hover:text-[#fcee0a] hover:rotate-90 transition-all duration-300"
@@ -128,7 +122,6 @@ const Navbar: React.FC<NavbarProps> = ({
                 <Settings size={22} />
               </button>
 
-              {/* SAMURAI Button */}
               <SamuraiButton onClick={onOpenSamurai} />
             </div>
           </div>
@@ -150,12 +143,11 @@ const Navbar: React.FC<NavbarProps> = ({
         </div>
       </div>
 
-      {/* Mobile menu */}
       <div
         className={`md:hidden fixed inset-x-0 top-[72px] bg-black/95 backdrop-blur-xl border-b border-[#00f0ff] transition-all duration-300 ease-in-out transform origin-top ${isOpen ? "scale-y-100 opacity-100" : "scale-y-0 opacity-0"}`}
       >
         <div className="px-4 pt-4 pb-6 space-y-4">
-          {navLinks.map((link, idx) => (
+          {navLinks.map((link) => (
             <a
               key={link.name}
               href={link.href}

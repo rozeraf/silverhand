@@ -3,13 +3,11 @@ import { AlertTriangle, FileWarning, EyeOff } from "lucide-react";
 import GlitchText from "./GlitchText";
 import RevealOnScroll from "./RevealOnScroll";
 
-const ClassifiedSection: React.FC = () => {
+const ClassifiedSection = () => {
   return (
     <section className="py-16 md:py-24 bg-[#0a0000] relative border-y-4 border-[#ff003c] overflow-hidden">
-      {/* Background Warning Stripes */}
       <div className="absolute inset-0 bg-[repeating-linear-gradient(45deg,transparent,transparent_10px,rgba(255,0,60,0.05)_10px,rgba(255,0,60,0.05)_20px)] pointer-events-none"></div>
 
-      {/* Watermark */}
       <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-[15vw] font-black text-[#ff003c] opacity-5 rotate-12 pointer-events-none whitespace-nowrap">
         TOP SECRET
       </div>
@@ -17,7 +15,6 @@ const ClassifiedSection: React.FC = () => {
       <div className="max-w-4xl mx-auto px-4 relative z-10">
         <RevealOnScroll>
           <div className="border border-[#ff003c] bg-black p-6 md:p-10 shadow-[0_0_50px_rgba(255,0,60,0.2)] relative">
-            {/* Header Badge */}
             <div className="flex items-center justify-between border-b-2 border-[#ff003c] pb-4 mb-8">
               <div className="flex items-center gap-3 text-[#ff003c]">
                 <AlertTriangle size={32} className="animate-pulse" />
@@ -37,7 +34,6 @@ const ClassifiedSection: React.FC = () => {
               </div>
             </div>
 
-            {/* Glitched Title */}
             <div className="mb-8 text-center">
               <GlitchText
                 text="[CLASSIFIED] OPERATION: FALL OF THE TOWERS"
@@ -47,7 +43,6 @@ const ClassifiedSection: React.FC = () => {
               />
             </div>
 
-            {/* Content Body */}
             <div className="font-mono text-sm md:text-base text-gray-300 space-y-6 leading-relaxed">
               <p>
                 <span className="bg-[#ff003c]/20 text-[#ff003c] px-1 mr-2">
@@ -109,7 +104,6 @@ const ClassifiedSection: React.FC = () => {
               </p>
             </div>
 
-            {/* Footer */}
             <div className="mt-10 pt-4 border-t border-[#333] flex justify-between items-center text-[#ff003c]/50 font-mono text-xs">
               <div className="flex items-center gap-2">
                 <EyeOff size={14} />
@@ -118,7 +112,6 @@ const ClassifiedSection: React.FC = () => {
               <div>FILE_ID: 9482-BETA-X</div>
             </div>
 
-            {/* Corner Markers */}
             <div className="absolute top-0 left-0 w-4 h-4 border-t-2 border-l-2 border-[#ff003c]"></div>
             <div className="absolute top-0 right-0 w-4 h-4 border-t-2 border-r-2 border-[#ff003c]"></div>
             <div className="absolute bottom-0 left-0 w-4 h-4 border-b-2 border-l-2 border-[#ff003c]"></div>

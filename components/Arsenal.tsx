@@ -4,17 +4,15 @@ import RevealOnScroll from "./RevealOnScroll";
 import GlitchText from "./GlitchText";
 import { ASSETS } from "../assets";
 
-const Arsenal: React.FC = () => {
+const Arsenal = () => {
   return (
     <section
       id="arsenal"
       className="py-16 md:py-24 bg-[#080808] relative border-t border-[#ff003c]/20 overflow-hidden"
     >
-      {/* Decorative Elements */}
       <div className="absolute left-0 top-1/4 w-1 md:w-2 h-24 md:h-32 bg-[#ff003c] z-10"></div>
       <div className="absolute right-0 bottom-1/4 w-1 md:w-2 h-24 md:h-32 bg-[#00f0ff] z-10"></div>
 
-      {/* Background Vector Watermark - Adjusted for mobile */}
       <div className="absolute -right-20 -top-20 text-white opacity-[0.03] pointer-events-none transform rotate-12 z-0 hidden md:block">
         <Target size={600} strokeWidth={0.5} />
       </div>
@@ -44,7 +42,6 @@ const Arsenal: React.FC = () => {
         </RevealOnScroll>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
-          {/* CARD 1: SILVER ARM */}
           <RevealOnScroll direction="left" delay={0} className="lg:col-span-1">
             <div className="h-full bg-[#111] border border-[#333] p-5 md:p-6 hover:border-[#fff] transition-colors group relative overflow-hidden flex flex-col">
               <div className="absolute top-0 right-0 p-2 opacity-20 group-hover:opacity-100 transition-opacity">
@@ -85,7 +82,6 @@ const Arsenal: React.FC = () => {
             </div>
           </RevealOnScroll>
 
-          {/* CARD 2: VEST (Middle, smaller vertical card) */}
           <RevealOnScroll direction="up" delay={150} className="lg:col-span-1">
             <div className="h-full bg-[#111] border border-[#333] p-5 md:p-6 hover:border-[#fcee0a] transition-colors group flex flex-col">
               <div className="flex justify-between items-start mb-4">
@@ -117,14 +113,12 @@ const Arsenal: React.FC = () => {
             </div>
           </RevealOnScroll>
 
-          {/* CARD 3: MALORIAN ARMS (Featured) */}
           <RevealOnScroll
             direction="right"
             delay={300}
             className="lg:col-span-1 md:col-span-2"
           >
             <div className="h-full bg-[#0b0b0b] border-2 border-[#00f0ff] p-5 md:p-6 relative overflow-hidden group flex flex-col">
-              {/* Animated Scanline Background */}
               <div className="absolute inset-0 bg-[linear-gradient(rgba(0,240,255,0.02)_1px,transparent_1px)] bg-[size:100%_4px] pointer-events-none"></div>
 
               <div className="flex justify-between items-start relative z-10 shrink-0">
@@ -137,7 +131,6 @@ const Arsenal: React.FC = () => {
                 />
               </div>
 
-              {/* Weapon Image */}
               <div className="relative w-full h-40 md:h-56 my-4 md:my-6 flex items-center justify-center bg-gradient-to-r from-black via-[#00f0ff]/5 to-black border-y border-[#00f0ff]/20 shrink-0 overflow-hidden">
                 <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/diagmonds-light.png')] opacity-10"></div>
                 <img

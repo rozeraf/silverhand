@@ -4,13 +4,10 @@ import RevealOnScroll from "./RevealOnScroll";
 import { Network, Fingerprint, RefreshCcw, UserPlus } from "lucide-react";
 import { ASSETS } from "../assets";
 
-const Engram: React.FC = () => {
+const Engram = () => {
   const [rotation, setRotation] = useState({ x: 0, y: 0 });
 
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
-    // Disable tilt on small screens/touch devices by checking capability or window width if needed,
-    // but CSS touch-action manipulation handles some of it.
-    // Here we just calculate as normal, but user interaction on mobile is mostly tap/scroll.
     const card = e.currentTarget;
     const rect = card.getBoundingClientRect();
     const x = e.clientX - rect.left;
@@ -19,7 +16,7 @@ const Engram: React.FC = () => {
     const centerX = rect.width / 2;
     const centerY = rect.height / 2;
 
-    const rotateX = ((y - centerY) / centerY) * -10; // Max rotation 10deg
+    const rotateX = ((y - centerY) / centerY) * -10;
     const rotateY = ((x - centerX) / centerX) * 10;
 
     setRotation({ x: rotateX, y: rotateY });
@@ -37,7 +34,6 @@ const Engram: React.FC = () => {
       <div className="absolute right-0 top-0 w-full md:w-1/3 h-full bg-[#00f0ff]/5 transform skew-x-12 pointer-events-none"></div>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-        {/* Header */}
         <RevealOnScroll className="flex flex-col md:flex-row justify-between items-start md:items-end mb-12 md:mb-16 border-b border-[#333] pb-6 md:pb-8">
           <div className="max-w-2xl">
             <h2 className="text-[#fcee0a] font-cyber text-lg md:text-xl mb-2 flex items-center gap-2">
@@ -61,7 +57,6 @@ const Engram: React.FC = () => {
         </RevealOnScroll>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 md:gap-16 items-start md:items-center">
-          {/* Visual Column with 3D Tilt */}
           <RevealOnScroll
             direction="right"
             className="relative order-1 perspective-1000"
@@ -84,7 +79,6 @@ const Engram: React.FC = () => {
                   loading="lazy"
                   className="w-full h-auto grayscale group-hover:grayscale-0 transition-all duration-700 contrast-125 scale-100 group-hover:scale-105"
                 />
-                {/* Glitch Overlay on Hover */}
                 <div className="absolute inset-0 bg-[#ff003c] mix-blend-multiply opacity-0 group-hover:opacity-20 transition-opacity"></div>
                 <div className="absolute inset-0 bg-[#00f0ff] mix-blend-screen opacity-0 group-hover:opacity-20 transition-opacity translate-x-1"></div>
               </div>
@@ -99,7 +93,6 @@ const Engram: React.FC = () => {
               </div>
             </div>
 
-            {/* Stats Grid */}
             <div className="grid grid-cols-2 gap-3 md:gap-4 mt-6 md:mt-8 max-w-sm mx-auto lg:max-w-none">
               <div className="bg-[#1a1a1a] p-3 md:p-4 border-b-2 border-[#fcee0a] hover:bg-[#222] transition-colors group cursor-crosshair">
                 <h4 className="text-[#fcee0a] text-xs md:text-sm font-bold mb-1 flex justify-between">
@@ -126,7 +119,6 @@ const Engram: React.FC = () => {
             </div>
           </RevealOnScroll>
 
-          {/* Text Column */}
           <div className="order-2 space-y-8 md:space-y-10">
             {[
               {

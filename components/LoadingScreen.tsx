@@ -4,7 +4,7 @@ interface LoadingScreenProps {
   onComplete: () => void;
 }
 
-const LoadingScreen: React.FC<LoadingScreenProps> = ({ onComplete }) => {
+const LoadingScreen = ({ onComplete }: LoadingScreenProps) => {
   const [progress, setProgress] = useState(0);
   const [logs, setLogs] = useState<string[]>([]);
 
@@ -22,7 +22,6 @@ const LoadingScreen: React.FC<LoadingScreenProps> = ({ onComplete }) => {
   useEffect(() => {
     let currentLog = 0;
 
-    // Progress Bar Timer
     const progressTimer = setInterval(() => {
       setProgress((prev) => {
         if (prev >= 100) {
@@ -33,14 +32,13 @@ const LoadingScreen: React.FC<LoadingScreenProps> = ({ onComplete }) => {
       });
     }, 150);
 
-    // Logs Timer
     const logTimer = setInterval(() => {
       if (currentLog < bootSequence.length) {
         setLogs((prev) => [...prev, bootSequence[currentLog]]);
         currentLog++;
       } else {
         clearInterval(logTimer);
-        setTimeout(onComplete, 800); // Slight delay after logs finish
+        setTimeout(onComplete, 800);
       }
     }, 400);
 
@@ -48,7 +46,6 @@ const LoadingScreen: React.FC<LoadingScreenProps> = ({ onComplete }) => {
       clearInterval(progressTimer);
       clearInterval(logTimer);
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
