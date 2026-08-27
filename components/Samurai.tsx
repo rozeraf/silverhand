@@ -24,33 +24,45 @@ interface Track {
   cover?: string;
 }
 
+const formatPlaybackTime = (seconds: number) => {
+  if (!Number.isFinite(seconds) || seconds < 0) return "0:00.0";
+
+  const totalTenths = Math.floor(seconds * 10);
+  const minutes = Math.floor(totalTenths / 600);
+  const remainingSeconds = Math.floor((totalTenths % 600) / 10);
+  const tenths = totalTenths % 10;
+
+  return `${minutes}:${remainingSeconds.toString().padStart(2, "0")}.${tenths}`;
+};
+
 const TRACKS: Track[] = [
   {
     title: "Chippin' In",
-    duration: "3:33",
+    duration: "3:30",
     file: ASSETS.music.chippinIn,
     cover: ASSETS.albumCovers.chippinIn,
   },
   {
     title: "Never Fade Away",
-    duration: "3:09",
+    duration: "3:10",
     file: ASSETS.music.neverFadeAway,
     cover: ASSETS.albumCovers.neverFadeAway,
   },
   {
     title: "A Like Supreme",
-    duration: "3:50",
+    duration: "3:49",
     file: ASSETS.music.aLikeSupreme,
     cover: ASSETS.albumCovers.aLikeSupreme,
   },
   {
     title: "Archangel",
-    duration: "4:12",
+    duration: "3:00",
     file: ASSETS.music.archangel,
+    cover: ASSETS.albumCovers.archangel,
   },
   {
     title: "Black Dog",
-    duration: "4:22",
+    duration: "4:24",
     file: ASSETS.music.blackDog,
     cover: ASSETS.albumCovers.blackDog,
   },
@@ -107,6 +119,7 @@ const Samurai = ({ onBack }: SamuraiPageProps) => {
   const [currentTrackIdx, setCurrentTrackIdx] = useState(0);
   const [isPlaying, setIsPlaying] = useState(false);
   const [progress, setProgress] = useState(0);
+  const [currentTime, setCurrentTime] = useState(0);
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const currentTrack = TRACKS[currentTrackIdx];
 
@@ -118,6 +131,7 @@ const Samurai = ({ onBack }: SamuraiPageProps) => {
       if (audioRef.current) {
         const duration = audioRef.current.duration || 1;
         if (!isNaN(duration)) {
+          setCurrentTime(audioRef.current.currentTime);
           setProgress((audioRef.current.currentTime / duration) * 100);
         }
       }
@@ -145,6 +159,8 @@ const Samurai = ({ onBack }: SamuraiPageProps) => {
       const wasPlaying = isPlaying;
       audioRef.current.src = TRACKS[currentTrackIdx].file;
       audioRef.current.load();
+      setCurrentTime(0);
+      setProgress(0);
       if (wasPlaying) {
         audioRef.current
           .play()
@@ -167,6 +183,24 @@ const Samurai = ({ onBack }: SamuraiPageProps) => {
     }
   }, [isPlaying]);
 
+  useEffect(() => {
+    if (!isPlaying) return;
+
+    const syncPlaybackTime = () => {
+      const audio = audioRef.current;
+      if (!audio) return;
+
+      setCurrentTime(audio.currentTime);
+      if (Number.isFinite(audio.duration) && audio.duration > 0) {
+        setProgress((audio.currentTime / audio.duration) * 100);
+      }
+    };
+
+    syncPlaybackTime();
+    const interval = window.setInterval(syncPlaybackTime, 100);
+    return () => window.clearInterval(interval);
+  }, [isPlaying, currentTrackIdx]);
+
   const togglePlay = () => setIsPlaying(!isPlaying);
   const handleNext = () =>
     setCurrentTrackIdx((prev) => (prev + 1) % TRACKS.length);
@@ -181,6 +215,7 @@ const Samurai = ({ onBack }: SamuraiPageProps) => {
       const duration = audioRef.current.duration || 0;
       if (duration > 0 && !isNaN(duration)) {
         audioRef.current.currentTime = (val / 100) * duration;
+        setCurrentTime(audioRef.current.currentTime);
       }
     }
   };
@@ -255,7 +290,9 @@ const Samurai = ({ onBack }: SamuraiPageProps) => {
 
             <div className="w-full max-w-[320px] mb-6 md:mb-8 relative group px-4 lg:px-0">
               <div className="flex justify-between text-[10px] font-mono text-gray-500 mb-1">
-                <span>{(audioRef.current?.currentTime || 0).toFixed(1)}</span>
+                <span>
+                  {formatPlaybackTime(currentTime)}
+                </span>
                 <span>{currentTrack.duration}</span>
               </div>
               <div className="relative h-2 bg-[#1a1a1a] border border-[#333] overflow-hidden">
@@ -325,7 +362,7 @@ const Samurai = ({ onBack }: SamuraiPageProps) => {
               <img
                 src={ASSETS.samuraiLogo}
                 alt=""
-                className="w-full h-full object-contain invert"
+                className="w-full h-full object-contain"
               />
             </div>
 
@@ -367,7 +404,7 @@ const Samurai = ({ onBack }: SamuraiPageProps) => {
                 <img
                   src={ASSETS.samuraiLogo}
                   alt="Logo"
-                  className="w-24 md:w-32 lg:w-48 invert"
+                  className="w-24 md:w-32 lg:w-48"
                 />
               </div>
             </div>

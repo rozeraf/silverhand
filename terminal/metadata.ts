@@ -84,26 +84,68 @@ export const META_OVERRIDES = {
     group: "samurai",
     mode: 0o755,
   },
-  "/srv/silverhand/assets/SamuraiNeverFadeAwayCover.webp": {
+  "/srv/silverhand/assets/a_like_supreme.png": {
+    owner: "silverhand",
+    group: "samurai",
+    mode: 0o644,
+    size: 69058,
+    mediaType: "image/webp",
+  },
+  "/srv/silverhand/assets/archangel.jpg": {
+    owner: "silverhand",
+    group: "samurai",
+    mode: 0o644,
+    size: 68622,
+    mediaType: "image/jpeg",
+  },
+  "/srv/silverhand/assets/black_dog.jpg": {
+    owner: "silverhand",
+    group: "samurai",
+    mode: 0o644,
+    size: 124360,
+    mediaType: "image/jpeg",
+  },
+  "/srv/silverhand/assets/chippin_in.jpg": {
+    owner: "silverhand",
+    group: "samurai",
+    mode: 0o644,
+    size: 699986,
+    mediaType: "image/jpeg",
+  },
+  "/srv/silverhand/assets/never_fade_away.webp": {
     owner: "silverhand",
     group: "samurai",
     mode: 0o644,
     size: 52968,
     mediaType: "image/webp",
   },
-  "/srv/silverhand/assets/image 1(1).png": {
+  "/srv/silverhand/assets/samurai.png": {
     owner: "silverhand",
     group: "samurai",
     mode: 0o644,
     size: 148110,
     mediaType: "image/png",
   },
-  "/srv/silverhand/assets/image-removebg-preview.png": {
+  "/srv/silverhand/music/a_like_supreme.mp3": {
     owner: "silverhand",
     group: "samurai",
     mode: 0o644,
-    size: 159990,
-    mediaType: "image/png",
+    size: 9162754,
+    mediaType: "audio/mpeg",
+  },
+  "/srv/silverhand/music/archangel.mp3": {
+    owner: "silverhand",
+    group: "samurai",
+    mode: 0o644,
+    size: 2958621,
+    mediaType: "audio/mpeg",
+  },
+  "/srv/silverhand/music/black_dog.mp3": {
+    owner: "silverhand",
+    group: "samurai",
+    mode: 0o644,
+    size: 4218088,
+    mediaType: "audio/mpeg",
   },
   "/srv/silverhand/music/chippin_in.mp3": {
     owner: "silverhand",

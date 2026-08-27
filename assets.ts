@@ -21,8 +21,8 @@ const getAsset = (filename: string) => {
 };
 
 export const ASSETS = {
-  favicon: getAsset("image 1(1).png"),
-  navLogo: getAsset("image 1(1).png"),
+  favicon: getAsset("samurai.png"),
+  navLogo: getAsset("samurai.png"),
   heroBackground:
     "https://static0.thegamerimages.com/wordpress/wp-content/uploads/2021/01/cyberpunk-2077-johnny-silverhand-glasses.jpg?q=50&fit=crop&w=1600&h=900&dpr=1.5",
   engramCard: "https://i.redd.it/xjga6t8mihaa1.jpg",
@@ -33,10 +33,8 @@ export const ASSETS = {
     "https://storage.modworkshop.net/mods/images/132636_1668291848_1922616252580f415a274d98a2c717e5.webp",
   biographyPortrait:
     "https://mediaproxy.tvtropes.org/width/1200/https://static.tvtropes.org/pmwiki/pub/images/3376891_johnnysilverhand.png",
-  samuraiLogo:
-    "https://upload.wikimedia.org/wikipedia/commons/thumb/2/23/Samurai_logo_Cyberpunk_2077.svg/2560px-Samurai_logo_Cyberpunk_2077.svg.png",
-  samuraiAlbum:
-    "https://i.scdn.co/image/ab67616d0000b273010b998df4924a619053229d",
+  samuraiLogo: getAsset("samurai.png"),
+  samuraiAlbum: getAsset("chippin_in.jpg"),
   music: {
     chippinIn: getMusic("chippin_in.mp3"),
     neverFadeAway: getMusic("never_fade_away.mp3"),
@@ -45,11 +43,10 @@ export const ASSETS = {
     blackDog: getMusic("black_dog.mp3"),
   },
   albumCovers: {
-    chippinIn:
-      "https://upload.wikimedia.org/wikipedia/en/6/60/Cyberpunk_2077_-_Chippin%27_In.jpg",
-    neverFadeAway: getAsset("SamuraiNeverFadeAwayCover.webp"),
-    aLikeSupreme: "https://i1.sndcdn.com/artworks-Z1X2c11432-0-t500x500.jpg",
-    blackDog:
-      "https://i.scdn.co/image/ab67616d0000b2733979505c21df22dc8f45f573",
+    chippinIn: getAsset("chippin_in.jpg"),
+    neverFadeAway: getAsset("never_fade_away.webp"),
+    aLikeSupreme: getAsset("a_like_supreme.png"),
+    archangel: getAsset("archangel.jpg"),
+    blackDog: getAsset("black_dog.jpg"),
   },
 };

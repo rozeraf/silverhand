@@ -415,6 +415,10 @@ const Terminal = ({
                   ? "PNG image data"
                   : node.mediaType === "image/webp"
                     ? "Web/P image"
+                    : node.mediaType === "image/jpeg"
+                      ? "JPEG image data"
+                      : node.mediaType === "image/svg+xml"
+                        ? "SVG Scalable Vector Graphics image"
                     : "Unicode text, UTF-8 text";
           setLines((prev) => [...prev, `${argString}: ${description}`]);
         }
