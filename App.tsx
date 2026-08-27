@@ -13,6 +13,7 @@ const ClassifiedSection = lazy(() => import("./components/ClassifiedSection"));
 const Arsenal = lazy(() => import("./components/Arsenal"));
 const Engram = lazy(() => import("./components/Engram"));
 const Samurai = lazy(() => import("./components/Samurai"));
+const DeveloperNote = lazy(() => import("./components/DeveloperNote"));
 const Footer = lazy(() => import("./components/Footer"));
 
 const App = () => {
@@ -137,6 +138,7 @@ const App = () => {
         </main>
 
         <Suspense fallback={null}>
+          <DeveloperNote />
           <Footer />
         </Suspense>
       </div>
