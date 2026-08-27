@@ -98,6 +98,27 @@ const Arsenal = () => {
                 БРОНЕЖИЛЕТ
               </h3>
 
+              <div className="relative w-full h-40 md:h-48 mb-6 overflow-hidden border-y border-[#fcee0a]/20 bg-gradient-to-b from-[#1a1a1a] to-[#0b0b0b] shrink-0">
+                <div className="absolute inset-0 bg-[linear-gradient(rgba(252,238,10,0.035)_1px,transparent_1px),linear-gradient(90deg,rgba(252,238,10,0.035)_1px,transparent_1px)] bg-[size:24px_24px]"></div>
+                <img
+                  src={ASSETS.vest}
+                  alt=""
+                  aria-hidden="true"
+                  className="absolute inset-0 h-full w-full scale-110 object-contain opacity-20 blur-xl mix-blend-screen grayscale"
+                />
+                <img
+                  src={ASSETS.vest}
+                  alt="Бронежилет Джонни Сильверхенда"
+                  className="absolute inset-0 z-10 h-full w-full object-contain p-2 grayscale contrast-125 brightness-90 mix-blend-screen drop-shadow-[0_0_14px_rgba(252,238,10,0.18)] transition-all duration-500 group-hover:scale-110 group-hover:grayscale-0 group-hover:brightness-110 group-hover:saturate-125"
+                />
+                <div className="absolute inset-0 z-10 bg-black/20 transition-colors duration-500 group-hover:bg-transparent"></div>
+                <div className="absolute inset-0 z-10 bg-gradient-to-tr from-[#ff003c]/10 via-transparent to-[#fcee0a]/5 mix-blend-color transition-opacity duration-500 group-hover:opacity-40"></div>
+                <div className="absolute inset-x-0 bottom-0 z-10 h-12 bg-gradient-to-t from-black/80 to-transparent"></div>
+                <span className="absolute bottom-2 right-2 z-20 bg-black/70 px-2 py-1 font-mono text-[9px] tracking-wider text-[#fcee0a]">
+                  ITEM_SCAN: VEST_JS
+                </span>
+              </div>
+
               <p className="text-gray-400 text-xs md:text-sm leading-relaxed mb-6 flex-grow">
                 Джонни редко появляется без своего фирменного пуленепробиваемого
                 жилета поверх майки. Для него сцена и поле боя — это одно и то

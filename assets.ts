@@ -29,6 +29,7 @@ export const ASSETS = {
   noiseTexture: "https://www.transparenttextures.com/patterns/stardust.png",
   silverArm:
     "https://i.etsystatic.com/45478307/r/il/2e1f03/5165531545/il_fullxfull.5165531545_8mso.jpg",
+  vest: getAsset("vest.png"),
   malorianGun:
     "https://storage.modworkshop.net/mods/images/132636_1668291848_1922616252580f415a274d98a2c717e5.webp",
   biographyPortrait:
