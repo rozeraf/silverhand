@@ -1,0 +1,4 @@
+rogue — confirm contact window
+spider — access route / lab subnet
+alt — first priority
+no open channels once we're inside

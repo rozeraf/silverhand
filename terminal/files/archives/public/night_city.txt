@@ -1,0 +1,10 @@
+record: NC-GEO-0001
+name: Night City
+former_name: Coronado City
+location: Del Coronado Bay, Pacific Coast, North America
+founded: 1993
+incorporated: 1994
+renamed: 1998
+administrative_status: Free City
+population_2077: 6,964,425
+jurisdiction: autonomous city-state

@@ -1,0 +1,7 @@
+account: silverhand
+uid: 1000
+principal: JS-2023
+subject: LINDER, ROBERT JOHN
+auth_source: engram-signature
+home: /home/silverhand
+groups: samurai,relic

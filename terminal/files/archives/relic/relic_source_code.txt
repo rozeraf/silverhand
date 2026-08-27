@@ -1,0 +1,12 @@
+
+# RELIC 2.0 construct descriptor
+
+project=M-AH-76/-38272/SA
+base_algorithm=SOULKILLER/2.311.8-B
+container=RELIC_2.0
+construct_id=JS-2023
+subject=ROBERT_JOHN_LINDER
+construct_type=personality_engram
+target_medium=organic_host
+activation_condition=irreversible_neural_shutdown
+record_state=archived

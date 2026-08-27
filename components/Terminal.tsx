@@ -34,7 +34,7 @@ const RESERVED_USERS = [
   "johnny silverhand",
   "robert john linder",
 ];
-const SECRET_PASS = "8492-AFX";
+const SECRET_PASS = "never_fade_away";
 const COMMANDS = [
   "boot",
   "cat",

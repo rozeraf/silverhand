@@ -1,0 +1,7 @@
+record: TARGET/JS-2023
+status: indexed
+access: public
+principal: SILVERHAND, JOHNNY
+operation: NC-AHQ-20230820
+auth_alias: JS-2023
+cross_reference: /archives/public/incident.txt
