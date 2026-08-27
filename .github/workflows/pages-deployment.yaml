@@ -2,8 +2,11 @@ name: Deploy to Cloudflare Pages
 
 on:
   push:
-    branches:
-      - prod
+    tags:
+      - "v*"
+  release:
+    types:
+      - published
 
 jobs:
   deploy:
@@ -35,5 +38,5 @@ jobs:
           wranglerVersion: "4"
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-          command: pages deploy dist --project-name=silverhand --branch=prod
+          command: pages deploy dist --project-name=silverhand --branch=main
           gitHubToken: ${{ secrets.GITHUB_TOKEN }}

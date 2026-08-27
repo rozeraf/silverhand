@@ -61,13 +61,13 @@
 
 ## Деплой
 
-Проект разворачивается автоматически через GitHub Actions на Cloudflare Pages при пуше в `main`.
+Проект разворачивается автоматически через GitHub Actions на Cloudflare Pages при публикации GitHub Release или push version-тега вида `v*`.
 
 ```
 .github/workflows/pages-deployment.yaml
-  push → main
-    └── bun install && bun run build
-          └── wrangler pages deploy dist --project-name=silverhand
+  release: published / push tag: v*
+    └── bun install --frozen-lockfile && bun run build
+          └── wrangler pages deploy dist --project-name=silverhand --branch=main
 ```
 
 Необходимые секреты репозитория: `CLOUDFLARE_API_TOKEN`, `CLOUDFLARE_ACCOUNT_ID`.
