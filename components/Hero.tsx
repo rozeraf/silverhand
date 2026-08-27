@@ -3,15 +3,19 @@ import GlitchText from "./GlitchText";
 import { ChevronDown, Crosshair, Battery, Wifi, MapPin } from "lucide-react";
 import { ASSETS } from "../assets";
 import SamuraiButton from "./SamuraiButton";
+import { useSettings } from "../context/SettingsContext";
 
 interface HeroProps {
   onOpenSamurai: () => void;
 }
 
 const Hero = ({ onOpenSamurai }: HeroProps) => {
+  const { enableScanlines } = useSettings();
   const coordsRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
+    if (enableScanlines) return;
+
     const updateCoords = (e: MouseEvent) => {
       if (!coordsRef.current) return;
 
@@ -29,7 +33,7 @@ const Hero = ({ onOpenSamurai }: HeroProps) => {
 
     window.addEventListener("mousemove", updateCoords);
     return () => window.removeEventListener("mousemove", updateCoords);
-  }, []);
+  }, [enableScanlines]);
 
   return (
     <section

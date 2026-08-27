@@ -9,6 +9,7 @@ import {
   Activity,
   MousePointer2,
   ChevronRight,
+  AlertTriangle,
 } from "lucide-react";
 import GlitchText from "./GlitchText";
 import { useSettings } from "../context/SettingsContext";
@@ -172,16 +173,6 @@ const SettingsModal = ({ isOpen, onClose, onOpenTerminal }: SettingsModalProps) 
             />
 
             <ToggleOption
-              label="SCANLINES"
-              description="Эффект ЭЛТ-монитора и линии развертки."
-              value={enableScanlines}
-              onChange={() =>
-                updateSetting("enableScanlines", !enableScanlines)
-              }
-              icon={Activity}
-            />
-
-            <ToggleOption
               label="SMART CURSOR"
               description="Кастомный курсор с интерфейсом."
               value={enableCustomCursor}
@@ -200,12 +191,54 @@ const SettingsModal = ({ isOpen, onClose, onOpenTerminal }: SettingsModalProps) 
               }
               icon={Zap}
             />
+
+            <div className="md:col-span-2 mt-5 border border-[#fcee0a]/70 bg-[#fcee0a]/[0.035] shadow-[inset_0_0_24px_rgba(252,238,10,0.035)]">
+              <div className="flex items-center justify-between gap-3 border-b border-[#fcee0a]/30 bg-[#fcee0a]/10 px-3 py-2">
+                <div className="flex items-center gap-2 text-[#fcee0a]">
+                  <AlertTriangle size={15} />
+                  <span className="font-cyber text-[10px] md:text-xs tracking-[0.2em]">
+                    EXPERIMENTAL
+                  </span>
+                </div>
+                <span className="border border-[#ff003c] bg-[#ff003c]/10 px-2 py-0.5 font-mono text-[9px] font-bold tracking-wider text-[#ff003c]">
+                  HIGH GPU LOAD
+                </span>
+              </div>
+
+              <div className="px-3 md:px-4">
+                <ToggleOption
+                  label="CRT SHADER"
+                  description="WebGL-развертка, фосфор, шум, преломление и геометрическое искривление."
+                  value={enableScanlines}
+                  onChange={() =>
+                    updateSetting("enableScanlines", !enableScanlines)
+                  }
+                  icon={Activity}
+                />
+              </div>
+
+              <div className="mx-3 mb-3 flex items-start gap-2 border-l-2 border-[#ff003c] bg-black/50 p-3 font-mono text-[9px] leading-relaxed text-gray-400 md:mx-4 md:mb-4 md:text-[10px]">
+                <AlertTriangle
+                  size={14}
+                  className="mt-0.5 shrink-0 text-[#ff003c]"
+                />
+                <p>
+                  Ресурсоёмкая экспериментальная функция. SVG displacement и
+                  fullscreen WebGL могут значительно снизить FPS, увеличить
+                  нагрузку на GPU и энергопотребление устройства.
+                </p>
+              </div>
+            </div>
           </div>
 
           <div className="mt-6 md:mt-8 p-3 bg-[#111] border-l-2 border-[#ff003c] font-mono text-[10px] md:text-xs text-gray-400 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-1 sm:gap-0">
             <span>
               VRAM USAGE:{" "}
-              {enableNoise && enableScanlines ? "HIGH" : "OPTIMIZED"}
+              {enableScanlines
+                ? "CRITICAL"
+                : enableNoise
+                  ? "MODERATE"
+                  : "OPTIMIZED"}
             </span>
             <span
               className={enableAnimations ? "text-[#00f0ff]" : "text-gray-600"}

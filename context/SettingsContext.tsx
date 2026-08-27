@@ -16,7 +16,7 @@ interface SettingsContextType extends Settings {
 const defaultSettings: Settings = {
   bootSequence: true,
   enableNoise: true,
-  enableScanlines: true,
+  enableScanlines: false,
   enableCustomCursor: true,
   enableAnimations: true,
 };

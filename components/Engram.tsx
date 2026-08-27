@@ -3,11 +3,14 @@ import GlitchText from "./GlitchText";
 import RevealOnScroll from "./RevealOnScroll";
 import { Network, Fingerprint, RefreshCcw, UserPlus } from "lucide-react";
 import { ASSETS } from "../assets";
+import { useSettings } from "../context/SettingsContext";
 
 const Engram = () => {
+  const { enableScanlines } = useSettings();
   const [rotation, setRotation] = useState({ x: 0, y: 0 });
 
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+    if (enableScanlines) return;
     const card = e.currentTarget;
     const rect = card.getBoundingClientRect();
     const x = e.clientX - rect.left;
@@ -68,8 +71,10 @@ const Engram = () => {
               onMouseMove={handleMouseMove}
               onMouseLeave={handleMouseLeave}
               style={{
-                transform: `rotateX(${rotation.x}deg) rotateY(${rotation.y}deg)`,
-                transformStyle: "preserve-3d",
+                transform: enableScanlines
+                  ? "none"
+                  : `rotateX(${rotation.x}deg) rotateY(${rotation.y}deg)`,
+                transformStyle: enableScanlines ? "flat" : "preserve-3d",
               }}
             >
               <div className="relative overflow-hidden group">

@@ -4,6 +4,7 @@ import Navbar from "./components/Navbar";
 import Hero from "./components/Hero";
 import CustomCursor from "./components/CustomCursor";
 import SettingsModal from "./components/SettingsModal";
+import CrtShader from "./components/CrtShader";
 import { useSettings } from "./context/SettingsContext";
 import { ASSETS } from "./assets";
 
@@ -22,6 +23,8 @@ const App = () => {
   const [isClassified, setIsClassified] = useState(false);
   const [showSamuraiPage, setShowSamuraiPage] = useState(false);
   const [showSettings, setShowSettings] = useState(false);
+  const enableCrtGeometry =
+    enableScanlines && !showTerminal && !showSettings && !showSamuraiPage;
 
   useEffect(() => {
     const hasVisited = localStorage.getItem("has_visited");
@@ -59,12 +62,21 @@ const App = () => {
 
   return (
     <div
-      className={`min-h-screen bg-[#0b0b0b] text-white selection:bg-[#00f0ff] selection:text-black relative ${enableCustomCursor ? "cursor-none" : "cursor-auto"}`}
+      className={`${
+        enableScanlines
+          ? `crt-scroll-container h-screen overflow-x-hidden overflow-y-auto ${enableCrtGeometry ? "crt-barrel-surface" : ""}`
+          : "min-h-screen"
+      } bg-[#0b0b0b] text-white selection:bg-[#00f0ff] selection:text-black relative ${enableCustomCursor || enableScanlines ? "cursor-none" : "cursor-auto"}`}
     >
-      {enableCustomCursor && <CustomCursor />}
+      {(enableCustomCursor || enableScanlines) && (
+        <CustomCursor
+          forceEnabled={enableScanlines}
+          applyCrtWarp={enableCrtGeometry}
+        />
+      )}
 
-      {enableScanlines && <div className="scanlines"></div>}
-      {enableNoise && <div className="noise-bg"></div>}
+      {enableScanlines && <CrtShader />}
+      {enableNoise && !enableScanlines && <div className="noise-bg"></div>}
 
       <SettingsModal
         isOpen={showSettings}
@@ -99,6 +111,7 @@ const App = () => {
           onOpenSamurai={() => setShowSamuraiPage(true)}
           onOpenSettings={() => setShowSettings(true)}
           onOpenTerminal={handleOpenTerminal}
+          useInternalScroll={enableScanlines}
         />
 
         <main>
