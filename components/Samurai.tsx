@@ -216,7 +216,7 @@ const Samurai = ({ onBack }: SamuraiPageProps) => {
           </div>
 
           <div className="flex-1 flex flex-col items-center justify-center p-6 md:p-8 lg:p-12 relative z-10">
-            <div className="relative w-48 h-48 md:w-64 md:h-64 lg:w-full lg:max-w-[320px] lg:aspect-square mb-6 md:mb-10 group perspective-1000">
+            <div className="relative w-48 md:w-64 lg:w-full max-w-[320px] aspect-square mb-6 md:mb-10 group perspective-1000">
               <div
                 className={`absolute inset-[-10px] md:inset-[-20px] rounded-full border border-dashed border-[#333] ${isPlaying ? "animate-spin-slow" : ""}`}
               ></div>
