@@ -1,4 +1,10 @@
-import React, { useEffect, useState, useRef, FormEvent } from "react";
+import React, {
+  useEffect,
+  useState,
+  useRef,
+  FormEvent,
+  KeyboardEvent,
+} from "react";
 import { Terminal as TerminalIcon, X } from "lucide-react";
 import {
   SILVERHAND_USER,
@@ -14,7 +20,7 @@ import {
   normalizePath,
   parentPath,
   TerminalUser,
-} from "./terminalFilesystem";
+} from "../terminal/filesystem";
 
 interface TerminalProps {
   isOpen: boolean;
@@ -29,6 +35,29 @@ const RESERVED_USERS = [
   "robert john linder",
 ];
 const SECRET_PASS = "8492-AFX";
+const COMMANDS = [
+  "boot",
+  "cat",
+  "cd",
+  "chmod",
+  "clear",
+  "exit",
+  "file",
+  "groups",
+  "help",
+  "id",
+  "login",
+  "logout",
+  "ls",
+  "mkdir",
+  "pwd",
+  "rm",
+  "stat",
+  "touch",
+  "tree",
+  "whoami",
+  "write",
+];
 
 const getStoredUser = (): TerminalUser => {
   const username = localStorage.getItem("username");
@@ -57,6 +86,9 @@ const Terminal = ({
   const inputRef = useRef<HTMLInputElement>(null);
   const scrollRef = useRef<HTMLDivElement>(null);
   const fsRef = useRef(createFileSystem());
+  const commandHistoryRef = useRef<string[]>([]);
+  const historyIndexRef = useRef(0);
+  const historyDraftRef = useRef("");
 
   if (!fsRef.current[sessionUser.home]) {
     fsRef.current[sessionUser.home] = {
@@ -124,7 +156,7 @@ const Terminal = ({
     const trimmed = cmd.trim();
 
     if (authMode === "password") {
-      setLines((prev) => [...prev, `> *****`]);
+      setLines((prev) => [...prev, "$ *****"]);
 
       if (trimmed === SECRET_PASS) {
         setSessionUser(SILVERHAND_USER);
@@ -156,7 +188,7 @@ const Terminal = ({
 
     const [command, ...args] = trimmed.split(" ");
     const argString = args.join(" ");
-    setLines((prev) => [...prev, `> ${trimmed}`]);
+    setLines((prev) => [...prev, `$ ${trimmed}`]);
 
     switch (command.toLowerCase()) {
       case "help":
@@ -169,8 +201,10 @@ const Terminal = ({
           "  id / groups       - Show UID, primary group and memberships",
           "  pwd               - Print working directory",
           "  ls [-l] [path]    - List directory contents",
+          "  tree [path]       - Display directory tree",
           "  cd [path]         - Change working directory",
           "  cat <file>        - Print a readable file",
+          "  file <path>       - Determine file type",
           "  stat <path>       - Show owner, group and permissions",
           "  touch <file>      - Create a file when the directory is writable",
           "  mkdir <dir>       - Create a writable directory",
@@ -179,6 +213,10 @@ const Terminal = ({
           "  rm <file>         - Remove a file from a writable directory",
           "  clear             - Clear terminal screen",
           "  exit / boot       - Close terminal and enter site",
+          "",
+          "KEYBOARD:",
+          "  Tab               - Complete commands and paths",
+          "  Up / Down         - Navigate command history",
         ]);
         break;
 
@@ -243,6 +281,74 @@ const Terminal = ({
         break;
       }
 
+      case "tree": {
+        const requested = argString || ".";
+        const path = normalizePath(
+          cwd,
+          requested === "~" ? sessionUser.home : requested,
+        );
+        const node = fsRef.current[path];
+
+        if (!node) {
+          setLines((prev) => [
+            ...prev,
+            `${requested} [error opening dir: No such file or directory]`,
+          ]);
+          break;
+        }
+
+        if (!canTraverse(fsRef.current, parentPath(path), sessionUser)) {
+          setLines((prev) => [
+            ...prev,
+            `${requested} [error opening dir: Permission denied]`,
+          ]);
+          break;
+        }
+
+        if (node.type === "file") {
+          setLines((prev) => [...prev, basename(path), "", "0 directories, 1 file"]);
+          break;
+        }
+
+        let directoryCount = 0;
+        let fileCount = 0;
+        const output: string[] = [requested === "." ? "." : requested];
+
+        const appendTree = (directory: string, prefix: string) => {
+          const directoryNode = fsRef.current[directory];
+          if (
+            !canTraverse(fsRef.current, directory, sessionUser) ||
+            !hasPermission(directoryNode, sessionUser, "r")
+          ) {
+            output.push(`${prefix}└── [error opening dir: Permission denied]`);
+            return;
+          }
+
+          const children = listChildren(fsRef.current, directory);
+          children.forEach(([childPath, child], index) => {
+            const last = index === children.length - 1;
+            const connector = last ? "└── " : "├── ";
+            const suffix = child.type === "directory" ? "/" : "";
+            output.push(`${prefix}${connector}${basename(childPath)}${suffix}`);
+
+            if (child.type === "directory") {
+              directoryCount += 1;
+              appendTree(childPath, `${prefix}${last ? "    " : "│   "}`);
+            } else {
+              fileCount += 1;
+            }
+          });
+        };
+
+        appendTree(path, "");
+        output.push(
+          "",
+          `${directoryCount} ${directoryCount === 1 ? "directory" : "directories"}, ${fileCount} ${fileCount === 1 ? "file" : "files"}`,
+        );
+        setLines((prev) => [...prev, ...output]);
+        break;
+      }
+
       case "cd": {
         const requested = argString || sessionUser.home;
         const path = normalizePath(cwd, requested === "~" ? sessionUser.home : requested);
@@ -276,8 +382,41 @@ const Terminal = ({
           !hasPermission(node, sessionUser, "r")
         ) {
           setLines((prev) => [...prev, `cat: ${argString}: Permission denied`]);
+        } else if (node.mediaType) {
+          setLines((prev) => [
+            ...prev,
+            `cat: ${argString}: binary ${node.mediaType} data (${node.size ?? 0} bytes)`,
+          ]);
         } else {
           setLines((prev) => [...prev, ...(node.content || "").split("\n")]);
+        }
+        break;
+      }
+
+      case "file": {
+        if (!argString) {
+          setLines((prev) => [...prev, "file: missing operand"]);
+          break;
+        }
+        const path = normalizePath(cwd, argString);
+        const node = fsRef.current[path];
+        if (!node || !canTraverse(fsRef.current, parentPath(path), sessionUser)) {
+          setLines((prev) => [
+            ...prev,
+            `${argString}: ${node ? "Permission denied" : "cannot open: No such file or directory"}`,
+          ]);
+        } else {
+          const description =
+            node.type === "directory"
+              ? "directory"
+              : node.mediaType === "audio/mpeg"
+                ? "Audio file with ID3 version 2, MPEG ADTS, layer III"
+                : node.mediaType === "image/png"
+                  ? "PNG image data"
+                  : node.mediaType === "image/webp"
+                    ? "Web/P image"
+                    : "Unicode text, UTF-8 text";
+          setLines((prev) => [...prev, `${argString}: ${description}`]);
         }
         break;
       }
@@ -297,7 +436,8 @@ const Terminal = ({
             `  File: ${path}`,
             `  Type: ${node.type}`,
             `Access: (${node.mode.toString(8).padStart(3, "0")}/${formatMode(node)})  Owner: ${node.owner}  Group: ${node.group}`,
-            `  Size: ${node.type === "file" ? (node.content || "").length : 4096} bytes`,
+            `  Size: ${node.type === "file" ? node.size ?? (node.content || "").length : 4096} bytes`,
+            ...(node.mediaType ? [`  MIME: ${node.mediaType}`] : []),
           ]);
         }
         break;
@@ -354,6 +494,7 @@ const Terminal = ({
           setLines((prev) => [...prev, `write: ${rawPath}: Permission denied`]);
         } else {
           node.content = contentParts.join(" ");
+          node.size = new TextEncoder().encode(node.content).byteLength;
         }
         break;
       }
@@ -462,15 +603,102 @@ const Terminal = ({
 
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
+    const command = input.trim();
+    if (command && authMode !== "password") {
+      const history = commandHistoryRef.current;
+      if (history.at(-1) !== command) history.push(command);
+    }
+    historyIndexRef.current = commandHistoryRef.current.length;
+    historyDraftRef.current = "";
     handleCommand(input);
     setInput("");
+  };
+
+  const handleInputKeyDown = (event: KeyboardEvent<HTMLInputElement>) => {
+    if (authMode === "password") return;
+
+    const history = commandHistoryRef.current;
+
+    if (event.key === "ArrowUp") {
+      event.preventDefault();
+      if (!history.length) return;
+      if (historyIndexRef.current === history.length) {
+        historyDraftRef.current = input;
+      }
+      historyIndexRef.current = Math.max(0, historyIndexRef.current - 1);
+      setInput(history[historyIndexRef.current]);
+      return;
+    }
+
+    if (event.key === "ArrowDown") {
+      event.preventDefault();
+      if (historyIndexRef.current >= history.length) return;
+      historyIndexRef.current += 1;
+      setInput(
+        historyIndexRef.current === history.length
+          ? historyDraftRef.current
+          : history[historyIndexRef.current],
+      );
+      return;
+    }
+
+    if (event.key !== "Tab") return;
+    event.preventDefault();
+
+    const lastSpace = input.lastIndexOf(" ");
+    if (lastSpace === -1) {
+      const matches = COMMANDS.filter((command) => command.startsWith(input));
+      if (matches.length === 1) setInput(`${matches[0]} `);
+      else if (matches.length > 1) setLines((prev) => [...prev, matches.join("  ")]);
+      return;
+    }
+
+    const prefix = input.slice(0, lastSpace + 1);
+    const rawPath = input.slice(lastSpace + 1);
+    const slashIndex = rawPath.lastIndexOf("/");
+    const rawDirectory = slashIndex >= 0 ? rawPath.slice(0, slashIndex + 1) : "";
+    const partialName = rawPath.slice(slashIndex + 1);
+    const directoryPath = normalizePath(
+      cwd,
+      rawDirectory === "~/" ? sessionUser.home : rawDirectory || ".",
+    );
+    const directory = fsRef.current[directoryPath];
+
+    if (
+      !directory ||
+      directory.type !== "directory" ||
+      !canTraverse(fsRef.current, directoryPath, sessionUser) ||
+      !hasPermission(directory, sessionUser, "r")
+    ) {
+      return;
+    }
+
+    const matches = listChildren(fsRef.current, directoryPath).filter(
+      ([path]) => basename(path).startsWith(partialName),
+    );
+    if (matches.length === 1) {
+      const [path, node] = matches[0];
+      const completion = `${rawDirectory}${basename(path)}${
+        node.type === "directory" ? "/" : " "
+      }`;
+      setInput(`${prefix}${completion}`);
+    } else if (matches.length > 1) {
+      setLines((prev) => [
+        ...prev,
+        matches
+          .map(([path, node]) =>
+            `${basename(path)}${node.type === "directory" ? "/" : ""}`,
+          )
+          .join("  "),
+      ]);
+    }
   };
 
   if (!isOpen) return null;
 
   return (
     <div
-      className="fixed inset-0 z-[150] bg-black font-mono text-[#ff003c] p-4 md:p-8 flex flex-col overflow-hidden"
+      className="fixed inset-0 z-[150] bg-black font-mono text-[#d7d7d7] p-4 md:p-8 flex flex-col overflow-hidden"
       onClick={handleContainerClick}
     >
       <div className="absolute inset-0 bg-[linear-gradient(rgba(18,16,16,0)_50%,rgba(0,0,0,0.25)_50%),linear-gradient(90deg,rgba(255,0,0,0.06),rgba(255,0,0,0.02),rgba(255,0,0,0.06))] bg-[size:100%_2px,3px_100%] pointer-events-none z-0"></div>
@@ -492,26 +720,55 @@ const Terminal = ({
 
         <div
           ref={scrollRef}
-          className="flex-1 overflow-y-auto p-4 md:p-6 font-cyber text-sm md:text-base space-y-1 custom-scrollbar"
+          className="flex-1 overflow-y-auto p-4 md:p-6 font-mono text-sm md:text-base leading-6 md:leading-7 tracking-[0.01em] custom-scrollbar"
         >
-          {lines.map((line, i) => (
-            <div key={i} className="break-words whitespace-pre-wrap">
-              {line}
-            </div>
-          ))}
+          {lines.map((line, i) => {
+            const isCommand = line.startsWith("$ ");
+            const isHeading =
+              line.endsWith(":") ||
+              line === "AVAILABLE COMMANDS:" ||
+              line === "TOP SECRET";
+            const isError =
+              /permission denied|no such file|cannot |access denied|incorrect/i.test(
+                line,
+              );
+
+            return (
+              <div
+                key={i}
+                className={`break-words whitespace-pre-wrap ${
+                  isCommand
+                    ? "mt-4 border-t border-[#ff003c]/15 pt-3 font-semibold text-[#00f0ff]"
+                    : isError
+                      ? "text-[#ff5577]"
+                      : isHeading
+                        ? "mt-2 font-semibold text-[#fcee0a]"
+                        : line === ""
+                          ? "h-3"
+                          : "text-[#d7d7d7]"
+                }`}
+              >
+                {line || "\u00a0"}
+              </div>
+            );
+          })}
 
           {!isBooting && (
-            <form onSubmit={handleSubmit} className="flex items-center mt-2">
-              <span className="mr-2 text-[#fcee0a]">
+            <form
+              onSubmit={handleSubmit}
+              className="flex items-center mt-4 border-t border-[#ff003c]/20 pt-3"
+            >
+              <span className="mr-2 whitespace-nowrap text-[#fcee0a]">
                 {authMode === "password"
-                  ? "PASSWORD>"
-                  : `${sessionUser.username}@NC_NET:${cwd}$`}
+                  ? "PASSWORD $"
+                  : `${sessionUser.username}@NC_NET:${cwd} $`}
               </span>
               <input
                 ref={inputRef}
                 type={authMode === "password" ? "password" : "text"}
                 value={input}
                 onChange={(e) => setInput(e.target.value)}
+                onKeyDown={handleInputKeyDown}
                 className="bg-transparent border-none outline-none flex-1 text-[#00f0ff] font-mono caret-[#00f0ff]"
                 autoFocus
                 autoComplete="off"
