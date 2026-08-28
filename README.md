@@ -1,97 +1,152 @@
 # Johnny Silverhand: The Engram
 
-> Иммерсивный веб-трибьют персонажу Cyberpunk 2077, построенный на React 19 + Vite. Хакатон-проект 2026.
+Интерактивный фан-сайт о Джонни Сильверхенде и вселенной Cyberpunk 2077. Проект объединяет биографию, арсенал, музыкальный плеер SAMURAI, виртуальный POSIX-терминал с небольшой загадкой и экспериментальный CRT-режим.
 
-![preview](https://static0.thegamerimages.com/wordpress/wp-content/uploads/2021/01/cyberpunk-2077-johnny-silverhand-glasses.jpg?q=50&fit=crop&w=1600&h=900&dpr=1.5)
+![Главный экран](./assets/johnny_silverhand_hero.jpg)
+
+> Это неофициальный некоммерческий фан-проект, не связанный с CD PROJEKT RED и не одобренный ею. Права на Cyberpunk 2077 и связанные материалы принадлежат CD PROJEKT S.A. Музыка SAMURAI исполнена группой Refused; права на композиции и записи принадлежат соответствующим правообладателям.
+
+## Что уже есть
+
+- Главная, биография, энграмма, арсенал и закрытый раздел с адаптивной вёрсткой.
+- Плеер пяти треков SAMURAI: переключение, перемотка, громкость и таймер `M:SS.t`.
+- Интерактивный терминал с настоящей виртуальной структурой каталогов, файлами из репозитория, POSIX-правами, пользователями и группами.
+- Терминальная загадка: публичные архивы содержат данные для входа в закрытый контур. README намеренно не раскрывает пароль.
+- Локальные изображения, обложки и MP3 без hotlink-зависимостей в реестре `assets.ts`.
+- Настройки шума, scanlines, курсора, анимаций и boot sequence с сохранением в `localStorage`.
+- Экспериментальный CRT-режим с WebGL-шейдером, SVG-деформацией экрана и согласованным с ней курсором.
 
 ## Стек
 
 | Слой | Технология |
 |---|---|
 | UI | React 19 |
-| Сборка | Vite 7 |
+| Сборка | Vite |
 | Типизация | TypeScript 5.8 |
-| Стилизация | Tailwind CSS (CDN, конфиг inline) |
-| Глитч-эффекты | `react-powerglitch` |
-| Scramble-анимация | `use-scramble` |
+| Пакетный менеджер | Bun |
+| Стилизация | Tailwind CSS через CDN и глобальные стили в `index.html` |
+| Эффекты | WebGL, SVG filters, `react-powerglitch`, `use-scramble` |
 | Иконки | `lucide-react` |
+| Деплой | GitHub Actions → Cloudflare Pages |
 
-## Архитектура
+## Структура проекта
 
-```
-/
-├── index.html          # Tailwind CDN, CSS-переменные, кастомные шрифты
-├── index.tsx           # Точка входа, SettingsProvider
-├── App.tsx             # Оркестратор: состояние терминала, classified-доступ, оверлеи
-├── assets.ts           # Единый реестр медиа (import.meta.glob + fallback URLs)
-├── types.ts            # Общие интерфейсы
+```text
+.
+├── index.html                       # Tailwind-конфиг, шрифты и глобальные стили
+├── index.tsx                        # Точка входа и SettingsProvider
+├── App.tsx                          # Секции, оверлеи и classified-состояние
+├── assets.ts                        # Реестр локальных изображений, обложек и музыки
+├── assets/                          # Изображения и обложки
+├── music/                           # MP3-файлы SAMURAI
+├── components/
+│   ├── Terminal.tsx                 # Shell, история, completion и авторизация
+│   ├── CrtShader.tsx                # Экспериментальный CRT/WebGL-слой
+│   ├── Samurai.tsx                  # Музыкальный экран и HTMLAudioElement-плеер
+│   ├── SettingsModal.tsx            # Настройки эффектов
+│   └── ...
 ├── context/
-│   └── SettingsContext.tsx   # Глобальные настройки → localStorage
-└── components/
-    ├── Terminal.tsx          # Интерактивный терминал с boot-sequence и авторизацией
-    ├── Hero.tsx              # HUD с live-координатами из mousemove
-    ├── Engram.tsx            # 3D tilt-эффект через rotateX/rotateY
-    ├── Samurai.tsx           # Музыкальный плеер (Web Audio API)
-    ├── GlitchText.tsx        # Глитч + scramble на одном компоненте
-    ├── RevealOnScroll.tsx    # IntersectionObserver с направлением анимации
-    ├── CustomCursor.tsx      # Кастомный курсор через direct DOM (не state)
-    └── ...
+│   └── SettingsContext.tsx          # Настройки → localStorage
+├── terminal/
+│   ├── filesystem.ts                # Сборка VFS из реальных файлов и медиа
+│   ├── metadata.ts                  # owner, group, mode и media metadata
+│   ├── users.ts                     # Пользователи и группы
+│   ├── types.ts                     # Типы VFS
+│   └── files/                       # Текстовое содержимое виртуальных файлов
+└── .github/workflows/
+    └── pages-deployment.yaml        # Release/tag deploy в Cloudflare Pages
 ```
 
-**Ключевой принцип:** данные отделены от представления. Весь визуальный контент (изображения, аудио) живёт в `assets.ts` — менять тему можно без касания логики компонентов.
+## Терминал
 
-## Технические решения
+Терминал работает поверх клиентской VFS, а не над файловой системой устройства. Текстовые документы автоматически импортируются из `terminal/files/**/*.txt`; изображения и музыка из `assets/` и `music/` отображаются в `/srv/silverhand`. Расширение `.txt` в виртуальных путях обычно скрывается, поскольку POSIX не определяет тип файла по расширению. Исключения `target.txt` и `incident.txt` оставлены частью загадки.
 
-### Производительность
-- **Lazy loading + Suspense** — все секции ниже Hero загружаются по запросу, Hero рендерится мгновенно.
-- **Direct DOM manipulation** в `CustomCursor` — позиция курсора обновляется через `ref.style.transform`, минуя React state и предотвращая ререндеры на каждый `mousemove`.
-- **`import.meta.glob`** в Vite — локальные ассеты хешируются при сборке и кешируются браузером.
+Для каждого узла заданы владелец, группа и mode. Проверки `r`, `w` и `x` реально применяются к `cat`, навигации и изменяющим командам. Изменения, созданные внутри терминальной сессии, существуют только до перезагрузки страницы; прогресс авторизации хранится отдельно в `localStorage`.
 
-### Визуальные эффекты
-- **CRT scanlines** — CSS `linear-gradient` с анимацией мерцания (`@keyframes scanline-flicker`).
-- **Film grain** — анимированная текстура (`noise-bg`) с `transform: translate` на 10 ключевых кадрах.
-- **3D Tilt** (Engram) — `rotateX/rotateY` вычисляются из координат мыши относительно центра контейнера, `transformStyle: preserve-3d`.
-- **Глитч-текст** — `react-powerglitch` даёт периодический slice-эффект, `use-scramble` — анимацию декодирования при монтировании.
+Полезная последовательность для знакомства:
 
-### Терминальная система авторизации
-Компонент `Terminal` реализует двухэтапный вход: `login <username>` → passphrase. При успешной авторизации под зарезервированными именами (Silverhand) в `localStorage` устанавливается флаг `classified: true`, который разблокирует скрытую секцию `ClassifiedSection` без перезагрузки страницы.
-
-### Настройки
-`SettingsContext` персистит пять булевых флагов в `localStorage["cyber_settings"]`. Эффекты (scanlines, noise, custom cursor, анимации, boot sequence) переключаются без перезагрузки.
-
-## Деплой
-
-Проект разворачивается автоматически через GitHub Actions на Cloudflare Pages при публикации GitHub Release или push version-тега вида `v*`.
-
-```
-.github/workflows/pages-deployment.yaml
-  release: published / push tag: v*
-    └── bun install --frozen-lockfile && bun run build
-          └── wrangler pages deploy dist --project-name=silverhand --branch=main
+```shell
+help
+id
+tree /
+cd /archives/public
+ls -l
+cat target.txt
+stat incident.txt
+login silverhand
 ```
 
-Необходимые секреты репозитория: `CLOUDFLARE_API_TOKEN`, `CLOUDFLARE_ACCOUNT_ID`.
+Поддерживаются `help`, `id`, `groups`, `pwd`, `ls`, `tree`, `cd`, `cat`, `file`, `stat`, `touch`, `mkdir`, `write`, `chmod`, `rm`, `login`, `logout`, `whoami`, `clear`, `boot` и `exit`. `Tab` дополняет команды и пути, стрелки вверх/вниз перемещаются по истории.
 
-## Запуск локально
+Метаданные и особые права добавляются в `terminal/metadata.ts`. Новый публичный документ достаточно создать в `terminal/files/`: каталоги и базовые метаданные будут построены автоматически через `import.meta.glob`.
+
+## Медиа и плеер
+
+`assets.ts` — единая точка доступа к локальным изображениям, обложкам и MP3. Плеер использует обычный `HTMLAudioElement`; аудио сейчас попадает в сборку Pages целиком. Следующий инфраструктурный шаг — вынести музыку в Cloudflare R2 и оставить в приложении URL-реестр, чтобы уменьшить размер релиза и использовать HTTP Range-запросы.
+
+Все материалы используются только в рамках некоммерческого фан-проекта. Указание правообладателей не заменяет разрешение или лицензию на распространение файлов.
+
+## CRT-режим и производительность
+
+CRT вынесен в настройках в отдельный блок `Experimental`. Режим сочетает полноэкранный WebGL-шейдер, шум, scanlines, виньетку, цветовые искажения и SVG barrel displacement для геометрии страницы.
+
+Это очень ресурсоёмкая функция: SVG-фильтр заставляет браузер повторно растрировать большой DOM-слой, а шейдер обрабатывает весь экран. На слабых GPU и сложных секциях FPS может заметно падать. По умолчанию эффект следует считать демонстрационным; при проблемах его нужно отключить в настройках.
+
+## Локальный запуск
+
+Требуется установленный [Bun](https://bun.sh/).
 
 ```bash
 bun install
-bun dev        # dev-сервер
-bun run build  # продакшен → dist/
+bun run dev
+```
+
+Проверка типов и production-сборки:
+
+```bash
+bunx tsc --noEmit
+bun run build
 bun run preview
 ```
+
+## Ветки и релизы
+
+- `dev` — рабочая ветка для разработки.
+- `main` — проверенное состояние, из которого выпускаются релизы.
+- Ветки `prod` больше нет.
+
+Обычный поток изменений:
+
+```text
+feature work → dev → pull request → main → tag/release → Cloudflare Pages
+```
+
+Деплой не запускается при обычном push в `dev` или `main`. Workflow начинает сборку только при публикации GitHub Release либо push тега вида `v*`, затем отправляет `dist/` в production-ветку `main` проекта Cloudflare Pages.
+
+Пример релизного тега:
+
+```bash
+git switch main
+git pull --ff-only
+git tag v1.0.0
+git push origin v1.0.0
+```
+
+Для GitHub Actions необходимы секреты `CLOUDFLARE_API_TOKEN` и `CLOUDFLARE_ACCOUNT_ID`.
 
 ## Дизайн-токены
 
 ```css
---cp-yellow: #fcee0a
---cp-blue:   #00f0ff
---cp-red:    #ff003c
---cp-bg:     #0b0b0b
+--cp-yellow: #fcee0a;
+--cp-blue: #00f0ff;
+--cp-red: #ff003c;
+--cp-bg: #0b0b0b;
 ```
 
-Шрифты: **Orbitron** (`font-cyber`, заголовки) · **Rajdhani** (основной текст)
+Основные шрифты: Orbitron для заголовков, Rajdhani для интерфейса и моноширинный стек для терминала.
 
----
+## Правообладатели
 
-*Hackathon 2026*
+Cyberpunk 2077, его мир, персонажи, названия и связанные визуальные материалы принадлежат CD PROJEKT S.A. Образ виртуальной группы SAMURAI и связанные произведения используются в контексте Cyberpunk 2077; музыкальные партии SAMURAI исполнены Refused. Все соответствующие товарные знаки, композиции, фонограммы и изображения принадлежат их правообладателям.
+
+Проект создан в образовательных и демонстрационных целях и не предназначен для продажи или извлечения прибыли. Если вы являетесь правообладателем и хотите обсудить использование материала, откройте issue в репозитории.
