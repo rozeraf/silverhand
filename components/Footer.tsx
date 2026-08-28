@@ -42,8 +42,21 @@ const Footer = () => {
           </div>
         </div>
 
+        <div className="mb-8 border-t border-gray-800 pt-6 font-mono text-[10px] leading-relaxed text-gray-600 md:text-xs">
+          <p className="mb-2 text-gray-400">
+            Это неофициальный некоммерческий фан-проект, не одобренный и не
+            поддерживаемый CD PROJEKT RED.
+          </p>
+          <p>
+            CYBERPUNK 2077, связанные персонажи, изображения и товарные знаки
+            принадлежат CD PROJEKT S.A. Композиции SAMURAI исполнены REFUSED.
+            Авторские права на музыку и звукозаписи принадлежат CD PROJEKT RED,
+            REFUSED и/или соответствующим правообладателям.
+          </p>
+        </div>
+
         <div className="border-t border-gray-800 pt-8 flex flex-col md:flex-row justify-between items-center text-xs text-gray-600 font-mono">
-          <p>&copy; 2077 NIGHT CITY ARCHIVES. FAN PROJECT.</p>
+          <p>2077 NIGHT CITY ARCHIVES // UNOFFICIAL FAN PROJECT</p>
           <p className="mt-2 md:mt-0">CONNECTION_ID: 8492-AFX</p>
         </div>
       </div>

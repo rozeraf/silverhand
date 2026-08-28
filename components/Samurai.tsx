@@ -351,6 +351,11 @@ const Samurai = ({ onBack }: SamuraiPageProps) => {
                 <SkipForward size={24} className="md:w-7 md:h-7" />
               </button>
             </div>
+
+            <p className="mt-5 max-w-[320px] px-4 text-center font-mono text-[9px] uppercase leading-relaxed tracking-wider text-gray-600 lg:px-0">
+              Music rights: CD PROJEKT RED / REFUSED / respective copyright
+              holders
+            </p>
           </div>
         </div>
 

@@ -172,7 +172,7 @@ export const META_OVERRIDES = {
     owner: "silverhand",
     group: "samurai",
     mode: 0o644,
-    size: 235358,
+    size: 1921465,
     mediaType: "image/png",
   },
   "/srv/silverhand/music/a_like_supreme.mp3": {
