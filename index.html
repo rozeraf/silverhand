@@ -172,6 +172,108 @@
         );
       }
 
+      /* Yellow actions and labels — outlined panels with a Cyberpunk-style cut. */
+      .cp-yellow-button,
+      .cp-yellow-label {
+        --cp-button-cut: 17px;
+        position: relative;
+        isolation: isolate;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        background: #050505;
+        color: #050505;
+        clip-path: polygon(
+          0 0,
+          100% 0,
+          100% calc(100% - var(--cp-button-cut)),
+          calc(100% - var(--cp-button-cut)) 100%,
+          0 100%
+        );
+        font-family: "Rajdhani", sans-serif;
+        font-weight: 700;
+        line-height: 1;
+        text-transform: uppercase;
+      }
+
+      .cp-yellow-button {
+        min-height: 48px;
+        gap: 0.5rem;
+        padding: 0.65rem 2rem;
+        border: 0;
+        font-size: 1.125rem;
+        letter-spacing: 0.01em;
+        cursor: pointer;
+        transition:
+          color 150ms ease,
+          filter 150ms ease,
+          transform 100ms ease;
+      }
+
+      .cp-yellow-label {
+        --cp-button-cut: 10px;
+        min-height: 28px;
+        padding: 0.4rem 1.25rem 0.4rem 1.35rem;
+        font-size: 0.75rem;
+        letter-spacing: 0.08em;
+      }
+
+      .cp-yellow-button::before,
+      .cp-yellow-label::before {
+        content: "";
+        position: absolute;
+        z-index: 0;
+        inset: 1px;
+        background: var(--cp-yellow);
+        clip-path: polygon(
+          0 0,
+          100% 0,
+          100% calc(100% - var(--cp-button-cut)),
+          calc(100% - var(--cp-button-cut)) 100%,
+          0 100%
+        );
+        transition: background-color 150ms ease;
+      }
+
+      .cp-yellow-button::after,
+      .cp-yellow-label::after {
+        content: "";
+        position: absolute;
+        z-index: 1;
+        top: 50%;
+        left: 0;
+        width: 13px;
+        height: 1px;
+        background: #050505;
+      }
+
+      .cp-yellow-label::after {
+        width: 9px;
+      }
+
+      .cp-yellow-button > *,
+      .cp-yellow-label > * {
+        position: relative;
+        z-index: 2;
+      }
+
+      .cp-yellow-button:hover::before {
+        background: #fff72e;
+      }
+
+      .cp-yellow-button:hover {
+        filter: drop-shadow(0 0 8px rgba(252, 238, 10, 0.28));
+      }
+
+      .cp-yellow-button:active {
+        transform: translateY(1px);
+      }
+
+      .cp-yellow-button:focus-visible {
+        outline: 2px solid var(--cp-blue);
+        outline-offset: 3px;
+      }
+
       .cyber-card-hover:hover {
         box-shadow: 0 0 15px rgba(0, 240, 255, 0.3);
         border-color: var(--cp-blue);

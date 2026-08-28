@@ -95,8 +95,8 @@ const Hero = ({ onOpenSamurai }: HeroProps) => {
 
       <div className="relative z-10 w-full max-w-7xl mx-auto px-4 flex flex-col items-start justify-center h-full pt-16 md:pt-20">
         <div className="mb-4 md:mb-8 flex items-center gap-4 relative">
-          <div className="bg-[#fcee0a] text-black px-3 py-1 md:px-4 font-bold font-cyber text-xs md:text-sm tracking-widest clip-corner-inverse transform -skew-x-12 relative z-10">
-            <span className="block transform skew-x-12">NIGHT CITY LEGEND</span>
+          <div className="cp-yellow-label relative z-10 md:text-sm">
+            <span>NIGHT CITY LEGEND</span>
           </div>
           <div className="h-[1px] w-12 md:w-20 bg-[#fcee0a] shadow-[0_0_10px_#fcee0a]"></div>
         </div>

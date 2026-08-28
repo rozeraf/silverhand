@@ -193,8 +193,8 @@ const Arsenal = () => {
               </div>
 
               <div className="mt-4 text-right">
-                <span className="inline-block bg-[#fcee0a] text-black text-[10px] font-bold px-2 py-1 transform -skew-x-12">
-                  LEGENDARY ITEM
+                <span className="cp-yellow-label text-[10px]">
+                  <span>ICONIC ITEM</span>
                 </span>
               </div>
             </div>

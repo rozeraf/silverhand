@@ -253,10 +253,12 @@ const SettingsModal = ({ isOpen, onClose, onOpenTerminal }: SettingsModalProps) 
         <div className="p-3 md:p-4 border-t border-[#333] flex justify-end shrink-0 bg-[#0b0b0b]">
           <button
             onClick={onClose}
-            className="flex items-center gap-2 bg-[#fcee0a] text-black font-cyber text-xs md:text-sm font-bold px-4 py-2 md:px-6 hover:bg-white transition-colors clip-button"
+            className="cp-yellow-button"
           >
-            <Save size={14} className="md:w-4 md:h-4" />
-            APPLY & EXIT
+            <span className="flex items-center gap-2">
+              <Save size={16} />
+              APPLY & EXIT
+            </span>
           </button>
         </div>
       </div>

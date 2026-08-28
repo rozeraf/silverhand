@@ -5,6 +5,7 @@ import Hero from "./components/Hero";
 import CustomCursor from "./components/CustomCursor";
 import SettingsModal from "./components/SettingsModal";
 import CrtShader from "./components/CrtShader";
+import SectionTransition from "./components/SectionTransition";
 import { useSettings } from "./context/SettingsContext";
 import { ASSETS } from "./assets";
 
@@ -131,7 +132,13 @@ const App = () => {
             }
           >
             <Biography />
-            {isClassified && <ClassifiedSection />}
+            {isClassified && (
+              <>
+                <SectionTransition />
+                <ClassifiedSection />
+                <SectionTransition direction="out" />
+              </>
+            )}
             <Arsenal />
             <Engram />
           </Suspense>
