@@ -91,6 +91,13 @@ export const META_OVERRIDES = {
     size: 69058,
     mediaType: "image/webp",
   },
+  "/srv/silverhand/assets/arm.png": {
+    owner: "silverhand",
+    group: "samurai",
+    mode: 0o644,
+    size: 387974,
+    mediaType: "image/png",
+  },
   "/srv/silverhand/assets/archangel.jpg": {
     owner: "silverhand",
     group: "samurai",
@@ -112,6 +119,27 @@ export const META_OVERRIDES = {
     size: 699986,
     mediaType: "image/jpeg",
   },
+  "/srv/silverhand/assets/johnny_silverhand_hero.jpg": {
+    owner: "silverhand",
+    group: "samurai",
+    mode: 0o644,
+    size: 108300,
+    mediaType: "image/jpeg",
+  },
+  "/srv/silverhand/assets/johnny_silverhand_portrait.webp": {
+    owner: "silverhand",
+    group: "samurai",
+    mode: 0o644,
+    size: 207730,
+    mediaType: "image/webp",
+  },
+  "/srv/silverhand/assets/malorian_arms_3516.png": {
+    owner: "silverhand",
+    group: "samurai",
+    mode: 0o644,
+    size: 2809695,
+    mediaType: "image/png",
+  },
   "/srv/silverhand/assets/never_fade_away.webp": {
     owner: "silverhand",
     group: "samurai",
@@ -119,11 +147,25 @@ export const META_OVERRIDES = {
     size: 52968,
     mediaType: "image/webp",
   },
+  "/srv/silverhand/assets/relic.jpg": {
+    owner: "silverhand",
+    group: "samurai",
+    mode: 0o644,
+    size: 63208,
+    mediaType: "image/jpeg",
+  },
   "/srv/silverhand/assets/samurai.png": {
     owner: "silverhand",
     group: "samurai",
     mode: 0o644,
     size: 148110,
+    mediaType: "image/png",
+  },
+  "/srv/silverhand/assets/stardust_noise.png": {
+    owner: "silverhand",
+    group: "samurai",
+    mode: 0o644,
+    size: 9145,
     mediaType: "image/png",
   },
   "/srv/silverhand/assets/vest.png": {

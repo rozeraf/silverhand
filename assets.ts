@@ -23,17 +23,13 @@ const getAsset = (filename: string) => {
 export const ASSETS = {
   favicon: getAsset("samurai.png"),
   navLogo: getAsset("samurai.png"),
-  heroBackground:
-    "https://static0.thegamerimages.com/wordpress/wp-content/uploads/2021/01/cyberpunk-2077-johnny-silverhand-glasses.jpg?q=50&fit=crop&w=1600&h=900&dpr=1.5",
-  engramCard: "https://i.redd.it/xjga6t8mihaa1.jpg",
-  noiseTexture: "https://www.transparenttextures.com/patterns/stardust.png",
-  silverArm:
-    "https://i.etsystatic.com/45478307/r/il/2e1f03/5165531545/il_fullxfull.5165531545_8mso.jpg",
+  heroBackground: getAsset("johnny_silverhand_hero.jpg"),
+  engramCard: getAsset("relic.jpg"),
+  noiseTexture: getAsset("stardust_noise.png"),
+  silverArm: getAsset("arm.png"),
   vest: getAsset("vest.png"),
-  malorianGun:
-    "https://storage.modworkshop.net/mods/images/132636_1668291848_1922616252580f415a274d98a2c717e5.webp",
-  biographyPortrait:
-    "https://mediaproxy.tvtropes.org/width/1200/https://static.tvtropes.org/pmwiki/pub/images/3376891_johnnysilverhand.png",
+  malorianGun: getAsset("malorian_arms_3516.png"),
+  biographyPortrait: getAsset("johnny_silverhand_portrait.webp"),
   samuraiLogo: getAsset("samurai.png"),
   samuraiAlbum: getAsset("chippin_in.jpg"),
   music: {
