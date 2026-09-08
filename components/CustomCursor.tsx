@@ -1,8 +1,18 @@
 import React, { useEffect, useState, useRef } from "react";
+import { createPortal } from "react-dom";
 import { useSettings } from "../context/SettingsContext";
 
-const CustomCursor = () => {
+interface CustomCursorProps {
+  forceEnabled?: boolean;
+  applyCrtWarp?: boolean;
+}
+
+const CustomCursor = ({
+  forceEnabled = false,
+  applyCrtWarp = false,
+}: CustomCursorProps) => {
   const { enableCustomCursor } = useSettings();
+  const isEnabled = enableCustomCursor || forceEnabled;
 
   const cursorRef = useRef<HTMLDivElement>(null);
   const [clicked, setClicked] = useState(false);
@@ -10,11 +20,31 @@ const CustomCursor = () => {
   const [hidden, setHidden] = useState(false);
 
   useEffect(() => {
-    if (!enableCustomCursor) return;
+    if (!isEnabled) return;
 
     const mMove = (el: MouseEvent) => {
       if (cursorRef.current) {
-        cursorRef.current.style.transform = `translate3d(${el.clientX}px, ${el.clientY}px, 0)`;
+        let x = el.clientX;
+        let y = el.clientY;
+
+        if (applyCrtWarp) {
+          const normalizedX = (x / window.innerWidth) * 2 - 1;
+          const normalizedY = (y / window.innerHeight) * 2 - 1;
+          const radius2 = normalizedX ** 2 + normalizedY ** 2;
+          const falloff = Math.min(radius2, 1.65);
+          const scale = Math.max(
+            52,
+            Math.min(
+              140,
+              Math.min(window.innerWidth, window.innerHeight) * 0.12,
+            ),
+          );
+
+          x -= normalizedX * falloff * 0.26 * scale;
+          y -= normalizedY * falloff * 0.26 * scale;
+        }
+
+        cursorRef.current.style.transform = `translate3d(${x}px, ${y}px, 0)`;
       }
 
       const target = el.target as HTMLElement;
@@ -46,9 +76,9 @@ const CustomCursor = () => {
       document.body.removeEventListener("mouseenter", mEnter);
       document.body.removeEventListener("mouseleave", mLeave);
     };
-  }, [enableCustomCursor]);
+  }, [applyCrtWarp, isEnabled]);
 
-  if (!enableCustomCursor) return null;
+  if (!isEnabled) return null;
   if (
     typeof window !== "undefined" &&
     window.matchMedia("(hover: none)").matches
@@ -56,7 +86,7 @@ const CustomCursor = () => {
     return null;
   }
 
-  return (
+  return createPortal(
     <div
       ref={cursorRef}
       className={`fixed top-0 left-0 pointer-events-none z-[9999] mix-blend-difference hidden md:block transition-opacity duration-300 ${hidden ? "opacity-0" : "opacity-100"}`}
@@ -96,7 +126,8 @@ const CustomCursor = () => {
           className={`absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[1px] h-[300vmax] bg-[#00f0ff] opacity-10 transition-opacity pointer-events-none ${clicked ? "opacity-30" : ""}`}
         ></div>
       </div>
-    </div>
+    </div>,
+    document.body,
   );
 };
 

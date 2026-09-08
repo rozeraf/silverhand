@@ -8,19 +8,36 @@ interface NavbarProps {
   onOpenSamurai: () => void;
   onOpenSettings?: () => void;
   onOpenTerminal?: () => void;
+  useInternalScroll?: boolean;
 }
 
-const Navbar = ({ onOpenSamurai, onOpenSettings, onOpenTerminal }: NavbarProps) => {
+const Navbar = ({
+  onOpenSamurai,
+  onOpenSettings,
+  onOpenTerminal,
+  useInternalScroll = false,
+}: NavbarProps) => {
   const [isOpen, setIsOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
 
   useEffect(() => {
+    const scrollContainer = useInternalScroll
+      ? document.querySelector<HTMLElement>(".crt-scroll-container")
+      : null;
+    const scrollTarget: Window | HTMLElement = scrollContainer || window;
+
     const handleScroll = () => {
-      setScrolled(window.scrollY > 50);
+      const scrollTop =
+        scrollTarget instanceof Window
+          ? window.scrollY
+          : scrollTarget.scrollTop;
+      setScrolled(scrollTop > 50);
     };
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
+
+    handleScroll();
+    scrollTarget.addEventListener("scroll", handleScroll, { passive: true });
+    return () => scrollTarget.removeEventListener("scroll", handleScroll);
+  }, [useInternalScroll]);
 
   const { ref: logoRef, replay: replayLogo } = useScramble({
     text: "SILVERHAND",
@@ -32,6 +49,7 @@ const Navbar = ({ onOpenSamurai, onOpenSettings, onOpenTerminal }: NavbarProps) 
     chance: 1,
     overdrive: false,
     overflow: true,
+    playOnMount: !useInternalScroll,
   });
 
   const navLinks = [

@@ -1,6 +1,7 @@
 import React from 'react';
 import { useScramble } from 'use-scramble';
 import { useGlitch } from 'react-powerglitch';
+import { useSettings } from '../context/SettingsContext';
 
 interface GlitchTextProps {
   text: string;
@@ -19,6 +20,7 @@ const GlitchText = ({
   variant = 'solid',
   enableScramble = false
 }: GlitchTextProps) => {
+  const { enableScanlines } = useSettings();
   let textColorClass = 'text-white';
 
   if (variant === 'solid') {
@@ -42,11 +44,11 @@ const GlitchText = ({
     chance: 1,
     overdrive: false,
     overflow: true,
-    playOnMount: enableScramble,
+    playOnMount: enableScramble && !enableScanlines,
   });
 
   const { ref: glitchRef } = useGlitch({
-    playMode: 'always',
+    playMode: enableScanlines ? 'hover' : 'always',
     createContainers: true,
     hideOverflow: false,
     timing: {
@@ -59,12 +61,12 @@ const GlitchText = ({
       end: 0.7,
     },
     shake: {
-      velocity: 15,
-      amplitudeX: 0.2,
-      amplitudeY: 0.1,
+      velocity: enableScanlines ? 0 : 15,
+      amplitudeX: enableScanlines ? 0 : 0.2,
+      amplitudeY: enableScanlines ? 0 : 0.1,
     },
     slice: {
-      count: 6,
+      count: enableScanlines ? 0 : 6,
       velocity: 20,
       minHeight: 0.02,
       maxHeight: 0.15,
@@ -78,8 +80,10 @@ const GlitchText = ({
       className={`${className} ${textColorClass} inline-block`}
       style={{ lineHeight: 1.1, position: 'relative' }}
     >
-      <span ref={enableScramble ? scrambleRef : undefined}>
-        {!enableScramble ? text : null}
+      <span
+        ref={enableScramble && !enableScanlines ? scrambleRef : undefined}
+      >
+        {!enableScramble || enableScanlines ? text : null}
       </span>
     </Tag>
   );

@@ -1,0 +1,8 @@
+record: INCIDENT/NC-AHQ-20230820
+status: partially declassified
+date: 2023-08-20
+location: Arasaka Towers, Night City
+operation: FALL OF THE TOWERS
+codename: never_fade_away
+target_record: /archives/public/target.txt
+restricted_material: authentication required

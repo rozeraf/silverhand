@@ -1,0 +1,13 @@
+archive_id: MIL/NC/AHQ/2023-08-20
+event: Arasaka Towers assault
+theater: Fourth Corporate War
+date: 2023-08-20
+sponsor: Militech
+field_lead: Morgan Blackhand
+elements: Alpha / Omega
+known_personnel: Johnny Silverhand; Rogue Amendiares; Shaitan; Thompson; Spider Murphy
+mission: penetrate Arasaka Towers and destroy strategic command/data infrastructure
+silverhand_element: access Soulkiller laboratory; locate Alt Cunningham
+result: towers destroyed following nuclear detonation
+casualty: Silverhand, Johnny — killed during engagement with Adam Smasher
+record_note: surviving Silverhand engram recollections diverge from external accounts of the operation.

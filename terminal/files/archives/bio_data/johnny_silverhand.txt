@@ -1,0 +1,15 @@
+record: BIO/JS-2023
+legal_name: Robert John Linder
+alias: Johnny Silverhand
+date_of_birth: 1988-11-16
+place_of_birth: College Station, Texas
+occupation: rockerboy; vocalist; guitarist
+affiliation: Samurai (lead vocalist; disbanded 2008)
+military_service: U.S. military; Second Central American War
+deployment: Nicaragua, 2003
+service_status: deserter
+cyberware: left-arm prosthesis
+date_of_death: 2023-08-20
+place_of_death: Arasaka Towers, Night City
+cause: killed during engagement with Adam Smasher
+postmortem_record: personality construct / engram exists in Arasaka data

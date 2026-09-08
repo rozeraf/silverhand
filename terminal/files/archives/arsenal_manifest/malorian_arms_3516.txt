@@ -1,0 +1,11 @@
+record: WEAPON/MA-3516/JS
+manufacturer: Malorian Arms
+platform: 3516
+class: heavy semiautomatic handgun
+configuration: bespoke
+client: Silverhand, Johnny
+interface: prototype smart-link / direct cyber-interlink (variant dependent)
+ammunition: configuration dependent
+legacy_spec_2020: 14 mm; orbital-titanium frame; Dyna-porting
+documented_2077_functions: ricochet; barrier penetration; incendiary discharge
+note: multiple 3516 variants were produced for Silverhand; archived specifications are not interchangeable.
