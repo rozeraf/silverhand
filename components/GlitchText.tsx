@@ -20,7 +20,7 @@ const GlitchText = ({
   variant = 'solid',
   enableScramble = false
 }: GlitchTextProps) => {
-  const { enableScanlines } = useSettings();
+  const { crtWarp } = useSettings();
   let textColorClass = 'text-white';
 
   if (variant === 'solid') {
@@ -44,11 +44,11 @@ const GlitchText = ({
     chance: 1,
     overdrive: false,
     overflow: true,
-    playOnMount: enableScramble && !enableScanlines,
+    playOnMount: enableScramble && !crtWarp,
   });
 
   const { ref: glitchRef } = useGlitch({
-    playMode: enableScanlines ? 'hover' : 'always',
+    playMode: crtWarp ? 'hover' : 'always',
     createContainers: true,
     hideOverflow: false,
     timing: {
@@ -61,12 +61,12 @@ const GlitchText = ({
       end: 0.7,
     },
     shake: {
-      velocity: enableScanlines ? 0 : 15,
-      amplitudeX: enableScanlines ? 0 : 0.2,
-      amplitudeY: enableScanlines ? 0 : 0.1,
+      velocity: crtWarp ? 0 : 15,
+      amplitudeX: crtWarp ? 0 : 0.2,
+      amplitudeY: crtWarp ? 0 : 0.1,
     },
     slice: {
-      count: enableScanlines ? 0 : 6,
+      count: crtWarp ? 0 : 6,
       velocity: 20,
       minHeight: 0.02,
       maxHeight: 0.15,
@@ -81,9 +81,9 @@ const GlitchText = ({
       style={{ lineHeight: 1.1, position: 'relative' }}
     >
       <span
-        ref={enableScramble && !enableScanlines ? scrambleRef : undefined}
+        ref={enableScramble && !crtWarp ? scrambleRef : undefined}
       >
-        {!enableScramble || enableScanlines ? text : null}
+        {!enableScramble || crtWarp ? text : null}
       </span>
     </Tag>
   );

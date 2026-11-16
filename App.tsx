@@ -5,6 +5,7 @@ import Hero from "./components/Hero";
 import CustomCursor from "./components/CustomCursor";
 import SettingsModal from "./components/SettingsModal";
 import CrtShader from "./components/CrtShader";
+import CrtOverlay from "./components/CrtOverlay";
 import SectionTransition from "./components/SectionTransition";
 import { useSettings } from "./context/SettingsContext";
 
@@ -17,8 +18,13 @@ const DeveloperNote = lazy(() => import("./components/DeveloperNote"));
 const Footer = lazy(() => import("./components/Footer"));
 
 const App = () => {
-  const { bootSequence, enableNoise, enableScanlines, enableCustomCursor } =
-    useSettings();
+  const {
+    bootSequence,
+    enableNoise,
+    enableScanlines,
+    enableCustomCursor,
+    crtWarp,
+  } = useSettings();
 
   const [showTerminal, setShowTerminal] = useState(false);
   const [skipBoot, setSkipBoot] = useState(false);
@@ -26,7 +32,7 @@ const App = () => {
   const [showSamuraiPage, setShowSamuraiPage] = useState(false);
   const [showSettings, setShowSettings] = useState(false);
   const enableCrtGeometry =
-    enableScanlines && !showTerminal && !showSettings && !showSamuraiPage;
+    crtWarp && !showTerminal && !showSettings && !showSamuraiPage;
 
   useEffect(() => {
     setIsClassified(localStorage.getItem("classified") === "true");
@@ -50,20 +56,20 @@ const App = () => {
   return (
     <div
       className={`${
-        enableScanlines
+        crtWarp
           ? `crt-scroll-container h-screen overflow-x-hidden overflow-y-auto ${enableCrtGeometry ? "crt-barrel-surface" : ""}`
           : "min-h-screen"
-      } bg-[#0b0b0b] text-white selection:bg-[#00f0ff] selection:text-black relative ${enableCustomCursor || enableScanlines ? "cursor-none" : "cursor-auto"}`}
+      } bg-[#0b0b0b] text-white selection:bg-[#00f0ff] selection:text-black relative ${enableCustomCursor || crtWarp ? "cursor-none" : "cursor-auto"}`}
     >
-      {(enableCustomCursor || enableScanlines) && (
+      {(enableCustomCursor || crtWarp) && (
         <CustomCursor
-          forceEnabled={enableScanlines}
+          forceEnabled={crtWarp}
           applyCrtWarp={enableCrtGeometry}
         />
       )}
 
-      {enableScanlines && <CrtShader />}
-      {enableNoise && !enableScanlines && <div className="noise-bg"></div>}
+      {crtWarp ? <CrtShader /> : enableScanlines && <CrtOverlay />}
+      {enableNoise && !crtWarp && <div className="noise-bg"></div>}
 
       <SettingsModal
         isOpen={showSettings}
@@ -98,7 +104,7 @@ const App = () => {
           onOpenSamurai={() => setShowSamuraiPage(true)}
           onOpenSettings={() => setShowSettings(true)}
           onOpenTerminal={handleOpenTerminal}
-          useInternalScroll={enableScanlines}
+          useInternalScroll={crtWarp}
         />
 
         <main>

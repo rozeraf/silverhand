@@ -44,6 +44,68 @@
         overflow: hidden;
       }
 
+      /* CRT lite: one static layer (phosphor mask + vignette + bezel) and two
+         compositor-only animated layers (scanline flicker, rolling band). */
+      .crt-lite {
+        position: fixed;
+        inset: 0;
+        z-index: 9995;
+        pointer-events: none;
+        overflow: hidden;
+        border-radius: 2.5rem;
+        background:
+          radial-gradient(ellipse at center, rgba(0, 0, 0, 0) 58%, rgba(0, 0, 0, 0.5) 100%),
+          repeating-linear-gradient(
+            90deg,
+            rgba(255, 40, 30, 0.035) 0 1px,
+            rgba(30, 255, 45, 0.025) 1px 2px,
+            rgba(30, 65, 255, 0.035) 2px 3px
+          );
+        box-shadow:
+          inset 0 0 38px rgba(0, 0, 0, 0.35),
+          inset 0 0 10px rgba(0, 240, 255, 0.08);
+      }
+      .crt-lite__scanlines {
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(rgba(0, 0, 0, 0) 50%, rgba(0, 0, 0, 0.22) 50%);
+        background-size: 100% 3px;
+        will-change: opacity;
+        animation: crt-lite-flicker 3.2s steps(1, end) infinite;
+      }
+      .crt-lite__band {
+        position: absolute;
+        left: 0;
+        right: 0;
+        top: -25vh;
+        height: 22vh;
+        background: linear-gradient(
+          rgba(0, 240, 255, 0),
+          rgba(0, 240, 255, 0.045),
+          rgba(0, 240, 255, 0)
+        );
+        will-change: transform;
+        animation: crt-lite-roll 9s linear infinite;
+      }
+      @keyframes crt-lite-roll {
+        to {
+          transform: translateY(150vh);
+        }
+      }
+      @keyframes crt-lite-flicker {
+        0%, 100% { opacity: 1; }
+        47% { opacity: 0.86; }
+        49% { opacity: 1; }
+        83% { opacity: 0.92; }
+        84% { opacity: 1; }
+      }
+      @media (prefers-reduced-motion: reduce) {
+        .crt-lite__scanlines,
+        .crt-lite__band {
+          animation: none;
+        }
+      }
+
       /* Re-enable cursor on touch devices where custom cursor might be annoying */
       @media (hover: none) and (pointer: coarse) {
         body {

@@ -6,11 +6,11 @@ import { ASSETS } from "../assets";
 import { useSettings } from "../context/SettingsContext";
 
 const Engram = () => {
-  const { enableScanlines } = useSettings();
+  const { crtWarp } = useSettings();
   const [rotation, setRotation] = useState({ x: 0, y: 0 });
 
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
-    if (enableScanlines) return;
+    if (crtWarp) return;
     const card = e.currentTarget;
     const rect = card.getBoundingClientRect();
     const x = e.clientX - rect.left;
@@ -71,10 +71,10 @@ const Engram = () => {
               onMouseMove={handleMouseMove}
               onMouseLeave={handleMouseLeave}
               style={{
-                transform: enableScanlines
+                transform: crtWarp
                   ? "none"
                   : `rotateX(${rotation.x}deg) rotateY(${rotation.y}deg)`,
-                transformStyle: enableScanlines ? "flat" : "preserve-3d",
+                transformStyle: crtWarp ? "flat" : "preserve-3d",
               }}
             >
               <div className="relative overflow-hidden group">

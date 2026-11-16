@@ -10,11 +10,11 @@ interface HeroProps {
 }
 
 const Hero = ({ onOpenSamurai }: HeroProps) => {
-  const { enableScanlines } = useSettings();
+  const { crtWarp } = useSettings();
   const coordsRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    if (enableScanlines) return;
+    if (crtWarp) return;
 
     const updateCoords = (e: MouseEvent) => {
       if (!coordsRef.current) return;
@@ -33,7 +33,7 @@ const Hero = ({ onOpenSamurai }: HeroProps) => {
 
     window.addEventListener("mousemove", updateCoords);
     return () => window.removeEventListener("mousemove", updateCoords);
-  }, [enableScanlines]);
+  }, [crtWarp]);
 
   return (
     <section

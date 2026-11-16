@@ -10,6 +10,7 @@ import {
   MousePointer2,
   ChevronRight,
   AlertTriangle,
+  Tv,
 } from "lucide-react";
 import GlitchText from "./GlitchText";
 import { useSettings } from "../context/SettingsContext";
@@ -26,14 +27,18 @@ const ToggleOption = ({
   value,
   onChange,
   icon: Icon,
+  disabled = false,
 }: {
   label: string;
   description: string;
   value: boolean;
   onChange: () => void;
   icon: React.ElementType;
+  disabled?: boolean;
 }) => (
-  <div className="flex items-center justify-between group py-3 md:py-4 border-b border-[#222] last:border-0">
+  <div
+    className={`flex items-center justify-between group py-3 md:py-4 border-b border-[#222] last:border-0 ${disabled ? "opacity-40" : ""}`}
+  >
     <div className="flex items-start gap-3 md:gap-4">
       <div
         className={`p-2 bg-[#111] border border-[#333] group-hover:border-[#00f0ff] transition-colors ${value ? "text-[#00f0ff]" : "text-gray-600"}`}
@@ -55,6 +60,7 @@ const ToggleOption = ({
       role="switch"
       aria-checked={value}
       aria-label={label}
+      disabled={disabled}
       onClick={onChange}
       className={`
         relative w-10 h-5 md:w-12 md:h-6 border transition-all duration-300 flex-shrink-0 ml-4
@@ -84,8 +90,10 @@ const SettingsModal = ({ isOpen, onClose, onOpenTerminal }: SettingsModalProps) 
     bootSequence,
     enableNoise,
     enableScanlines,
+    enableCrtWarp,
     enableCustomCursor,
     enableAnimations,
+    crtWarp,
     updateSetting,
   } = useSettings();
 
@@ -196,6 +204,16 @@ const SettingsModal = ({ isOpen, onClose, onOpenTerminal }: SettingsModalProps) 
               icon={Zap}
             />
 
+            <ToggleOption
+              label="CRT DISPLAY"
+              description="Сканлайны, фосфорная маска, виньетка и мерцание. Лёгкий режим без WebGL."
+              value={enableScanlines}
+              onChange={() =>
+                updateSetting("enableScanlines", !enableScanlines)
+              }
+              icon={Tv}
+            />
+
             <div className="md:col-span-2 mt-5 border border-[#fcee0a]/70 bg-[#fcee0a]/[0.035] shadow-[inset_0_0_24px_rgba(252,238,10,0.035)]">
               <div className="flex items-center justify-between gap-3 border-b border-[#fcee0a]/30 bg-[#fcee0a]/10 px-3 py-2">
                 <div className="flex items-center gap-2 text-[#fcee0a]">
@@ -211,11 +229,16 @@ const SettingsModal = ({ isOpen, onClose, onOpenTerminal }: SettingsModalProps) 
 
               <div className="px-3 md:px-4">
                 <ToggleOption
-                  label="CRT SHADER"
-                  description="WebGL-развертка, фосфор, шум, преломление и геометрическое искривление."
-                  value={enableScanlines}
+                  label="CRT GEOMETRY WARP"
+                  description={
+                    enableScanlines
+                      ? "WebGL-шейдер и искривление всей страницы под выпуклый кинескоп."
+                      : "Сначала включите CRT DISPLAY."
+                  }
+                  value={enableCrtWarp}
+                  disabled={!enableScanlines}
                   onChange={() =>
-                    updateSetting("enableScanlines", !enableScanlines)
+                    updateSetting("enableCrtWarp", !enableCrtWarp)
                   }
                   icon={Activity}
                 />
@@ -227,9 +250,10 @@ const SettingsModal = ({ isOpen, onClose, onOpenTerminal }: SettingsModalProps) 
                   className="mt-0.5 shrink-0 text-[#ff003c]"
                 />
                 <p>
-                  Ресурсоёмкая экспериментальная функция. SVG displacement и
-                  fullscreen WebGL могут значительно снизить FPS, увеличить
-                  нагрузку на GPU и энергопотребление устройства.
+                  Ресурсоёмкая экспериментальная функция: браузер заново
+                  прогоняет всю страницу через SVG displacement при каждом
+                  скролле и анимации, поверх работает fullscreen WebGL. FPS
+                  может сильно упасть, а нагрузка и энергопотребление вырасти.
                 </p>
               </div>
             </div>
@@ -238,9 +262,9 @@ const SettingsModal = ({ isOpen, onClose, onOpenTerminal }: SettingsModalProps) 
           <div className="mt-6 md:mt-8 p-3 bg-[#111] border-l-2 border-[#ff003c] font-mono text-[10px] md:text-xs text-gray-400 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-1 sm:gap-0">
             <span>
               VRAM USAGE:{" "}
-              {enableScanlines
+              {crtWarp
                 ? "CRITICAL"
-                : enableNoise
+                : enableScanlines || enableNoise
                   ? "MODERATE"
                   : "OPTIMIZED"}
             </span>
