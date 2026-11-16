@@ -24,7 +24,7 @@ export const ASSETS = {
   favicon: getAsset("samurai.png"),
   navLogo: getAsset("samurai.png"),
   heroBackground: getAsset("johnny_silverhand_hero.jpg"),
-  engramCard: getAsset("relic.jpg"),
+  engramCard: getAsset("relic.webp"),
   noiseTexture: getAsset("stardust_noise.png"),
   silverArm: getAsset("arm.png"),
   vest: getAsset("vest.png"),

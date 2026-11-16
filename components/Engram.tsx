@@ -41,17 +41,19 @@ const Engram = () => (
           />
           <div className="relic-frame__scan" />
           <span className="tick tick--tr" />
-          <span className="tick tick--br" />
 
-          {/* Sits over a stray icon baked into the source image */}
-          <figcaption className="absolute bottom-0 left-0 z-10 flex h-[25%] min-w-[20%] flex-col justify-end bg-black px-4 py-3 md:px-6 md:py-5">
+          <span className="label absolute left-4 top-4 z-10 text-bone/70 md:left-8 md:top-8">
+            Biochip // Relic 2.0 · Arasaka
+          </span>
+
+          <figcaption className="absolute bottom-4 left-4 z-10 hidden sm:block md:bottom-8 md:left-8">
             <div className="label text-blood">Subject</div>
-            <div className="font-display text-xl font-bold uppercase leading-tight md:text-3xl">
+            <div className="font-display text-2xl font-bold uppercase leading-tight md:text-5xl">
               V &amp; Silverhand
             </div>
           </figcaption>
 
-          <div className="absolute right-4 top-4 z-10 w-40 bg-black/80 p-3 backdrop-blur-sm md:right-8 md:top-8 md:w-64 md:p-5">
+          <div className="absolute bottom-4 right-4 z-10 hidden w-44 bg-black/75 p-3 backdrop-blur-sm sm:block md:bottom-8 md:right-8 md:w-64 md:p-5">
             <div className="label text-blood">Синхронизация</div>
             <div className="mt-1 font-display text-4xl font-bold leading-none text-blood md:text-7xl">
               86%
@@ -64,6 +66,24 @@ const Engram = () => (
             </div>
           </div>
         </figure>
+
+        {/* On phones the readouts sit under the image instead of over the chip */}
+        <div className="mt-4 flex items-end justify-between gap-4 sm:hidden">
+          <div>
+            <div className="label text-blood">Subject</div>
+            <div className="font-display text-2xl font-bold uppercase leading-tight">
+              V &amp; Silverhand
+            </div>
+          </div>
+          <div className="w-32 text-right">
+            <div className="font-display text-4xl font-bold leading-none text-blood">
+              86%
+            </div>
+            <div className="meter mt-2 text-blood">
+              <i style={{ width: "86%" }} />
+            </div>
+          </div>
+        </div>
       </RevealOnScroll>
 
       {/* Four theses, four different shapes */}

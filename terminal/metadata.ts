@@ -147,12 +147,12 @@ export const META_OVERRIDES = {
     size: 52968,
     mediaType: "image/webp",
   },
-  "/srv/silverhand/assets/relic.jpg": {
+  "/srv/silverhand/assets/relic.webp": {
     owner: "silverhand",
     group: "samurai",
     mode: 0o644,
-    size: 63208,
-    mediaType: "image/jpeg",
+    size: 64962,
+    mediaType: "image/webp",
   },
   "/srv/silverhand/assets/samurai.png": {
     owner: "silverhand",
