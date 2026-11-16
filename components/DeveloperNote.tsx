@@ -1,15 +1,32 @@
 import React from "react";
+import { Terminal as TerminalIcon } from "lucide-react";
 
-const DeveloperNote = () => (
-  <aside className="border-t border-[#00f0ff]/20 bg-[#070707] px-4 py-10">
-    <div className="mx-auto max-w-4xl border-l-2 border-[#fcee0a] bg-black/70 px-5 py-4 font-mono md:px-6">
-      <p className="mb-2 text-xs uppercase tracking-[0.24em] text-[#fcee0a]">
-        Сообщение разработчика
-      </p>
-      <p className="text-sm leading-7 text-gray-300 md:text-base">
-        Пожалуйста, уделите больше времени терминалу и загадке, оставленной мною
-      </p>
+interface DeveloperNoteProps {
+  onOpenTerminal?: () => void;
+}
+
+const DeveloperNote = ({ onOpenTerminal }: DeveloperNoteProps) => (
+  <aside className="bg-acid text-black">
+    <div className="hazard h-3" />
+    <div className="mx-auto flex max-w-[1500px] flex-col gap-6 px-5 py-10 md:flex-row md:items-center md:justify-between md:px-10 md:py-12">
+      <div>
+        <p className="section-index mb-3">Сообщение разработчика</p>
+        <p className="display max-w-4xl text-3xl md:text-5xl">
+          Пожалуйста, уделите больше времени терминалу и загадке, оставленной
+          мною
+        </p>
+      </div>
+      {onOpenTerminal && (
+        <button
+          type="button"
+          onClick={onOpenTerminal}
+          className="btn btn--ink shrink-0"
+        >
+          <TerminalIcon size={16} /> Открыть терминал
+        </button>
+      )}
     </div>
+    <div className="hazard h-3" />
   </aside>
 );
 

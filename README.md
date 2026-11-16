@@ -24,8 +24,8 @@
 | Сборка | Vite |
 | Типизация | TypeScript 5.8 |
 | Пакетный менеджер | Bun |
-| Стилизация | Tailwind CSS через CDN и глобальные стили в `index.html` |
-| Эффекты | WebGL, SVG filters, `react-powerglitch`, `use-scramble` |
+| Стилизация | `styles/main.css` (токены, фирменные компоненты, анимации) и Tailwind CSS через CDN для раскладки |
+| Эффекты | CSS-анимации, WebGL, SVG filters, `use-scramble` |
 | Иконки | `lucide-react` |
 | Деплой | GitHub Actions → Cloudflare Pages |
 
@@ -33,8 +33,9 @@
 
 ```text
 .
-├── index.html                       # Tailwind-конфиг, шрифты и глобальные стили
+├── index.html                       # Tailwind-конфиг и шрифты
 ├── index.tsx                        # Точка входа и SettingsProvider
+├── styles/main.css                  # Дизайн-токены и все глобальные стили
 ├── App.tsx                          # Секции, оверлеи и classified-состояние
 ├── assets.ts                        # Реестр локальных изображений, обложек и музыки
 ├── assets/                          # Изображения и обложки
@@ -150,16 +151,19 @@ git switch dev && git merge --ff-only main && git push origin dev
 
 Для GitHub Actions необходимы секреты `CLOUDFLARE_API_TOKEN` и `CLOUDFLARE_ACCOUNT_ID`.
 
-## Дизайн-токены
+## Дизайн
+
+Визуальная идея — панк-зин о мёртвом рокере, который читают через сбоящий биочип: плакатная типографика, красный как ведущий цвет, «бумажные» секции досье среди тёмных, жёлтая сигнальная лента. Циан оставлен только для всего, что связано с Relic.
 
 ```css
---cp-yellow: #fcee0a;
---cp-blue: #00f0ff;
---cp-red: #ff003c;
---cp-bg: #0b0b0b;
+--ink: #0a0908;     /* фон */
+--bone: #e9e3d3;    /* бумага и основной текст */
+--red: #ff003c;     /* ведущий акцент */
+--yellow: #fcee0a;  /* сигнальная лента, пометки */
+--cyan: #00f0ff;    /* только Relic / энграмма */
 ```
 
-Основные шрифты: Orbitron для заголовков, Rajdhani для интерфейса и моноширинный стек для терминала.
+Шрифты с поддержкой кириллицы: Oswald — заголовки, Golos Text — основной текст, JetBrains Mono — подписи, данные и терминал.
 
 ## Правообладатели
 

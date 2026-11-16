@@ -1,20 +1,5 @@
 import React, { useState, useRef, useEffect } from "react";
-import {
-  Play,
-  Pause,
-  SkipBack,
-  SkipForward,
-  Disc,
-  Mic2,
-  Guitar,
-  Drum,
-  Music4,
-  ArrowLeft,
-  BarChart3,
-  Radio,
-  ListMusic,
-} from "lucide-react";
-import GlitchText from "./GlitchText";
+import { Play, Pause, SkipBack, SkipForward, ArrowLeft } from "lucide-react";
 import { ASSETS } from "../assets";
 
 interface Track {
@@ -69,19 +54,11 @@ const TRACKS: Track[] = [
 ];
 
 const MEMBERS = [
-  {
-    name: "Johnny Silverhand",
-    role: "Vocals / Guitar",
-    icon: <Mic2 size={16} />,
-  },
-  {
-    name: "Kerry Eurodyne",
-    role: "Vocals / Guitar",
-    icon: <Guitar size={16} />,
-  },
-  { name: "Nancy (Bes Isis)", role: "Keyboards", icon: <Music4 size={16} /> },
-  { name: "Denny", role: "Drums", icon: <Drum size={16} /> },
-  { name: "Henry", role: "Bass", icon: <Guitar size={16} /> },
+  { name: "Johnny Silverhand", role: "Вокал / гитара" },
+  { name: "Kerry Eurodyne", role: "Вокал / гитара" },
+  { name: "Nancy (Bes Isis)", role: "Клавишные" },
+  { name: "Denny", role: "Ударные" },
+  { name: "Henry", role: "Бас" },
 ];
 
 const TIMELINE_EVENTS = [
@@ -217,317 +194,198 @@ const Samurai = ({ onBack }: SamuraiPageProps) => {
   const activeCover = currentTrack.cover || ASSETS.samuraiAlbum;
 
   return (
-    <div className="fixed inset-0 z-[100] bg-[#030303] text-white flex flex-col lg:flex-row overflow-hidden animate-[fadeIn_0.5s_ease-out]">
-      <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_50%,rgba(255,0,60,0.05),transparent_50%)] pointer-events-none"></div>
-      <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')] opacity-10 pointer-events-none"></div>
+    <div className="fixed inset-0 z-[100] overflow-y-auto bg-ink text-bone animate-[fadeIn_0.35s_ease-out] lg:grid lg:grid-cols-[minmax(0,5fr)_minmax(0,7fr)] lg:overflow-hidden">
+      {/* Deck */}
+      <div
+        className={`relative flex min-h-[100svh] flex-col bg-blood text-black lg:min-h-0 lg:overflow-y-auto ${isPlaying ? "deck--playing" : ""}`}
+      >
+        <div className="flex items-center justify-between border-b-2 border-black px-5 py-4 md:px-8">
+          <button
+            type="button"
+            onClick={onBack}
+            className="label flex items-center gap-2 font-bold hover:underline"
+          >
+            <ArrowLeft size={16} /> Выход
+          </button>
+          <span className="label flex items-center gap-3 font-bold">
+            <span className={`eq ${isPlaying ? "" : "eq--paused"}`}>
+              <i />
+              <i />
+              <i />
+            </span>
+            {isPlaying ? "On air" : "Paused"} · 0{currentTrackIdx + 1}/0
+            {TRACKS.length}
+          </span>
+        </div>
 
-      <div className="flex flex-col lg:flex-row w-full h-full overflow-y-auto lg:overflow-hidden">
-        <div className="w-full lg:w-5/12 h-auto lg:h-full relative border-b lg:border-b-0 lg:border-r border-[#222] bg-[#080808] flex flex-col z-10 lg:shadow-[20px_0_50px_rgba(0,0,0,0.9)] shrink-0">
-          <div className="absolute inset-0 bg-[linear-gradient(0deg,transparent_24%,rgba(255,255,255,.02)_25%,rgba(255,255,255,.02)_26%,transparent_27%,transparent_74%,rgba(255,255,255,.02)_75%,rgba(255,255,255,.02)_76%,transparent_77%,transparent),linear-gradient(90deg,transparent_24%,rgba(255,255,255,.02)_25%,rgba(255,255,255,.02)_26%,transparent_27%,transparent_74%,rgba(255,255,255,.02)_75%,rgba(255,255,255,.02)_76%,transparent_77%,transparent)] bg-[size:50px_50px] pointer-events-none"></div>
+        <div className="flex flex-1 flex-col justify-center px-5 py-10 md:px-10">
+          <div className="relative mx-auto mb-10 aspect-square w-[62%] max-w-[340px] -translate-x-[12%]">
+            <div className="vinyl" />
+            <img
+              key={currentTrack.title}
+              src={activeCover}
+              alt={`Обложка: ${currentTrack.title}`}
+              className="relative z-10 h-full w-full border-2 border-black object-cover shadow-[10px_10px_0_#000] animate-[fadeIn_0.4s_ease-out]"
+            />
+          </div>
 
-          <div className="p-4 md:p-6 flex justify-between items-center border-b border-[#222] bg-[#0a0a0a]/80 backdrop-blur-md relative z-20">
-            <button
-              onClick={onBack}
-              className="flex items-center gap-2 text-gray-400 hover:text-[#fcee0a] transition-all group uppercase font-cyber text-[10px] md:text-xs tracking-widest border border-transparent hover:border-[#fcee0a] px-3 py-1 rounded-sm"
-            >
-              <ArrowLeft
-                size={16}
-                className="group-hover:-translate-x-1 transition-transform"
-              />
-              EXIT_DB
-            </button>
-            <div className="flex items-center gap-2">
-              <div className="w-2 h-2 rounded-full bg-[#ff003c] animate-pulse"></div>
-              <span className="text-[#ff003c] font-cyber text-[10px] md:text-xs tracking-widest">
-                LIVE_FEED
-              </span>
+          <div className="label mb-2 font-bold">Samurai // Silverhand</div>
+          <h2 className="display break-words text-[clamp(3rem,7.5vw,6.5rem)]">
+            {currentTrack.title}
+          </h2>
+
+          <div className="mt-8">
+            <input
+              type="range"
+              min="0"
+              max="100"
+              step="0.1"
+              value={progress}
+              onChange={handleSeek}
+              aria-label="Позиция воспроизведения"
+              className="seek"
+              style={{ "--p": `${progress}%` } as React.CSSProperties}
+            />
+            <div className="mt-1 flex justify-between font-mono text-xs font-bold tabular-nums">
+              <span>{formatPlaybackTime(currentTime)}</span>
+              <span>{currentTrack.duration}</span>
             </div>
           </div>
 
-          <div className="flex-1 flex flex-col items-center justify-center p-6 md:p-8 lg:p-12 relative z-10">
-            <div className="relative w-48 md:w-64 lg:w-full max-w-[320px] aspect-square mb-6 md:mb-10 group perspective-1000">
-              <div
-                className={`absolute inset-[-10px] md:inset-[-20px] rounded-full border border-dashed border-[#333] ${isPlaying ? "animate-spin-slow" : ""}`}
-              ></div>
-              <div
-                className={`absolute inset-[-5px] md:inset-[-10px] rounded-full border border-[#fcee0a]/20 ${isPlaying ? "animate-spin-reverse-slow" : ""}`}
-              ></div>
-
-              <div className="relative h-full w-full border-2 border-[#333] bg-black overflow-hidden shadow-[0_0_50px_rgba(255,0,60,0.15)] group-hover:shadow-[0_0_80px_rgba(255,0,60,0.3)] transition-shadow duration-500">
-                <img
-                  key={currentTrack.title}
-                  src={activeCover}
-                  alt="Album"
-                  className={`w-full h-full object-cover transition-all duration-700 animate-[fadeIn_0.5s_ease-out] ${isPlaying ? "scale-110 contrast-125 saturate-150" : "grayscale scale-100"}`}
-                />
-
-                <div className="absolute inset-0 bg-[#ff003c] mix-blend-overlay opacity-0 group-hover:opacity-20 transition-opacity"></div>
-
-                <div className="absolute top-0 left-0 w-6 h-6 md:w-8 md:h-8 border-t-2 border-l-2 border-[#fcee0a]"></div>
-                <div className="absolute bottom-0 right-0 w-6 h-6 md:w-8 md:h-8 border-b-2 border-r-2 border-[#fcee0a]"></div>
-              </div>
-
-              <div className="absolute -bottom-6 left-0 w-full flex justify-between items-end font-mono text-[10px] text-[#00f0ff] uppercase tracking-widest">
-                <span className="hidden md:inline">Codec: MP3_320</span>
-                <span>{isPlaying ? "PLAYING..." : "PAUSED"}</span>
-              </div>
-            </div>
-
-            <div className="w-full max-w-[320px] mb-6 md:mb-8 text-center relative px-4">
-              <h2 className="text-xl md:text-3xl font-cyber font-bold text-white mb-2 truncate drop-shadow-[0_0_5px_rgba(255,255,255,0.5)]">
-                {currentTrack.title}
-              </h2>
-              <p className="text-[#ff003c] font-mono text-[10px] md:text-xs tracking-[0.4em] uppercase">
-                SAMURAI // SILVERHAND
-              </p>
-            </div>
-
-            <div className="w-full max-w-[320px] mb-6 md:mb-8 relative group px-4 lg:px-0">
-              <div className="flex justify-between text-[10px] font-mono text-gray-500 mb-1">
-                <span>
-                  {formatPlaybackTime(currentTime)}
-                </span>
-                <span>{currentTrack.duration}</span>
-              </div>
-              <div className="relative h-2 bg-[#1a1a1a] border border-[#333] overflow-hidden">
-                <div
-                  className="absolute top-0 left-0 h-full bg-[#fcee0a] shadow-[0_0_10px_#fcee0a]"
-                  style={{ width: `${progress}%` }}
-                ></div>
-                <input
-                  type="range"
-                  min="0"
-                  max="100"
-                  step="0.1"
-                  value={progress}
-                  onChange={handleSeek}
-                  className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
-                />
-              </div>
-              <div className="absolute top-1/2 -left-2 w-1 h-3 bg-[#333] transform -translate-y-1/2"></div>
-              <div className="absolute top-1/2 -right-2 w-1 h-3 bg-[#333] transform -translate-y-1/2"></div>
-            </div>
-
-            <div className="flex justify-center items-center gap-6 md:gap-8 w-full max-w-[320px]">
-              <button
-                onClick={handlePrev}
-                className="text-gray-500 hover:text-[#00f0ff] transition-all hover:scale-110 active:scale-95"
-              >
-                <SkipBack size={24} className="md:w-7 md:h-7" />
-              </button>
-
-              <button
-                onClick={togglePlay}
-                className="w-14 h-14 md:w-16 md:h-16 bg-transparent border-2 border-[#fcee0a] text-[#fcee0a] rounded-sm flex items-center justify-center hover:bg-[#fcee0a] hover:text-black transition-all hover:shadow-[0_0_20px_#fcee0a] active:scale-95 group relative"
-              >
-                <div className="absolute top-1 left-1 w-2 h-2 border-t border-l border-current opacity-50"></div>
-                <div className="absolute bottom-1 right-1 w-2 h-2 border-b border-r border-current opacity-50"></div>
-
-                {isPlaying ? (
-                  <Pause
-                    size={28}
-                    className="md:w-8 md:h-8"
-                    fill="currentColor"
-                  />
-                ) : (
-                  <Play
-                    size={28}
-                    className="ml-1 md:w-8 md:h-8"
-                    fill="currentColor"
-                  />
-                )}
-              </button>
-
-              <button
-                onClick={handleNext}
-                className="text-gray-500 hover:text-[#00f0ff] transition-all hover:scale-110 active:scale-95"
-              >
-                <SkipForward size={24} className="md:w-7 md:h-7" />
-              </button>
-            </div>
-
-            <p className="mt-5 max-w-[320px] px-4 text-center font-mono text-[9px] uppercase leading-relaxed tracking-wider text-gray-600 lg:px-0">
-              Music rights: CD PROJEKT RED / REFUSED / respective copyright
-              holders
-            </p>
+          <div className="mt-6 flex items-center gap-4">
+            <button
+              type="button"
+              onClick={togglePlay}
+              aria-label={isPlaying ? "Пауза" : "Воспроизвести"}
+              className="flex h-20 w-20 items-center justify-center rounded-full bg-black text-blood transition-transform hover:scale-105 active:scale-95"
+            >
+              {isPlaying ? (
+                <Pause size={30} fill="currentColor" />
+              ) : (
+                <Play size={30} fill="currentColor" className="ml-1" />
+              )}
+            </button>
+            <button
+              type="button"
+              onClick={handlePrev}
+              aria-label="Предыдущий трек"
+              className="flex h-14 w-14 items-center justify-center rounded-full border-2 border-black transition-colors hover:bg-black hover:text-blood"
+            >
+              <SkipBack size={22} fill="currentColor" />
+            </button>
+            <button
+              type="button"
+              onClick={handleNext}
+              aria-label="Следующий трек"
+              className="flex h-14 w-14 items-center justify-center rounded-full border-2 border-black transition-colors hover:bg-black hover:text-blood"
+            >
+              <SkipForward size={22} fill="currentColor" />
+            </button>
           </div>
         </div>
 
-        <div className="w-full lg:w-7/12 h-auto lg:h-full overflow-visible lg:overflow-y-auto bg-[#030303] relative custom-scrollbar scroll-smooth">
-          <div className="absolute inset-0 pointer-events-none overflow-hidden">
-            <div className="absolute inset-0 bg-[linear-gradient(rgba(255,0,60,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(255,0,60,0.03)_1px,transparent_1px)] bg-[size:40px_40px] opacity-20"></div>
+        <p className="label border-t-2 border-black px-5 py-3 text-[9px] opacity-70 md:px-8">
+          Music rights: CD PROJEKT RED / REFUSED / respective copyright holders
+        </p>
+      </div>
 
-            <div className="absolute -top-20 -right-20 w-[600px] h-[600px] opacity-[0.03] rotate-12">
-              <img
-                src={ASSETS.samuraiLogo}
-                alt=""
-                className="w-full h-full object-contain"
-              />
-            </div>
+      {/* Liner notes */}
+      <div className="custom-scrollbar relative lg:overflow-y-auto">
+        <img
+          src={ASSETS.samuraiLogo}
+          alt=""
+          className="pointer-events-none absolute -right-24 -top-16 w-[520px] opacity-[0.06]"
+        />
+        <div className="relative px-5 py-12 md:px-12 md:py-16">
+          <div className="section-index mb-6 text-blood">Est. 2003 · Night City</div>
+          <h1 className="display text-[clamp(4rem,11vw,10.5rem)]">
+            <span className="outline-text block">We are</span>
+            Samurai
+          </h1>
+          <p className="mt-6 max-w-lg border-l-2 border-blood pl-5 text-base leading-relaxed text-bone/75">
+            Хромированный рок. Голос улиц. Мятеж, записанный на плёнку.
+            Единственная группа, которая сожгла город, чтобы доказать свою
+            правоту.
+          </p>
 
-            <div className="absolute top-1/3 left-0 w-64 md:w-96 h-64 md:h-96 bg-[#ff003c] rounded-full mix-blend-screen filter blur-[100px] md:blur-[120px] opacity-[0.05]"></div>
-
-            <div className="absolute top-40 right-10 w-[2px] h-32 bg-gradient-to-b from-transparent via-[#333] to-transparent hidden md:block"></div>
-          </div>
-
-          <div className="sticky top-0 h-10 md:h-20 bg-gradient-to-b from-[#030303] to-transparent z-20 pointer-events-none"></div>
-
-          <div className="max-w-4xl mx-auto p-6 md:p-8 lg:p-16 pt-0 relative z-10">
-            <div className="flex flex-col md:flex-row justify-between items-start mb-12 md:mb-16 border-b-2 border-[#333] pb-8 relative">
-              <div className="w-full">
-                <div className="inline-flex items-center gap-2 mb-2 bg-[#ff003c]/10 px-3 py-1 border border-[#ff003c]/20 rounded-sm">
-                  <Radio size={14} className="text-[#ff003c] animate-pulse" />
-                  <span className="text-[#ff003c] font-mono text-[10px] tracking-widest uppercase">
-                    Encrypted Connection
-                  </span>
-                </div>
-                <h1 className="text-4xl sm:text-6xl md:text-8xl font-black font-cyber text-white uppercase leading-[0.85] tracking-tighter mb-4">
-                  <span className="block text-stroke-thick text-transparent opacity-30">
-                    We Are
-                  </span>
-                  <span className="relative inline-block">
-                    Samurai
-                    <span className="absolute -top-3 -right-6 md:-top-4 md:-right-8 text-xl md:text-2xl text-[#fcee0a] font-normal tracking-normal italic opacity-80 rotate-12">
-                      est. 2003
+          <div className="section-index mb-2 mt-16 text-blood">Сет-лист</div>
+          <ol className="border-b border-line">
+            {TRACKS.map((track, idx) => {
+              const active = currentTrackIdx === idx;
+              return (
+                <li key={track.title}>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setCurrentTrackIdx(idx);
+                      setIsPlaying(true);
+                    }}
+                    aria-current={active}
+                    className={`group flex w-full items-baseline gap-4 border-t border-line py-4 text-left transition-colors md:gap-6 ${active ? "text-blood" : "text-bone hover:text-blood"}`}
+                  >
+                    <span className="w-8 font-mono text-xs opacity-60">
+                      0{idx + 1}
                     </span>
-                  </span>
-                </h1>
-                <p className="max-w-md text-gray-400 font-mono text-xs md:text-sm leading-relaxed border-l-2 border-[#fcee0a] pl-4">
-                  Хромированный рок. Голос улиц. Мятеж, записанный на пленку.
-                  Единственная группа, которая сожгла город, чтобы доказать свою
-                  правоту.
-                </p>
-              </div>
+                    <span className="display flex-1 text-3xl transition-transform duration-300 group-hover:translate-x-2 md:text-5xl">
+                      {track.title}
+                    </span>
+                    {active && (
+                      <span className={`eq ${isPlaying ? "" : "eq--paused"}`}>
+                        <i />
+                        <i />
+                        <i />
+                      </span>
+                    )}
+                    <span className="font-mono text-xs opacity-60">
+                      {track.duration}
+                    </span>
+                  </button>
+                </li>
+              );
+            })}
+          </ol>
 
-              <div className="mt-6 md:mt-0 opacity-20 hover:opacity-100 transition-opacity duration-500 self-end md:self-auto">
-                <img
-                  src={ASSETS.samuraiLogo}
-                  alt="Logo"
-                  className="w-24 md:w-32 lg:w-48"
-                />
-              </div>
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-12 gap-8 md:gap-12">
-              <div className="md:col-span-7">
-                <h3 className="text-white font-cyber text-lg md:text-xl mb-4 md:mb-6 flex items-center gap-3">
-                  <ListMusic className="text-[#00f0ff]" size={20} />
-                  <span className="tracking-widest">DISCOGRAPHY</span>
-                </h3>
-
-                <div className="space-y-1">
-                  {TRACKS.map((track, idx) => (
-                    <div
-                      key={idx}
-                      onClick={() => setCurrentTrackIdx(idx)}
-                      className={`
-                                        group relative flex justify-between items-center p-3 md:p-4 border border-transparent
-                                        cursor-pointer transition-all duration-300
-                                        ${
-                                          currentTrackIdx === idx
-                                            ? "bg-[#111] border-[#fcee0a] text-[#fcee0a] shadow-[0_0_15px_rgba(252,238,10,0.1)]"
-                                            : "hover:bg-[#111] hover:border-[#333] hover:translate-x-2 text-gray-400"
-                                        }
-                                    `}
-                    >
-                      <div className="flex items-center gap-4 relative z-10">
-                        <span
-                          className={`font-mono text-xs w-6 ${currentTrackIdx === idx ? "text-[#fcee0a]" : "text-[#333]"}`}
-                        >
-                          0{idx + 1}
-                        </span>
-                        <span className="font-bold font-cyber text-sm md:text-lg tracking-wide uppercase group-hover:text-white transition-colors">
-                          {track.title}
-                        </span>
-                      </div>
-                      <div className="flex items-center gap-3 relative z-10">
-                        {currentTrackIdx === idx && (
-                          <BarChart3 size={16} className="animate-pulse" />
-                        )}
-                        <span className="font-mono text-xs opacity-60">
-                          {track.duration}
-                        </span>
-                      </div>
-
-                      <div className="absolute inset-0 bg-[#ffffff03] transform scale-x-0 group-hover:scale-x-100 transition-transform origin-left z-0"></div>
+          <div className="mt-16 grid gap-14 xl:grid-cols-2">
+            <div>
+              <div className="section-index mb-6 text-blood">Хронология</div>
+              <ol className="space-y-8">
+                {TIMELINE_EVENTS.map((item) => (
+                  <li key={item.year} className="grid grid-cols-[4.5rem_1fr] gap-4">
+                    <span className="font-display text-3xl font-bold leading-none text-blood">
+                      {item.year}
+                    </span>
+                    <div>
+                      <h3 className="font-display text-lg font-bold uppercase tracking-wide">
+                        {item.title}
+                      </h3>
+                      <p className="mt-1.5 text-sm leading-relaxed text-bone/65">
+                        {item.description}
+                      </p>
                     </div>
-                  ))}
-                </div>
-              </div>
-
-              <div className="md:col-span-5 space-y-12">
-                <div>
-                  <h3 className="text-white font-cyber text-lg md:text-xl mb-4 md:mb-6 flex items-center gap-3">
-                    <span className="w-2 h-2 bg-[#ff003c]"></span>
-                    <span className="tracking-widest">TIMELINE</span>
-                  </h3>
-                  <div className="relative border-l border-[#333] ml-3 space-y-6 pl-8 py-2">
-                    {TIMELINE_EVENTS.map((item, i) => (
-                      <div key={i} className="relative group cursor-default">
-                        <div className="absolute -left-[37px] top-1.5 w-3 h-3 bg-[#0b0b0b] border border-[#555] rounded-full group-hover:border-[#ff003c] group-hover:bg-[#ff003c] transition-all duration-300 shadow-[0_0_0_transparent] group-hover:shadow-[0_0_10px_#ff003c]"></div>
-
-                        <div className="flex flex-col">
-                          <span className="text-[#ff003c] font-cyber font-bold text-sm mb-1 group-hover:text-[#fcee0a] transition-colors duration-300">
-                            {item.year}
-                          </span>
-                          <span className="text-gray-300 font-bold text-sm block group-hover:text-white transition-colors duration-300">
-                            {item.title}
-                          </span>
-
-                          <div className="md:grid md:grid-rows-[0fr] md:group-hover:grid-rows-[1fr] transition-[grid-template-rows] duration-500 ease-out">
-                            <div className="overflow-hidden">
-                              <p className="text-gray-500 font-mono text-xs leading-relaxed mt-2 border-l-2 border-[#ff003c] pl-3 opacity-100 md:opacity-0 md:group-hover:opacity-100 transition-opacity duration-500 delay-75">
-                                {item.description}
-                              </p>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-
-                <div>
-                  <h3 className="text-white font-cyber text-lg md:text-xl mb-4 md:mb-6 tracking-widest">
-                    PERSONNEL
-                  </h3>
-                  <div className="grid grid-cols-1 gap-3">
-                    {MEMBERS.map((member, i) => (
-                      <div
-                        key={i}
-                        className="flex items-center justify-between bg-[#111] p-3 border-l-2 border-transparent hover:border-[#00f0ff] transition-colors group"
-                      >
-                        <div className="flex items-center gap-3">
-                          <div className="text-gray-600 group-hover:text-[#00f0ff] transition-colors">
-                            {member.icon}
-                          </div>
-                          <span className="text-gray-300 font-bold text-xs md:text-sm uppercase group-hover:text-white">
-                            {member.name}
-                          </span>
-                        </div>
-                        <span className="text-[10px] font-mono text-gray-600 uppercase group-hover:text-[#00f0ff]">
-                          {member.role.split(" ")[0]}
-                        </span>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              </div>
+                  </li>
+                ))}
+              </ol>
             </div>
 
-            <div className="mt-16 md:mt-20 border-t border-[#222] pt-8 flex flex-col md:flex-row justify-between items-start md:items-end gap-4 opacity-70 md:opacity-50 md:hover:opacity-100 transition-opacity pb-8 md:pb-0">
-              <div className="font-mono text-[10px] text-gray-500 max-w-xs">
-                WARNING: LISTENING TO SUBVERSIVE MATERIAL MAY VIOLATE NCPD CODE
-                330.1. PROCEED AT OWN RISK.
-              </div>
-              <div className="text-left md:text-right">
-                <div className="font-cyber text-xl md:text-2xl font-bold text-[#333]">
-                  NIGHT CITY
-                </div>
-                <div className="font-mono text-xs text-[#ff003c]">
-                  ARCHIVES_2077
-                </div>
-              </div>
+            <div>
+              <div className="section-index mb-6 text-blood">Состав</div>
+              <ul>
+                {MEMBERS.map((member) => (
+                  <li
+                    key={member.name}
+                    className="flex items-baseline justify-between gap-4 border-t border-line py-3"
+                  >
+                    <span className="font-display text-xl font-bold uppercase">
+                      {member.name}
+                    </span>
+                    <span className="label text-dust">{member.role}</span>
+                  </li>
+                ))}
+              </ul>
+              <p className="label mt-10 leading-relaxed text-dust">
+                Warning: listening to subversive material may violate NCPD code
+                330.1. Proceed at own risk.
+              </p>
             </div>
           </div>
         </div>

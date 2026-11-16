@@ -6,7 +6,6 @@ import CustomCursor from "./components/CustomCursor";
 import SettingsModal from "./components/SettingsModal";
 import CrtShader from "./components/CrtShader";
 import CrtOverlay from "./components/CrtOverlay";
-import SectionTransition from "./components/SectionTransition";
 import { useSettings } from "./context/SettingsContext";
 
 const Biography = lazy(() => import("./components/Biography"));
@@ -59,7 +58,7 @@ const App = () => {
         crtWarp
           ? `crt-scroll-container h-screen overflow-x-hidden overflow-y-auto ${enableCrtGeometry ? "crt-barrel-surface" : ""}`
           : "min-h-screen"
-      } bg-[#0b0b0b] text-white selection:bg-[#00f0ff] selection:text-black relative ${enableCustomCursor || crtWarp ? "cursor-none" : "cursor-auto"}`}
+      } bg-ink text-bone relative ${enableCustomCursor || crtWarp ? "cursor-none" : "cursor-auto"}`}
     >
       {(enableCustomCursor || crtWarp) && (
         <CustomCursor
@@ -90,8 +89,8 @@ const App = () => {
       {showSamuraiPage && (
         <Suspense
           fallback={
-            <div className="fixed inset-0 bg-black z-[100] flex items-center justify-center text-[#ff003c] font-cyber">
-              INITIALIZING_MUSIC_DB...
+            <div className="label fixed inset-0 z-[100] flex items-center justify-center bg-blood text-black">
+              Initializing_music_db…
             </div>
           }
         >
@@ -112,23 +111,14 @@ const App = () => {
 
           <Suspense
             fallback={
-              <div className="h-96 w-full flex items-center justify-center bg-[#0b0b0b]">
-                <div className="flex flex-col items-center">
-                  <div className="w-16 h-1 bg-[#ff003c] animate-pulse mb-2"></div>
-                  <div className="font-cyber text-[#00f0ff] animate-pulse">
-                    LOADING_DATA_SHARDS...
-                  </div>
-                </div>
+              <div className="label flex h-96 w-full items-center justify-center bg-ink text-blood">
+                <span className="animate-pulse">Loading_data_shards…</span>
               </div>
             }
           >
             <Biography />
             {isClassified && (
-              <>
-                <SectionTransition />
-                <ClassifiedSection />
-                <SectionTransition direction="out" />
-              </>
+<ClassifiedSection />
             )}
             <Arsenal />
             <Engram />
@@ -136,7 +126,7 @@ const App = () => {
         </main>
 
         <Suspense fallback={null}>
-          <DeveloperNote />
+          <DeveloperNote onOpenTerminal={handleOpenTerminal} />
           <Footer />
         </Suspense>
       </div>

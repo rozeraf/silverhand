@@ -35,13 +35,20 @@ There are no tests and no linter. "Verified" means `bunx tsc --noEmit` and `bun 
 
 ## Architecture notes (non-obvious parts)
 
-- **No CSS build.** Tailwind comes from the CDN script in `index.html`. Its theme (`cp-yellow`, `cp-blue`, `cp-red`, `cp-bg`, fonts Orbitron/`font-cyber` and Rajdhani) and all global CSS (noise, scanlines, clip-paths, keyframes, CRT classes) live inline in `index.html`. There are no `.css` files. Dynamically built class names work only because of the CDN JIT.
+- **Styling is split in two.**
+  - `styles/main.css` (imported in `index.tsx`) holds the design tokens and every signature piece: `.display`, `.label`, `.outline-text`, `.btn*`, `.nav*`, `.hero*`, `.glitch`, `.marquee`, `.paper`, `.evidence`, `.rubber-stamp`, `.redact`, `.hazard`, `.blueprint`, `.spec`, `.relic-frame`, `.vinyl`, `.seek`, `.switch`, the CRT classes and all keyframes.
+  - Tailwind still comes from the CDN script in `index.html` and is used for layout/spacing only. Its inline config maps the tokens to utilities: colors `ink`, `coal`, `line`, `bone`, `dust`, `blood`, `acid`, `relic` (plus legacy `cp-*`), fonts `font-display`/`font-cyber` (Oswald), `font-sans` (Golos Text), `font-mono` (JetBrains Mono). Dynamically built class names work only because of the CDN JIT.
+- **Design direction** — a punk zine about a dead rocker, read through a failing biochip. Keep to it when adding UI:
+  - red (`blood`) leads; bone "paper" sections (`.paper`, `.dossier-sheet`) break up the dark ones; yellow (`acid`) is for hazard tape and highlights; cyan (`relic`) is reserved for Relic/engram content;
+  - poster-size Oswald headings (`.display`), mono `.label`/`.section-index` captions, sections opened with `SectionHead` (index like `A1`, kicker, title);
+  - fonts must support Cyrillic (the old Orbitron/Rajdhani did not);
+  - animate only `transform`/`opacity`, and add new animations to the `prefers-reduced-motion` block at the end of `main.css`.
 - **`App.tsx` orchestrates the page.** Overlays are `Terminal`, `SettingsModal` and the full-screen `Samurai` player. Content sections and `Footer` are `lazy()`-loaded. `ClassifiedSection` renders only when `localStorage.classified === "true"`.
 - **`context/SettingsContext.tsx`** keeps the settings in `localStorage.cyber_settings`. When `bootSequence` is on (the default), the terminal with its boot animation opens on every page load. Legacy key `has_visited` is read once for migration and then removed. `enableAnimations` controls only the `RevealOnScroll` fade-ins.
 - **CRT has two tiers.**
   - `enableScanlines` ("CRT DISPLAY") renders `CrtOverlay.tsx`, the lite mode: one static phosphor/vignette layer plus scanline-flicker and rolling-band layers that animate only `opacity`/`transform` (`.crt-lite*` in `index.html`). It is cheap and touches neither scrolling nor the cursor.
   - `enableCrtWarp` (Experimental, only with CRT on) switches to `CrtShader.tsx`: a full-screen WebGL pass plus the `.crt-barrel-surface` SVG displacement filter over the whole page, inside an internal scroll container. The filter re-rasterizes the DOM on every scroll or animation, so this mode is extremely heavy (≈15× fewer frames than lite in a headless benchmark).
-  - Use the derived `crtWarp` from `useSettings()` for "heavy mode active" checks. Components that degrade effects (GlitchText, Hero coords, Engram tilt) and the forced/warped `CustomCursor` key off `crtWarp`, not `enableScanlines`. `CustomCursor` warps its position to match the barrel geometry, so change those together.
+  - Use the derived `crtWarp` from `useSettings()` for "heavy mode active" checks. Components that degrade effects (the Engram tilt) and the forced/warped `CustomCursor` key off `crtWarp`, not `enableScanlines`. `CustomCursor` warps its position to match the barrel geometry, so change those together.
 - **Media goes through `assets.ts`.** Files in `assets/` and `music/` are pulled in with eager `import.meta.glob(..., { query: "?url" })`, so Vite hashes them and **every MP3 ships in `dist/`** (~27 MB of the ~33 MB build). Always reference media via `ASSETS`, never via hard-coded paths. Moving music out to Cloudflare R2 is planned in `todo.md`.
 - **Terminal** (`components/Terminal.tsx` + `terminal/`):
   - Client-side virtual filesystem, built by `terminal/filesystem.ts` from `import.meta.glob` over `terminal/files/**/*.txt`, `assets/` and `music/` (media appears under `/srv/silverhand`).
