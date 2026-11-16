@@ -51,7 +51,7 @@
 ## P2 — CRT, анимации и производительность
 
 - [ ] Снять профиль Performance/GPU на Hero, Terminal, первой и последней секциях с включённым CRT.
-- [ ] Добавить облегчённый CRT preset без SVG `feDisplacementMap` для слабых устройств.
+- [x] Добавить облегчённый CRT preset без SVG `feDisplacementMap` для слабых устройств (`CrtOverlay`, тяжёлый режим — опция `enableCrtWarp`).
 - [ ] Останавливать WebGL loop при скрытой вкладке и статичном/неактивном эффекте.
 - [ ] Учитывать `prefers-reduced-motion`; отключать glitch, scramble, tilt, parallax и постоянное мерцание.
 - [ ] Сделать `enableAnimations` единым выключателем всех необязательных анимаций.
