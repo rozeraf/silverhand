@@ -1,6 +1,7 @@
 import React from "react";
 import RevealOnScroll from "./RevealOnScroll";
 import SectionHead from "./SectionHead";
+import Kinetic from "./Kinetic";
 import { ASSETS } from "../assets";
 
 const EVENTS = [
@@ -33,6 +34,7 @@ const EVENTS = [
 const Biography = () => (
   <>
     <section id="bio" className="paper overflow-hidden py-20 md:py-32">
+      <div className="hairlines" aria-hidden="true" />
       <img
         src={ASSETS.samuraiLogo}
         alt=""
@@ -163,11 +165,17 @@ const Biography = () => (
       <div className="mx-auto max-w-[1500px] px-5 md:px-10">
         <RevealOnScroll>
           <div className="section-index mb-6">Memory_log_114</div>
-          <blockquote className="display text-[clamp(2.75rem,10.5vw,10rem)]">
-            «Wake the f**k up, Samurai.
-            <br />
-            <span className="outline-text">We have a city</span> to burn.»
-          </blockquote>
+          <Kinetic
+            as="blockquote"
+            className="display text-[clamp(2.75rem,10.5vw,10rem)]"
+            step={110}
+            parts={[
+              "«Wake the f**k up, Samurai.",
+              "\n",
+              ["We have a city", "outline-text"],
+              "to burn.»",
+            ]}
+          />
         </RevealOnScroll>
       </div>
     </section>

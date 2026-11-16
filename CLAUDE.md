@@ -44,6 +44,7 @@ There are no tests and no linter. "Verified" means `bunx tsc --noEmit` and `bun 
   - two voices: the official corporate record, and Johnny's red marker over it — `.scrawl` notes (Caveat), `.struck` and `.circled` words. Keep his remarks short, sarcastic and in character; don't put lore facts only in them;
   - paper ends in a torn edge (`.tear`), and the `.relic-fx` layer (shown with film grain) flashes a brief "Relic malfunction" screen tear about every 30 s;
   - `Navbar` shows the current section as "now playing" and its bottom line is the scroll playback head;
+  - motion borrowed from fan edits: `Kinetic` lands the words of a big statement one by one on scroll (use it for poster-size quotes only), `.smear-cut` replays a short tear when the view switches, cut-out PNGs get a hard yellow "sticker" offset on hover (`.blueprint--cutout`), and `.hairlines` puts thin diagonals across a sheet;
   - fonts must support Cyrillic (the old Orbitron/Rajdhani did not) and are self-hosted: `@fontsource/*` packages imported in `index.tsx`, never a font CDN — when Google Fonts failed to load, the whole layout fell apart;
   - animate only `transform`/`opacity`, and add new animations to the `prefers-reduced-motion` block at the end of `main.css`.
 - **`App.tsx` orchestrates the page.** Overlays are `Terminal`, `SettingsModal` and the full-screen `Samurai` player. Content sections and `Footer` are `lazy()`-loaded.

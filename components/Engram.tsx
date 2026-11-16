@@ -2,6 +2,7 @@ import React from "react";
 import { ArrowRight } from "lucide-react";
 import RevealOnScroll from "./RevealOnScroll";
 import SectionHead from "./SectionHead";
+import Kinetic from "./Kinetic";
 import { ASSETS } from "../assets";
 
 const Engram = () => (
@@ -92,9 +93,12 @@ const Engram = () => (
           <article className="flex h-full flex-col justify-between bg-blood p-7 text-black md:p-10">
             <div className="label font-bold">01 · Что такое энграмма?</div>
             <div>
-              <h3 className="display mt-10 text-[clamp(3.5rem,8vw,7.5rem)]">
-                Это не душа.
-              </h3>
+              <Kinetic
+                as="h3"
+                className="display mt-10 block text-[clamp(3.5rem,8vw,7.5rem)]"
+                step={160}
+                parts={["Это не душа."]}
+              />
               <p className="mt-6 max-w-2xl text-[15px] font-medium leading-relaxed md:text-lg">
                 Это цифровая копия сознания, записанная на экспериментальный
                 биочип Arasaka. Код, имитирующий мыслительные процессы,
@@ -160,10 +164,12 @@ const Engram = () => (
           <article className="paper flex h-full flex-col justify-between p-7 md:p-10">
             <div className="label font-bold">04 · Наследие</div>
             <div>
-              <blockquote className="display mt-10 text-[clamp(2.75rem,6vw,5.5rem)]">
-                «Никогда не переставай{" "}
-                <span className="text-blood">бороться</span>»
-              </blockquote>
+              <Kinetic
+                as="blockquote"
+                className="display mt-10 text-[clamp(2.75rem,6vw,5.5rem)]"
+                step={130}
+                parts={["«Никогда не переставай", ["бороться»", "text-blood"]]}
+              />
               <p className="mt-6 max-w-2xl text-[15px] leading-relaxed text-ink/80 md:text-base">
                 Это кредо, которое он передаёт нам. Энграмма доказывает, что
                 даже цифровая копия человека может проявить больше человечности,

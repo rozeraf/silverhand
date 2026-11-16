@@ -31,6 +31,8 @@ const App = () => {
   const [showSamuraiPage, setShowSamuraiPage] = useState(false);
   const [showSettings, setShowSettings] = useState(false);
   const [showUnlockToast, setShowUnlockToast] = useState(false);
+  // Bumped whenever the view switches, to replay the smear cut.
+  const [cut, setCut] = useState(0);
   const enableCrtGeometry =
     crtWarp && !showTerminal && !showSettings && !showSamuraiPage;
 
@@ -50,6 +52,7 @@ const App = () => {
   };
 
   const handleAuthSuccess = (unlockedClassified: boolean) => {
+    if (unlockedClassified !== isClassified) setCut((n) => n + 1);
     setIsClassified(unlockedClassified);
     setShowUnlockToast(unlockedClassified);
   };
@@ -85,9 +88,23 @@ const App = () => {
             <i />
             <i />
             <i />
-            <b>RELIC MALFUNCTION</b>
+            <b>
+              <span>⚠ Warning</span>
+              <span>Relic malfunction</span>
+            </b>
           </div>
         </>
+      )}
+
+      {cut > 0 && (
+        <div key={cut} className="smear-cut" aria-hidden="true">
+          <i />
+          <i />
+          <i />
+          <i />
+          <i />
+          <i />
+        </div>
       )}
 
       {showUnlockToast && (

@@ -162,7 +162,9 @@ const Arsenal = () => (
         {ITEMS.map((item, index) => (
           <RevealOnScroll key={item.code} delay={index * 150}>
             <article className={`relative ${index === 1 ? "md:mt-24" : ""}`}>
-              <div className="blueprint aspect-[4/3]">
+              <div
+                className={`blueprint aspect-[4/3] ${item.cover ? "" : "blueprint--cutout"}`}
+              >
                 <span className="tick tick--tl" />
                 <span className="tick tick--tr" />
                 <span className="tick tick--bl" />
