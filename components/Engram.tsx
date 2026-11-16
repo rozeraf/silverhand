@@ -115,12 +115,14 @@ const Engram = () => (
             <div className="label text-blood">02 · Симбиоз с Ви</div>
             <div className="mt-8 grid grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)] items-end gap-3">
               <div>
-                <div className="display text-[clamp(2rem,9vw,4.5rem)]">Ви</div>
+                <div className="display text-[clamp(2rem,9vw,4rem)] lg:text-[clamp(2rem,3.5vw,4.25rem)]">
+                  Ви
+                </div>
                 <div className="label mt-2 text-dust">жёстче, решительнее</div>
               </div>
               <span className="display pb-7 text-2xl text-blood md:text-3xl">×</span>
               <div className="text-right">
-                <div className="display text-[clamp(2rem,9vw,4.5rem)] text-blood">
+                <div className="display text-[clamp(2rem,9vw,4rem)] text-blood lg:text-[clamp(2rem,3.5vw,4.25rem)]">
                   Джонни
                 </div>
                 <div className="label mt-2 text-dust">учится эмпатии</div>
@@ -154,7 +156,7 @@ const Engram = () => (
               осознаёт свои ошибки и становится другом, готовым уйти во тьму
               киберпространства, чтобы дать Ви шанс на жизнь.
             </p>
-            <p className="scrawl scrawl--dark mt-5">
+            <p className="scrawl scrawl--dark mt-auto pt-6">
               «нарцисс». ладно. было дело.
             </p>
           </article>

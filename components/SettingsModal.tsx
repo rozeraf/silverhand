@@ -146,7 +146,7 @@ const SettingsModal = ({ isOpen, onClose, onOpenTerminal }: SettingsModalProps) 
           />
           <ToggleOption
             label="Animations"
-            description="Эффекты появления при скролле (Fade In)."
+            description="Появление блоков и слов по одному при прокрутке."
             value={enableAnimations}
             onChange={() =>
               updateSetting("enableAnimations", !enableAnimations)

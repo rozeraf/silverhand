@@ -25,27 +25,27 @@ const MEMBERS = [
 const TIMELINE_EVENTS = [
   {
     year: "2003",
-    title: "FORMATION",
+    title: "Основание",
     description:
-      'Основана Джонни Сильверхендом и Керри Евродином в задних комнатах "Rainbow Cadenza". Их сырая энергия и антикорпоративные тексты мгновенно нашли отклик у бесправной молодежи Найт-Сити.',
+      "Основана Джонни Сильверхендом и Керри Евродином в задних комнатах «Rainbow Cadenza». Их сырая энергия и антикорпоративные тексты мгновенно нашли отклик у бесправной молодёжи Найт-Сити.",
   },
   {
     year: "2008",
-    title: "THE BREAKUP",
+    title: "Распад",
     description:
       "После того как клавишница Нэнси была арестована за то, что выбросила мужа-абьюзера из окна, группа распалась. 7 месяцев тюрьмы для неё означали конец Samurai.",
   },
   {
     year: "2023",
-    title: "ARASAKA TOWER",
+    title: "Башня Arasaka",
     description:
       "Джонни возглавил ударную группу Militech, чтобы проникнуть в сердце Арасака-Тауэр и спасти Альт Каннингем. Миссия закончилась ядерным взрывом, уничтожившим центр города, и физической смертью Джонни.",
   },
   {
     year: "2077",
-    title: "THE REUNION",
+    title: "Воссоединение",
     description:
-      'Спустя десятилетия выжившие участники воссоединились для одного последнего концерта в баре Red Dirt. Используя тело Ви как проводник для Джонни, они сыграли "A Like Supreme" в последний раз.',
+      "Спустя десятилетия выжившие участники воссоединились для одного последнего концерта в баре Red Dirt. Используя тело Ви как проводник для Джонни, они сыграли «A Like Supreme» в последний раз.",
   },
 ];
 
@@ -98,7 +98,7 @@ const Samurai = ({ onBack }: SamuraiPageProps) => {
         </div>
 
         <div className="flex flex-1 flex-col justify-center px-5 py-10 md:px-10">
-          <div className="relative mx-auto mb-10 aspect-square w-[62%] max-w-[340px] -translate-x-[12%]">
+          <div className="deck__cover relative mx-auto mb-10 aspect-square w-[62%] max-w-[340px]">
             <div className="vinyl" />
             <img
               key={currentTrack.title}

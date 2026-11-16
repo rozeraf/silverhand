@@ -88,7 +88,7 @@ const Details = ({ item }: { item: Item }) => (
       ))}
     </dl>
     {item.note && (
-      <p className="mt-6 border-l-2 border-blood pl-4 font-mono text-xs leading-relaxed text-bone/60">
+      <p className="mt-6 border-l-2 border-blood pl-4 font-mono text-xs leading-relaxed text-bone/75">
         <span className="text-blood">// </span>
         {item.note}
       </p>
@@ -125,10 +125,6 @@ const Arsenal = () => (
       <RevealOnScroll>
         <article className="relative">
           <div className="blueprint aspect-[4/3] md:aspect-[21/9]">
-            <span className="tick tick--tl" />
-            <span className="tick tick--tr" />
-            <span className="tick tick--bl" />
-            <span className="tick tick--br" />
             <img
               src={MALORIAN.image}
               alt={MALORIAN.alt}
@@ -136,6 +132,10 @@ const Arsenal = () => (
               className="absolute inset-0 h-full w-full object-cover"
             />
             <div className="absolute inset-0 bg-gradient-to-t from-ink via-ink/20 to-transparent" />
+            <span className="tick tick--tl" />
+            <span className="tick tick--tr" />
+            <span className="tick tick--bl" />
+            <span className="tick tick--br" />
             <span className="label absolute right-7 top-7 bg-acid px-2 py-1 text-black">
               Iconic
             </span>
@@ -165,22 +165,16 @@ const Arsenal = () => (
               <div
                 className={`blueprint aspect-[4/3] ${item.cover ? "" : "blueprint--cutout"}`}
               >
-                <span className="tick tick--tl" />
-                <span className="tick tick--tr" />
-                <span className="tick tick--bl" />
-                <span className="tick tick--br" />
                 <img
                   src={item.image}
                   alt={item.alt}
                   loading="lazy"
                   className={`absolute inset-0 h-full w-full ${item.cover ? "object-cover" : "object-contain p-6 md:p-10"}`}
                 />
-                <span
-                  className="display outline-text pointer-events-none absolute -bottom-4 right-4 text-[7rem] text-bone/50 md:text-[10rem]"
-                  aria-hidden="true"
-                >
-                  0{index + 2}
-                </span>
+                <span className="tick tick--tl" />
+                <span className="tick tick--tr" />
+                <span className="tick tick--bl" />
+                <span className="tick tick--br" />
               </div>
               <EvidenceTag
                 no={index + 2}

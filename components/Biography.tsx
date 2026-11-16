@@ -34,11 +34,10 @@ const EVENTS = [
 const Biography = () => (
   <>
     <section id="bio" className="paper overflow-hidden py-20 md:py-32">
-      <div className="hairlines" aria-hidden="true" />
       <img
         src={ASSETS.samuraiLogo}
         alt=""
-        className="sticker johnny-only bottom-10 right-[5%] rotate-12"
+        className="sticker johnny-only bottom-12 left-[22%] hidden -rotate-12 lg:block"
       />
       <div className="mx-auto max-w-[1500px] px-5 md:px-10">
         <SectionHead
@@ -170,9 +169,12 @@ const Biography = () => (
             className="display text-[clamp(2.75rem,10.5vw,10rem)]"
             step={110}
             parts={[
-              "«Wake the f**k up, Samurai.",
+              "«Wake the f**k up,",
+              "\n",
+              "Samurai.",
               "\n",
               ["We have a city", "outline-text"],
+              "\n",
               "to burn.»",
             ]}
           />

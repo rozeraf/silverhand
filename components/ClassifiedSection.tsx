@@ -136,14 +136,14 @@ const ClassifiedSection = () => (
       Top secret
     </div>
 
-    <div className="relative mx-auto max-w-5xl px-5">
+    <div className="relative mx-auto max-w-5xl px-2 md:px-5">
       <RevealOnScroll>
         <div className="mb-6 flex items-center justify-between gap-4 text-blood">
           <span className="section-index">A2 — Вскрытый архив</span>
           <span className="label hidden sm:inline">Clearance: Omega</span>
         </div>
 
-        <article className="dossier-sheet px-6 py-10 md:px-14 md:py-14">
+        <article className="dossier-sheet px-5 py-10 md:px-14 md:py-14">
           <div className="relative">
             <header className="flex flex-wrap items-start justify-between gap-4 border-b-2 border-ink pb-5">
               <div>
@@ -218,7 +218,7 @@ const ClassifiedSection = () => (
             </ol>
 
             <div className="mt-6 border-2 border-ink">
-              <div className="grid grid-cols-[5.5rem_1fr_1fr] bg-ink text-[10px] font-bold uppercase tracking-[0.16em] text-bone md:grid-cols-[9rem_1fr_1fr] md:text-[11px]">
+              <div className="hidden bg-ink text-[11px] font-bold uppercase tracking-[0.16em] text-bone md:grid md:grid-cols-[9rem_1fr_1fr]">
                 <span className="p-3" />
                 <span className="p-3">Помнит энграмма</span>
                 <span className="p-3 text-acid">Установлено</span>
@@ -226,13 +226,21 @@ const ClassifiedSection = () => (
               {COMPARISON.map(([topic, memory, fact]) => (
                 <div
                   key={topic}
-                  className="grid grid-cols-[5.5rem_1fr_1fr] border-t border-ink/30 text-xs leading-relaxed md:grid-cols-[9rem_1fr_1fr] md:text-sm"
+                  className="border-t border-ink/30 text-sm leading-relaxed first:border-t-0 md:grid md:grid-cols-[9rem_1fr_1fr] md:first:border-t"
                 >
-                  <span className="p-3 text-[10px] font-bold uppercase tracking-[0.14em] md:text-[11px]">
+                  <span className="block bg-ink px-3 py-2 text-[11px] font-bold uppercase tracking-[0.14em] text-bone md:bg-transparent md:p-3 md:text-ink">
                     {topic}
                   </span>
-                  <span className="p-3 opacity-60">{memory}</span>
-                  <span className="border-l border-ink/30 p-3 font-bold">
+                  <span className="block px-3 pt-3 opacity-60 md:p-3">
+                    <span className="mb-1 block text-[10px] font-bold uppercase tracking-[0.14em] md:hidden">
+                      Помнит энграмма
+                    </span>
+                    {memory}
+                  </span>
+                  <span className="block p-3 font-bold md:border-l md:border-ink/30">
+                    <span className="mb-1 block text-[10px] uppercase tracking-[0.14em] text-blood md:hidden">
+                      Установлено
+                    </span>
                     {fact}
                   </span>
                 </div>

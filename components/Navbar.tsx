@@ -15,10 +15,10 @@ interface NavbarProps {
 }
 
 const NAV_LINKS = [
-  { name: "Главная", href: "#hero", side: "00" },
-  { name: "Досье", href: "#bio", side: "A1" },
-  { name: "Арсенал", href: "#arsenal", side: "B1" },
-  { name: "Энграмма", href: "#engram", side: "B2" },
+  { name: "Главная", href: "#hero" },
+  { name: "Досье", href: "#bio" },
+  { name: "Арсенал", href: "#arsenal" },
+  { name: "Энграмма", href: "#engram" },
 ];
 
 const Navbar = ({
@@ -46,7 +46,7 @@ const Navbar = ({
       const max = el.scrollHeight - el.clientHeight;
       setScrolled(scrollTop > 40);
 
-      // "Now playing": the last section whose top has passed 40% of the screen.
+      // Active link: the last section whose top has passed 40% of the screen.
       const line = window.innerHeight * 0.4;
       let current = 0;
       NAV_LINKS.forEach((link, i) => {
@@ -160,12 +160,7 @@ const Navbar = ({
                   <span className="truncate">{player.track.title}</span>
                 </button>
               </span>
-            ) : (
-              <span className="label mr-3 hidden text-dust xl:inline">
-                <span className="text-blood">▶</span> {NAV_LINKS[active].side}{" "}
-                — <span className="text-bone">{NAV_LINKS[active].name}</span>
-              </span>
-            )}
+            ) : null}
             {johnnyView && (
               <span
                 className="label mr-2 hidden bg-acid px-2 py-1 font-bold text-black sm:inline"

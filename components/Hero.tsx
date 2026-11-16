@@ -70,9 +70,6 @@ const Hero = ({ onOpenSamurai }: HeroProps) => (
         </div>
 
         <div className="hidden items-end justify-end gap-6 md:flex">
-          <span className="writing-vertical font-display text-5xl font-bold text-blood">
-            侍
-          </span>
           <svg
             viewBox="0 0 200 200"
             className="h-36 w-36 text-bone lg:h-44 lg:w-44"
@@ -100,14 +97,13 @@ const Hero = ({ onOpenSamurai }: HeroProps) => (
             <circle cx="100" cy="100" r="46" fill="#ff003c" />
             <text
               x="100"
-              y="112"
+              y="117"
               textAnchor="middle"
               fill="#000"
-              fontFamily="Oswald, sans-serif"
-              fontSize="34"
+              fontSize="46"
               fontWeight="700"
             >
-              86%
+              侍
             </text>
           </svg>
         </div>

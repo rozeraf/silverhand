@@ -746,7 +746,7 @@ const Terminal = ({
       {/* Status poster */}
       <aside className="relative flex shrink-0 flex-col justify-between gap-6 overflow-hidden border-b border-line bg-black px-5 py-5 md:px-10 lg:border-b-0 lg:border-r lg:py-10">
         <div className="flex items-center justify-between gap-4">
-          <span className="section-index text-relic">Relic biochip v2.0</span>
+          <span className="section-index text-blood">Relic biochip v2.0</span>
           <button
             type="button"
             onClick={onClose}
@@ -761,7 +761,7 @@ const Terminal = ({
           {isBooting ? (
             <>
               <div className="label mb-2 text-dust">Загрузка энграммы</div>
-              <div className="display text-[clamp(4.5rem,13vw,12rem)] tabular-nums text-relic">
+              <div className="display text-[clamp(4.5rem,13vw,12rem)] tabular-nums text-blood">
                 {Math.round(bootProgress * 100)}%
               </div>
             </>
@@ -773,7 +773,7 @@ const Terminal = ({
               </span>
             </h2>
           )}
-          <div className="meter mt-5 text-relic">
+          <div className="meter mt-5 text-blood">
             <i style={{ width: `${bootProgress * 100}%` }} />
           </div>
         </div>
@@ -890,7 +890,7 @@ const Terminal = ({
           )}
 
           {isBooting && (
-            <div className="mt-2 inline-block h-4 w-2 animate-pulse bg-relic"></div>
+            <div className="mt-2 inline-block h-4 w-2 animate-pulse bg-blood"></div>
           )}
         </div>
 
