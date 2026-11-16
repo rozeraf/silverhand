@@ -95,37 +95,10 @@ const CustomCursor = ({
         willChange: "transform",
       }}
     >
-      <div className="relative -translate-x-1/2 -translate-y-1/2 transition-all duration-150 ease-out">
-        <div
-          className={`w-1 h-1 bg-[#ff003c] rounded-full absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 ${clicked ? "scale-150" : "scale-100"}`}
-        />
-
-        <div
-          className={`
-            absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2
-            border border-[#00f0ff]
-            transition-all duration-300
-            ${linkHovered ? "w-8 h-8 rotate-45 border-[#fcee0a] border-2" : "w-5 h-5 rotate-0"}
-            ${clicked ? "scale-75" : "scale-100"}
-        `}
-        >
-          {!linkHovered && (
-            <>
-              <div className="absolute -top-[1px] -left-[1px] w-1.5 h-1.5 border-t border-l border-[#00f0ff]"></div>
-              <div className="absolute -top-[1px] -right-[1px] w-1.5 h-1.5 border-t border-r border-[#00f0ff]"></div>
-              <div className="absolute -bottom-[1px] -left-[1px] w-1.5 h-1.5 border-b border-l border-[#00f0ff]"></div>
-              <div className="absolute -bottom-[1px] -right-[1px] w-1.5 h-1.5 border-b border-r border-[#00f0ff]"></div>
-            </>
-          )}
-        </div>
-
-        <div
-          className={`absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[300vmax] h-[1px] bg-[#00f0ff] opacity-10 transition-opacity pointer-events-none ${clicked ? "opacity-30" : ""}`}
-        ></div>
-        <div
-          className={`absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[1px] h-[300vmax] bg-[#00f0ff] opacity-10 transition-opacity pointer-events-none ${clicked ? "opacity-30" : ""}`}
-        ></div>
-      </div>
+      <div className="absolute left-0 top-0 h-1.5 w-1.5 -translate-x-1/2 -translate-y-1/2 rounded-full bg-blood" />
+      <div
+        className={`cursor-ring absolute left-0 top-0 -translate-x-1/2 -translate-y-1/2 ${linkHovered ? "cursor-ring--link" : ""} ${clicked ? "cursor-ring--down" : ""}`}
+      />
     </div>,
     document.body,
   );

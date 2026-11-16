@@ -25,6 +25,9 @@
   --font-display: "Oswald", "Impact", sans-serif;
   --font-body: "Golos Text", system-ui, sans-serif;
   --font-mono: "JetBrains Mono", ui-monospace, monospace;
+  --font-hand: "Caveat", "Segoe Script", cursive;
+
+  --tear: polygon(0 0, 100% 0, 100.0% 87%, 98.6% 51%, 96.3% 42%, 94.7% 71%, 92.8% 44%, 90.8% 68%, 88.5% 37%, 86.0% 46%, 83.7% 68%, 81.4% 47%, 80.0% 41%, 77.8% 70%, 76.7% 47%, 75.7% 48%, 73.9% 63%, 71.8% 40%, 69.5% 99%, 67.4% 83%, 65.1% 41%, 63.4% 40%, 61.2% 70%, 60.2% 64%, 58.0% 71%, 57.0% 96%, 56.1% 90%, 53.6% 84%, 51.1% 70%, 49.9% 66%, 47.7% 85%, 46.3% 97%, 45.4% 67%, 44.5% 58%, 41.9% 43%, 39.4% 94%, 37.3% 39%, 35.7% 80%, 34.7% 54%, 33.7% 90%, 31.3% 95%, 29.1% 72%, 28.2% 66%, 26.1% 84%, 25.2% 36%, 24.3% 95%, 23.3% 60%, 21.6% 92%, 20.6% 52%, 18.4% 41%, 17.3% 37%, 14.7% 50%, 13.0% 60%, 10.5% 81%, 8.6% 67%, 7.3% 90%, 6.3% 75%, 5.0% 53%, 3.4% 47%, 1.5% 40%, 0.7% 44%, 0 93%);
 
   --grain: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  0 0 0 .55 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
   --grain-dark: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 .5 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
@@ -255,9 +258,11 @@ body {
   transform-origin: right;
   transition: transform 0.3s ease;
 }
-.nav__link:hover {
+.nav__link:hover,
+.nav__link--active {
   opacity: 1;
 }
+.nav__link--active::after,
 .nav__link:hover::after {
   transform: scaleX(1);
   transform-origin: left;
@@ -311,7 +316,7 @@ body {
   position: absolute;
   inset: 0;
   background-size: cover;
-  background-position: 62% 18%;
+  background-position: 46% 18%;
   filter: grayscale(1) contrast(1.35) brightness(0.95);
 }
 @media (min-width: 1024px) {
@@ -865,6 +870,156 @@ body.crt-viewport-active {
   84% { opacity: 1; }
 }
 
+/* --- Johnny's marker: the second voice over the official record ---------- */
+
+.scrawl {
+  display: inline-block;
+  font-family: var(--font-hand);
+  font-weight: 700;
+  font-size: clamp(1.5rem, 2.2vw, 2rem);
+  line-height: 1;
+  color: var(--red);
+  transform: rotate(-3deg);
+  transform-origin: left center;
+}
+.scrawl--dark {
+  color: var(--yellow);
+}
+.scrawl--right {
+  transform: rotate(2.5deg);
+}
+.scrawl::before {
+  content: "↳ ";
+  font-family: var(--font-mono);
+  font-size: 0.6em;
+  opacity: 0.7;
+}
+.scrawl--bare::before {
+  content: none;
+}
+/* Struck through by hand: two slightly crooked strokes */
+.struck {
+  position: relative;
+  white-space: nowrap;
+}
+.struck::before,
+.struck::after {
+  content: "";
+  position: absolute;
+  left: -4%;
+  right: -4%;
+  top: 52%;
+  height: 2px;
+  background: var(--red);
+  transform: rotate(-2.5deg);
+}
+.struck::after {
+  top: 44%;
+  transform: rotate(1.5deg);
+}
+/* Hand-drawn ring around a word */
+.circled {
+  position: relative;
+  white-space: nowrap;
+}
+.circled::after {
+  content: "";
+  position: absolute;
+  inset: -0.25em -0.5em;
+  border: 2px solid var(--red);
+  border-radius: 50% 46% 52% 48% / 60% 52% 48% 40%;
+  transform: rotate(-2deg);
+  pointer-events: none;
+}
+
+/* --- Torn paper edge ----------------------------------------------------- */
+
+.tear {
+  position: relative;
+  z-index: 2;
+  height: 22px;
+  margin-bottom: -22px;
+  background-color: var(--bone);
+  /* Roughly the tone the grain overlay gives the sheet above, to hide the seam */
+  background-image: linear-gradient(rgba(10, 9, 8, 0.04), rgba(10, 9, 8, 0.04));
+  clip-path: var(--tear);
+  pointer-events: none;
+}
+.tear--sheet {
+  position: absolute;
+  inset: 100% 0 auto 0;
+  margin: -1px 0 0;
+  background-color: var(--bone-dim);
+}
+
+/* --- Relic malfunction: a rare screen tear, compositor-only -------------- */
+
+.relic-fx {
+  position: fixed;
+  inset: 0;
+  z-index: 46;
+  pointer-events: none;
+  overflow: hidden;
+}
+.relic-fx i {
+  position: absolute;
+  left: -5%;
+  right: -5%;
+  opacity: 0;
+  will-change: transform, opacity;
+  animation: relic-tear 31s steps(1) infinite;
+}
+.relic-fx i:nth-child(1) { top: 18%; height: 7vh; background: rgba(0, 240, 255, 0.16); }
+.relic-fx i:nth-child(2) { top: 47%; height: 2vh; background: rgba(255, 0, 60, 0.3); animation-delay: 0.06s; }
+.relic-fx i:nth-child(3) { top: 71%; height: 11vh; background: rgba(0, 240, 255, 0.1); animation-delay: 0.12s; }
+.relic-fx b {
+  position: absolute;
+  right: 20px;
+  bottom: 20px;
+  padding: 4px 8px;
+  background: var(--cyan);
+  color: #000;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  opacity: 0;
+  animation: relic-warn 31s steps(1) infinite;
+}
+@keyframes relic-tear {
+  0%, 96.4%, 100% { opacity: 0; transform: none; }
+  96.5% { opacity: 1; transform: translateX(-3%); }
+  96.9% { opacity: 1; transform: translateX(4%) scaleY(0.4); }
+  97.3% { opacity: 0; }
+  97.7% { opacity: 1; transform: translateX(-1%) scaleY(1.6); }
+  98% { opacity: 0; }
+}
+@keyframes relic-warn {
+  0%, 96.4%, 100% { opacity: 0; }
+  96.5%, 99.4% { opacity: 1; }
+  97.6% { opacity: 0; }
+  97.9% { opacity: 1; }
+}
+
+/* --- Cursor -------------------------------------------------------------- */
+
+.cursor-ring {
+  width: 28px;
+  height: 28px;
+  border: 1.5px solid var(--bone);
+  border-radius: 50%;
+  transition: width 0.2s, height 0.2s, border-color 0.2s, background-color 0.2s, transform 0.15s;
+}
+.cursor-ring--link {
+  width: 52px;
+  height: 52px;
+  border-color: var(--red);
+  background: rgba(255, 0, 60, 0.18);
+}
+.cursor-ring--down {
+  transform: translate(-50%, -50%) scale(0.75);
+}
+
 /* --- Motion preferences -------------------------------------------------- */
 
 @media (prefers-reduced-motion: reduce) {
@@ -878,7 +1033,9 @@ body.crt-viewport-active {
   .eq i,
   .vinyl::after,
   .crt-lite__scanlines,
-  .crt-lite__band {
+  .crt-lite__band,
+  .relic-fx i,
+  .relic-fx b {
     animation: none;
   }
 }

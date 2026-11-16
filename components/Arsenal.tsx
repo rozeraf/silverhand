@@ -10,7 +10,9 @@ interface Item {
   alt: string;
   text: string;
   specs: [string, string][];
-  note: string;
+  note?: string;
+  /** Johnny's own remark, in marker. */
+  scrawl: string;
   iconic?: boolean;
   /** Opaque renders fill the frame; cut-out PNGs sit on the grid. */
   cover?: boolean;
@@ -30,6 +32,7 @@ const ITEMS: Item[] = [
       ["Покрытие", "Хром"],
     ],
     note: "На металле еле видно грубо соскобленное лого Arasaka. Он пытался стереть следы производителя, чтобы не быть запятнанным врагом.",
+    scrawl: "сточил сам. напильником.",
   },
   {
     code: "Vest_JS // Armor_Lvl_4",
@@ -43,7 +46,7 @@ const ITEMS: Item[] = [
       ["Состояние", "Поношенное"],
       ["Вес", "4.2 кг"],
     ],
-    note: "Сцена и поле боя — одно и то же место.",
+    scrawl: "спасал чаще, чем друзья",
   },
   {
     code: "Malorian_Arms_3516",
@@ -58,6 +61,7 @@ const ITEMS: Item[] = [
       ["Режимы", "Рикошет / Пробитие / Поджог"],
     ],
     note: "Внимание: отдача ломает кисть без киберпротеза.",
+    scrawl: "тебе сломает руку. мне — нет.",
     iconic: true,
   },
 ];
@@ -77,13 +81,14 @@ const Arsenal = () => (
           </>
         }
         aside={<>Character_loadout · 03 предмета</>}
+        lede={
+          <p>
+            Визуальный код легенды. Каждая деталь его образа — от
+            хромированного протеза до уникального оружия — рассказывает историю
+            войны, которую он ведёт уже полвека.
+          </p>
+        }
       />
-
-      <p className="-mt-6 mb-16 max-w-2xl text-base leading-relaxed text-bone/70 md:-mt-10 md:mb-24 md:text-lg">
-        Визуальный код легенды. Каждая деталь его образа — от хромированного
-        протеза до уникального оружия — рассказывает историю войны, которую он
-        ведёт уже полвека.
-      </p>
 
       <div className="space-y-20 md:space-y-32">
         {ITEMS.map((item, index) => {
@@ -146,10 +151,13 @@ const Arsenal = () => (
                     </React.Fragment>
                   ))}
                 </dl>
-                <p className="mt-8 border-l-2 border-blood pl-4 font-mono text-xs leading-relaxed text-bone/60">
-                  <span className="text-blood">// </span>
-                  {item.note}
-                </p>
+                {item.note && (
+                  <p className="mt-8 border-l-2 border-blood pl-4 font-mono text-xs leading-relaxed text-bone/60">
+                    <span className="text-blood">// </span>
+                    {item.note}
+                  </p>
+                )}
+                <p className="scrawl scrawl--dark mt-6">{item.scrawl}</p>
               </RevealOnScroll>
             </article>
           );

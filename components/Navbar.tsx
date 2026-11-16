@@ -12,10 +12,10 @@ interface NavbarProps {
 }
 
 const NAV_LINKS = [
-  { name: "Главная", href: "#hero" },
-  { name: "Досье", href: "#bio" },
-  { name: "Арсенал", href: "#arsenal" },
-  { name: "Энграмма", href: "#engram" },
+  { name: "Главная", href: "#hero", side: "00" },
+  { name: "Досье", href: "#bio", side: "A1" },
+  { name: "Арсенал", href: "#arsenal", side: "B1" },
+  { name: "Энграмма", href: "#engram", side: "B2" },
 ];
 
 const Navbar = ({
@@ -26,6 +26,7 @@ const Navbar = ({
 }: NavbarProps) => {
   const [isOpen, setIsOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const [active, setActive] = useState(0);
   const navRef = useRef<HTMLElement>(null);
 
   useEffect(() => {
@@ -39,6 +40,15 @@ const Navbar = ({
       const scrollTop = scrollContainer ? el.scrollTop : window.scrollY;
       const max = el.scrollHeight - el.clientHeight;
       setScrolled(scrollTop > 40);
+
+      // "Now playing": the last section whose top has passed 40% of the screen.
+      const line = window.innerHeight * 0.4;
+      let current = 0;
+      NAV_LINKS.forEach((link, i) => {
+        const section = document.querySelector(link.href);
+        if (section && section.getBoundingClientRect().top <= line) current = i;
+      });
+      setActive(current);
       // Playback head: written straight to a CSS variable, no re-render.
       navRef.current?.style.setProperty(
         "--progress",
@@ -105,7 +115,8 @@ const Navbar = ({
                 key={link.href}
                 href={link.href}
                 onClick={(e) => handleNavClick(e, link.href)}
-                className="nav__link"
+                aria-current={active === i ? "true" : undefined}
+                className={`nav__link ${active === i ? "nav__link--active" : ""}`}
               >
                 <span>0{i + 1}</span>
                 <span>{link.name}</span>
@@ -115,7 +126,8 @@ const Navbar = ({
 
           <div className="flex items-center gap-1.5">
             <span className="label mr-3 hidden text-dust xl:inline">
-              Relic v2.0 <span className="text-blood">●</span> Sync 86%
+              <span className="text-blood">▶</span> {NAV_LINKS[active].side} —{" "}
+              <span className="text-bone">{NAV_LINKS[active].name}</span>
             </span>
             <button
               type="button"

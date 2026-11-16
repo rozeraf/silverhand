@@ -68,7 +68,17 @@ const App = () => {
       )}
 
       {crtWarp ? <CrtShader /> : enableScanlines && <CrtOverlay />}
-      {enableNoise && !crtWarp && <div className="noise-bg"></div>}
+      {enableNoise && !crtWarp && (
+        <>
+          <div className="noise-bg"></div>
+          <div className="relic-fx" aria-hidden="true">
+            <i />
+            <i />
+            <i />
+            <b>RELIC MALFUNCTION</b>
+          </div>
+        </>
+      )}
 
       <SettingsModal
         isOpen={showSettings}

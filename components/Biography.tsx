@@ -10,6 +10,7 @@ const EVENTS = [
     title: "Трагедия с Альт Каннингем",
     description:
       "Корпорация Arasaka похищает Альт Каннингем, лучшего нетраннера Найт-Сити и возлюбленную Джонни. Спасательная операция проваливается: Альт погибает физически, а её сознание становится узником Сети. Это событие навсегда меняет Сильверхенда, превращая его ненависть к корпорациям в личную вендетту.",
+    note: "Не «погибает». Её убили.",
   },
   {
     year: "2023",
@@ -17,6 +18,7 @@ const EVENTS = [
     title: "Падение Башни",
     description:
       "Финальный аккорд. Джонни возглавляет штурмовую группу Militech для атаки на Arasaka Tower. Цель — освободить Альт и взорвать тактическую ядерную бомбу. Джонни сходится в бою с легендарным соло Адамом Смэшером и терпит поражение. Его тело погибает, но сознание похищается Сабуро Арасакой с помощью программы «Соулкиллер».",
+    note: "Смэшер. Я запомнил.",
   },
   {
     year: "2077",
@@ -24,6 +26,7 @@ const EVENTS = [
     title: "Пробуждение",
     description:
       "Спустя 50 лет энграмма Джонни активируется в голове наёмника Ви после неудачного ограбления Konpeki Plaza. Биочип начинает переписывать мозг носителя, воскрешая рокера в новом мире, который он не узнаёт, но который всё так же прогнил насквозь.",
+    note: "Полвека прошло. Город всё тот же.",
   },
 ];
 
@@ -46,6 +49,15 @@ const Biography = () => (
               NCPD File № 2023-0820
               <br />
               Night City Archives
+            </>
+          }
+          lede={
+            <>
+              <p>
+                Дезертир. Рокербой. Террорист. Легенда Найт-Сити. Человек,
+                который сжёг половину города, чтобы доказать свою правоту.
+              </p>
+              <p className="scrawl mt-4">и это они ещё по-доброму</p>
             </>
           }
         />
@@ -72,14 +84,30 @@ const Biography = () => (
                   <span className="opacity-60">Exhibit 01</span>
                 </figcaption>
               </figure>
+              <p className="scrawl scrawl--right mx-auto mt-5 block max-w-sm text-right lg:mx-0 lg:max-w-md">
+                «deceased». ага, щас
+              </p>
 
-              <dl className="mx-auto mt-10 max-w-sm font-mono text-xs uppercase tracking-wider lg:mx-0 lg:max-w-md">
-                {[
-                  ["Позывной", "Johnny Silverhand"],
-                  ["Род занятий", "Рокербой, дезертир"],
-                  ["Группа", "Samurai"],
-                  ["Статус", "Мёртв (2023) // энграмма активна"],
-                ].map(([k, v]) => (
+              <dl className="mx-auto mt-6 max-w-sm font-mono text-xs uppercase tracking-wider lg:mx-0 lg:max-w-md">
+                {(
+                  [
+                    ["Позывной", "Johnny Silverhand"],
+                    [
+                      "Род занятий",
+                      <>
+                        Рокербой, <span className="struck">дезертир</span>
+                      </>,
+                    ],
+                    ["Группа", "Samurai"],
+                    [
+                      "Статус",
+                      <>
+                        <span className="circled">Мёртв (2023)</span>
+                        {"  // энграмма активна"}
+                      </>,
+                    ],
+                  ] as [string, React.ReactNode][]
+                ).map(([k, v]) => (
                   <div
                     key={k}
                     className="flex justify-between gap-6 border-t border-ink/25 py-2.5"
@@ -89,9 +117,8 @@ const Biography = () => (
                   </div>
                 ))}
               </dl>
-              <p className="mx-auto mt-6 max-w-sm text-base leading-relaxed lg:mx-0 lg:max-w-md">
-                Дезертир. Рокербой. Террорист. Легенда Найт-Сити. Человек,
-                который сжёг половину города, чтобы доказать свою правоту.
+              <p className="scrawl mx-auto mt-4 block max-w-sm lg:mx-0 lg:max-w-md">
+                с ИХ войны я ушёл сам
               </p>
             </div>
           </RevealOnScroll>
@@ -113,6 +140,7 @@ const Biography = () => (
                     <p className="mt-3 text-[15px] leading-relaxed text-ink/80 md:text-base">
                       {event.description}
                     </p>
+                    <p className="scrawl mt-4">{event.note}</p>
                   </div>
                 </article>
               </RevealOnScroll>
@@ -121,8 +149,9 @@ const Biography = () => (
         </div>
       </div>
     </section>
+    <div className="tear" aria-hidden="true" />
 
-    <section className="relative overflow-hidden bg-blood py-16 text-black md:py-24">
+    <section className="relative overflow-hidden bg-blood pb-16 pt-24 text-black md:pb-24 md:pt-32">
       <div className="mx-auto max-w-[1500px] px-5 md:px-10">
         <RevealOnScroll>
           <div className="section-index mb-6">Memory_log_114</div>

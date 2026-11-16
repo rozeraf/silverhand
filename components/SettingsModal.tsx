@@ -130,7 +130,7 @@ const SettingsModal = ({ isOpen, onClose, onOpenTerminal }: SettingsModalProps) 
           <div className="label mb-1 mt-8 text-dust">Визуализация и FX</div>
           <ToggleOption
             label="Film grain"
-            description="Эффект плёночного шума на фоне."
+            description="Плёночный шум и редкие сбои Relic на экране."
             value={enableNoise}
             onChange={() => updateSetting("enableNoise", !enableNoise)}
             icon={Film}

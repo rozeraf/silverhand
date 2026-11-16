@@ -41,6 +41,9 @@ There are no tests and no linter. "Verified" means `bunx tsc --noEmit` and `bun 
 - **Design direction** — a punk zine about a dead rocker, read through a failing biochip. Keep to it when adding UI:
   - red (`blood`) leads; bone "paper" sections (`.paper`, `.dossier-sheet`) break up the dark ones; yellow (`acid`) is for hazard tape and highlights; cyan (`relic`) is reserved for Relic/engram content;
   - poster-size Oswald headings (`.display`), mono `.label`/`.section-index` captions, sections opened with `SectionHead` (index like `A1`, kicker, title);
+  - two voices: the official corporate record, and Johnny's red marker over it — `.scrawl` notes (Caveat), `.struck` and `.circled` words. Keep his remarks short, sarcastic and in character; don't put lore facts only in them;
+  - paper ends in a torn edge (`.tear`), and the `.relic-fx` layer (shown with film grain) flashes a brief "Relic malfunction" screen tear about every 30 s;
+  - `Navbar` shows the current section as "now playing" and its bottom line is the scroll playback head;
   - fonts must support Cyrillic (the old Orbitron/Rajdhani did not);
   - animate only `transform`/`opacity`, and add new animations to the `prefers-reduced-motion` block at the end of `main.css`.
 - **`App.tsx` orchestrates the page.** Overlays are `Terminal`, `SettingsModal` and the full-screen `Samurai` player. Content sections and `Footer` are `lazy()`-loaded. `ClassifiedSection` renders only when `localStorage.classified === "true"`.

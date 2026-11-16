@@ -85,6 +85,10 @@ const ClassifiedSection = () => (
                 </p>
               </aside>
 
+              <p className="scrawl -mt-1 ml-4 md:ml-12">
+                враньё. я там был.
+              </p>
+
               <p>
                 Настоящая судьба Роберта Джона Линдера после событий 2023 года
                 остаётся <Redact>неизвестной</Redact>. Официальные записи
@@ -97,6 +101,7 @@ const ClassifiedSection = () => (
               <span>Стр. 1 / 1</span>
             </footer>
           </div>
+          <div className="tear tear--sheet" aria-hidden="true" />
         </article>
       </RevealOnScroll>
     </div>

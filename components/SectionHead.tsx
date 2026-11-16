@@ -6,6 +6,8 @@ interface SectionHeadProps {
   kicker: string;
   title: React.ReactNode;
   aside?: React.ReactNode;
+  /** Intro paragraph set to the right of the title on wide screens. */
+  lede?: React.ReactNode;
   className?: string;
 }
 
@@ -15,10 +17,11 @@ const SectionHead = ({
   kicker,
   title,
   aside,
+  lede,
   className = "",
 }: SectionHeadProps) => (
   <RevealOnScroll className={`mb-12 md:mb-20 ${className}`}>
-    <div className="flex items-center justify-between gap-6 mb-5">
+    <div className="mb-5 flex items-center justify-between gap-6">
       <span className="section-index">
         {index} — {kicker}
       </span>
@@ -28,7 +31,14 @@ const SectionHead = ({
         </span>
       )}
     </div>
-    <h2 className="display section-title">{title}</h2>
+    <div className="grid gap-8 lg:grid-cols-[minmax(0,7fr)_minmax(0,5fr)] lg:items-end">
+      <h2 className="display section-title">{title}</h2>
+      {lede && (
+        <div className="max-w-xl text-base leading-relaxed opacity-80 md:text-lg lg:pb-3">
+          {lede}
+        </div>
+      )}
+    </div>
   </RevealOnScroll>
 );
 
