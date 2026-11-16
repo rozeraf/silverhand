@@ -4,122 +4,47 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project
 
-**Johnny Silverhand: The Engram** — an immersive single-page tribute to Cyberpunk 2077's Johnny Silverhand, built for a hackathon. The stack is React 19 + Vite + TypeScript. The primary package manager is **Bun**.
+**Johnny Silverhand: The Engram** — a non-commercial fan tribute single-page site (Cyberpunk 2077). React 19 + Vite 7 + TypeScript, package manager **Bun**. UI copy is mixed Russian/English; README and `todo.md` are in Russian.
 
 ## Commands
 
 ```bash
-bun dev          # Start dev server
-bun run build    # Production build → dist/
-bun run preview  # Preview production build locally
+bun install --frozen-lockfile   # install exactly what bun.lock pins (same as CI)
+bun dev                         # dev server
+bunx tsc --noEmit               # typecheck (no script for it yet)
+bun run build                   # production build → dist/
+bun run preview                 # serve dist/ locally
 ```
 
-There are no tests or linters configured in this project.
+There are no tests and no linter. "Verified" means `bunx tsc --noEmit` and `bun run build` both pass; for UI/terminal behavior, also check it in `bun dev`.
 
-## Architecture
+## Git workflow (follow strictly)
 
-### Package Metadata
-* **Version**: 0.0.0
-* **Dependencies**: React 19.2.4, Vite 7.3.1, Lucide React 0.344.0, use-scramble 2.2.15, react-powerglitch 1.0.0, react-dom 19.2.4
-* **DevDependencies**: TypeScript 5.8.2, Vite 6.2.0, @types/node 22.14.0, @types/react 19.2.14, @types/react-dom 19.2.3
-* **Imports**: From esm.sh CDN (React 18.2.0 URLs, Vite 7.3.1) — backend changes to React version not critical for development
+- **`dev`** is the working branch. Do work on `dev` or on short-lived `fix/*` / `feat/*` branches cut from `dev`.
+- **`main`** only receives changes through a pull request `dev → main`. Never commit or push to `main` directly.
+- **Releases** are tags `vX.Y.Z` on `main` (or a published GitHub Release). Only that triggers `.github/workflows/pages-deployment.yaml`, which builds with Bun and deploys `dist/` to Cloudflare Pages. A plain push to `dev`/`main` deploys nothing.
+- Keep `dev` a fast-forward ancestor of `main` after each release (`git merge --ff-only main` on `dev`).
+- When resolving a merge conflict, never take one side wholesale. Merge `680da22` did that and silently reverted all of `dev`; `2d97f73` had to restore it.
+- `bun.lock` is committed and must be updated together with `package.json`, because CI installs with `--frozen-lockfile`.
+- Commit style: Conventional Commits with scopes, e.g. `fix(terminal): …`, `feat(player): …`, `docs: …`.
+- `todo.md` is the live backlog. Tick items there when a change completes them.
 
-### Tailwind CSS
-Tailwind is loaded **via CDN** in `index.html` — it is not a package dependency. The theme extension (custom colors, fonts) is configured inline in `index.html` inside a `tailwind.config = {...}` script block. Global CSS (scanlines, noise-bg, clip-paths, font-cyber utility, CSS variables) lives in the `<style>` block in `index.html`.
+## Architecture notes (non-obvious parts)
 
-**Custom Tailwind classes**: `cp-yellow`, `cp-blue`, `cp-red`, `cp-bg`. Font `font-cyber` maps to Orbitron; default sans is Rajdhani.
+- **No CSS build.** Tailwind comes from the CDN script in `index.html`. Its theme (`cp-yellow`, `cp-blue`, `cp-red`, `cp-bg`, fonts Orbitron/`font-cyber` and Rajdhani) and all global CSS (noise, scanlines, clip-paths, keyframes, CRT classes) live inline in `index.html`. There are no `.css` files. Dynamically built class names work only because of the CDN JIT.
+- **`App.tsx` orchestrates the page.** Overlays are `Terminal`, `SettingsModal` and the full-screen `Samurai` player. Content sections and `Footer` are `lazy()`-loaded. `ClassifiedSection` renders only when `localStorage.classified === "true"`.
+- **`context/SettingsContext.tsx`** keeps the settings in `localStorage.cyber_settings`. When `bootSequence` is on (the default), the terminal with its boot animation opens on every page load. Legacy key `has_visited` is read once for migration and then removed. `enableAnimations` controls only the `RevealOnScroll` fade-ins.
+- **CRT mode** (`enableScanlines`, under "Experimental"): `CrtShader.tsx` is a full-screen WebGL pass, and the `.crt-barrel-surface` class adds an SVG displacement filter. It is very GPU-heavy. `CustomCursor` warps its position to match the barrel geometry, so change those together.
+- **Media goes through `assets.ts`.** Files in `assets/` and `music/` are pulled in with eager `import.meta.glob(..., { query: "?url" })`, so Vite hashes them and **every MP3 ships in `dist/`** (~27 MB of the ~33 MB build). Always reference media via `ASSETS`, never via hard-coded paths. Moving music out to Cloudflare R2 is planned in `todo.md`.
+- **Terminal** (`components/Terminal.tsx` + `terminal/`):
+  - Client-side virtual filesystem, built by `terminal/filesystem.ts` from `import.meta.glob` over `terminal/files/**/*.txt`, `assets/` and `music/` (media appears under `/srv/silverhand`).
+  - To add a document, drop a `.txt` into `terminal/files/`. Special owner/group/mode/size goes in `terminal/metadata.ts`. Users live in `terminal/users.ts`.
+  - `.txt` is hidden in virtual paths, except for the puzzle files `target.txt` / `incident.txt`.
+  - POSIX-style `rwx` checks really apply to commands. VFS changes last only for the session. Auth state lives in `localStorage` (`username`, `authenticated`, `classified`).
+  - Boot/close timers go through the `schedule()` helper, which clears them on close/unmount. Use it instead of a raw `setTimeout`.
+  - `index.tsx` runs in `React.StrictMode`, so effects must clean up after themselves.
+- **The login puzzle is part of the experience.** Do not reveal the passphrase (`SECRET_PASS`) or the solution in docs, README, commit messages or UI copy.
 
-### Key CSS variables / design tokens
+## Content / legal
 
-| Variable | Value | Usage |
-|----------|-------|-------|
-| `--cp-yellow` | `#fcee0a` | Accent yellow |
-| `--cp-blue` | `#00f0ff` | Accent cyan |
-| `--cp-red` | `#ff003c` | Primary red |
-| `--cp-bg` | `#0b0b0b` | Background |
-
-**Custom components**:
-- `.cp-yellow-button` — Cyberpunk-style button with yellow outline effect
-- `.cp-yellow-label` — Yellow Futurama-style label
-- `.text-stroke-cyan` / `.text-stroke-red` / `.text-stroke-thick` — Cyberpunk text outline effects
-- `.cyber-card-hover` — Hover effect for accent highlights
-
-### Application flow (`App.tsx`)
-All heavy sections are **lazy-loaded** with React Suspense. `App.tsx` is the single root orchestrator:
-- Shows `Terminal` (boot sequence + auth) on first visit, then skips boot on future visits
-- Manages the `Samurai` music page as a full-screen overlay
-- Renders `ClassifiedSection` only when `isClassified === true` (set after terminal auth)
-- Toggles CRT effects and scanlines based on `SettingsContext`
-- Applies CRT barrel distortion geometry when scanlines are enabled AND terminal/settings/Samurai view is not active
-
-### `context/SettingsContext.tsx`
-Central settings store persisted to `localStorage` under key `cyber_settings`. Settings:
-- `bootSequence` (default: true) — whether to show boot sequence
-- `enableNoise` (default: true) — visual film noise effect
-- `enableScanlines` (default: false) — CRT scanlines effect
-- `enableCustomCursor` (default: true) — custom user cursor
-- `enableAnimations` (default: true) — general animation states
-
-**Legacy cache keys managed**:
-- `has_visited` — legacy switch for boot sequence (synced with bootSequence)
-- `cyber_settings` — local storage for all UI settings
-
-## `assets.ts` — media registry
-All images and audio are referenced through the `ASSETS` object. Local files use `import.meta.glob` via `getAsset()` / `getMusic()` so Vite hashes them at build time. Remote images/audio are plain URLs. The object also includes CDN imports from esm.sh.
-
-**Available media** (source folder structure):
-```
-assets/
-  ├── *.webp, *.png, *.jpg, *.jpeg, *.svg, *.ico
-music/
-  └── *.mp3
-```
-
-**`ASSETS` exports**:
-- **favicon**, **navLogo**, **samuraiLogo** — 48px PNG logo
-- **heroBackground** — `johnny_silverhand_hero.jpg` (hero section)
-- **engramCard** — `relic.jpg` (enigma card visual)
-- **noiseTexture** — `stardust_noise.png` (pattern for .noise-bg overlay)
-- **silverArm** — `arm.png`, **vest** — `vest.png`, **malorianGun** — `malorian_arms_3516.png` (inventory visuals)
-- **biographyPortrait** — `johnny_silverhand_portrait.webp` (portrait image)
-- **samuraiAlbum** — `chippin_in.jpg` (album artwork)
-- **music** object — MP3 URLs for: `chippinIn`, `neverFadeAway`, `aLikeSupreme`, `archangel`, `blackDog`
-- **albumCovers** object — WebP/PNG imaging for each album
-
-## `components/Terminal.tsx` — auth system
-Interactive terminal emulating a cyberpunk command-line. Features:
-
-### Authentication flow
-- Command: `login <username>` — recognized names:
-  - `silverhand`, `johnny silverhand`, `robert john linder`
-- Password: **`never_fade_away`** → sets `localStorage.classified = "true"` and unlocks `ClassifiedSection`
-- Any other username grants public access only
-- Success prompts user identity: `uid=1000(silverhand) gid=1000(samurai) groups=samurai,relic,wheel`
-
-### Commands
-Supported via `COMMANDS` array + switch statement:
-- `boot`, `cat`, `cd`, `chmod`, `clear`, `exit`, `file`, `groups`, `help`, `id`, `login`, `logout`, `ls`, `mkdir`, `pwd`, `rm`, `stat`, `touch`, `tree`, `whoami`, `write`
-- Tab key for command/quantity completion
-- Up/Down arrows for history
-- Password input masked as `*****`
-
-### Virtual filesystem (`terminal/filesystem.ts`)
-- Flat object map keyed by full paths (e.g., `/home/silverhand/profile`)
-- Mock Unix permissions via `mode` octal, `owner`, `group`, `hasPermission()`
--.getcwd() returns current working directory
-- Supports `touch`, `mkdir`, `write`, `chmod`, `rm` for writable directories
-
-### Filesystem metadata (`terminal/metadata.ts`)
-Overrides for key paths with custom ownership, groups, and modes (e.g., `/home/silverhand` owned by `silverhand` group `samurai`, mode `0o750`).
-
-## localStorage keys
-| Key | Purpose |
-|-----|---------|
-| `cyber_settings` | JSON blob of all UI settings |
-| `has_visited` | Legacy: whether to skip boot sequence |
-| `classified` | `"true"` when authenticated as Silverhand |
-| `username` | Current user display name (public users only) |
-| `authenticated` | `"true"` when any login completed |
-
-## Component lazy-loading strategy
-In `App.tsx`, only `Hero`, `Navbar`, `Footer`, and terminal-related views are eagerly loaded. All content-heavy sections (`Biography`, `ClassifiedSection`, `Arsenal`, `Engram`, `Samurai`, `DeveloperNote`) are loaded via `lazy()` with React Suspense fallback overlays.
+All game, music and artwork rights belong to CD PROJEKT S.A., Refused and other holders. Notices are in the site footer and README. Keep them intact when touching those areas.
