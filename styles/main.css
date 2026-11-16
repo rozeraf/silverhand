@@ -355,6 +355,7 @@ body {
 }
 .hero__title-red {
   color: var(--red);
+  white-space: nowrap;
   margin-left: clamp(0rem, 3.5vw, 4rem);
 }
 

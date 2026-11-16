@@ -62,7 +62,7 @@
 
 - [ ] Перенести Tailwind CSS с CDN в локальную сборку.
 - [x] Вынести глобальные стили, keyframes и CSS-переменные из `index.html` в CSS-файлы (`styles/main.css`).
-- [ ] Локализовать favicon, Google Fonts и оставшиеся внешние texture URL в `index.html`, `Arsenal.tsx` и `Samurai.tsx`.
+- [x] Локализовать favicon, Google Fonts и оставшиеся внешние texture URL в `index.html`, `Arsenal.tsx` и `Samurai.tsx`.
 - [ ] Подключить ESLint и Prettier с единым конфигом.
 - [ ] Настроить branch protection для `main`: обязательный PR из `dev`, успешный CI и запрет прямых push.
 - [ ] Проверить предупреждения GitHub Actions о runtime Node и регулярно обновлять pinned major-версии actions.

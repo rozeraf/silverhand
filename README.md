@@ -163,7 +163,7 @@ git switch dev && git merge --ff-only main && git push origin dev
 --cyan: #00f0ff;    /* только Relic / энграмма */
 ```
 
-Шрифты с поддержкой кириллицы: Oswald — заголовки, Golos Text — основной текст, JetBrains Mono — подписи, данные и терминал.
+Шрифты с поддержкой кириллицы: Oswald — заголовки, Golos Text — основной текст, JetBrains Mono — подписи, данные и терминал, Caveat — пометки Джонни. Они подключены как пакеты `@fontsource/*` и собираются вместе с сайтом, без обращения к Google Fonts.
 
 ## Правообладатели
 
