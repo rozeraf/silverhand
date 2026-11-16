@@ -168,7 +168,30 @@ const ClassifiedSection = () => (
               запомнил и пересказал себе Сильверхенд. Ниже то, что удалось
               восстановить по независимым источникам.
             </p>
-            <p className="mt-2 text-[11px] uppercase tracking-[0.2em] opacity-60">
+            {/* Alt's lines are verbatim from Cyberpunk 2077; the Russian is ours. */}
+            <figure className="mt-8 border-l-4 border-blood bg-ink/[0.06] p-5 md:p-7">
+              <blockquote className="font-display text-xl font-bold uppercase leading-snug md:text-3xl">
+                «То, что ты видел, — его субъективный взгляд на случившееся.
+                Искажённая версия событий, которую он запер в подсознании и
+                проигрывал снова и снова. Она не имеет ничего общего с
+                правдой.»
+              </blockquote>
+              <p
+                lang="en"
+                className="mt-4 text-xs leading-relaxed opacity-70 md:text-[13px]"
+              >
+                “What you saw was his subjective view of what happened. A
+                warped account of events he locked away in his subconscious
+                and replayed time and again. It bears no resemblance to the
+                truth.”
+              </p>
+              <figcaption className="mt-4 text-[11px] font-bold uppercase tracking-[0.2em] text-blood">
+                Альт Каннингем · Cyberpunk 2077
+              </figcaption>
+            </figure>
+            <p className="scrawl mt-3">Альт. и ты туда же.</p>
+
+            <p className="mt-6 text-[11px] uppercase tracking-[0.2em] opacity-60">
               Наведите на закрашенные фрагменты, чтобы снять цензуру
             </p>
 
