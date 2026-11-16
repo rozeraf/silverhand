@@ -20,6 +20,7 @@ import {
   normalizePath,
   parentPath,
   TerminalUser,
+  isValidUsername,
 } from "../terminal/filesystem";
 
 interface TerminalProps {
@@ -62,7 +63,11 @@ const COMMANDS = [
 const getStoredUser = (): TerminalUser => {
   const username = localStorage.getItem("username");
   if (username === "Silverhand") return SILVERHAND_USER;
-  if (localStorage.getItem("authenticated") === "true" && username) {
+  if (
+    localStorage.getItem("authenticated") === "true" &&
+    username &&
+    isValidUsername(username)
+  ) {
     return createPublicUser(username);
   }
   return GUEST_USER;
@@ -108,6 +113,15 @@ const Terminal = ({
       mode: 0o750,
     };
   }
+
+  // Resolve a user-typed path, expanding "~" and "~/..." to the home directory.
+  const resolvePath = (input: string) =>
+    normalizePath(
+      cwd,
+      input === "~" || input.startsWith("~/")
+        ? `${sessionUser.home}${input.slice(1)}`
+        : input,
+    );
 
   const handleContainerClick = () => {
     if (!isBooting) inputRef.current?.focus();
@@ -199,7 +213,7 @@ const Terminal = ({
       return;
     }
 
-    const [command, ...args] = trimmed.split(" ");
+    const [command, ...args] = trimmed.split(/\s+/);
     const argString = args.join(" ");
     setLines((prev) => [...prev, `$ ${trimmed}`]);
 
@@ -259,7 +273,7 @@ const Terminal = ({
       case "ls": {
         const long = args.includes("-l") || args.includes("-la") || args.includes("-al");
         const requested = args.find((arg) => !arg.startsWith("-")) || ".";
-        const path = normalizePath(cwd, requested === "~" ? sessionUser.home : requested);
+        const path = resolvePath(requested);
         const node = fsRef.current[path];
 
         if (!node) {
@@ -296,10 +310,7 @@ const Terminal = ({
 
       case "tree": {
         const requested = argString || ".";
-        const path = normalizePath(
-          cwd,
-          requested === "~" ? sessionUser.home : requested,
-        );
+        const path = resolvePath(requested);
         const node = fsRef.current[path];
 
         if (!node) {
@@ -364,7 +375,7 @@ const Terminal = ({
 
       case "cd": {
         const requested = argString || sessionUser.home;
-        const path = normalizePath(cwd, requested === "~" ? sessionUser.home : requested);
+        const path = resolvePath(requested);
         const node = fsRef.current[path];
 
         if (!node) {
@@ -384,7 +395,7 @@ const Terminal = ({
           setLines((prev) => [...prev, "cat: missing file operand"]);
           break;
         }
-        const path = normalizePath(cwd, argString);
+        const path = resolvePath(argString);
         const node = fsRef.current[path];
         if (!node) {
           setLines((prev) => [...prev, `cat: ${argString}: No such file or directory`]);
@@ -411,7 +422,7 @@ const Terminal = ({
           setLines((prev) => [...prev, "file: missing operand"]);
           break;
         }
-        const path = normalizePath(cwd, argString);
+        const path = resolvePath(argString);
         const node = fsRef.current[path];
         if (!node || !canTraverse(fsRef.current, parentPath(path), sessionUser)) {
           setLines((prev) => [
@@ -443,7 +454,7 @@ const Terminal = ({
           setLines((prev) => [...prev, "stat: missing operand"]);
           break;
         }
-        const path = normalizePath(cwd, argString);
+        const path = resolvePath(argString);
         const node = fsRef.current[path];
         if (!node || !canTraverse(fsRef.current, parentPath(path), sessionUser)) {
           setLines((prev) => [...prev, `stat: cannot stat '${argString}': ${node ? "Permission denied" : "No such file or directory"}`]);
@@ -466,7 +477,7 @@ const Terminal = ({
           setLines((prev) => [...prev, `${command}: missing operand`]);
           break;
         }
-        const path = normalizePath(cwd, argString);
+        const path = resolvePath(argString);
         const parent = parentPath(path);
         const parentNode = fsRef.current[parent];
         if (fsRef.current[path]) {
@@ -498,7 +509,7 @@ const Terminal = ({
           setLines((prev) => [...prev, "write: usage: write <file> <text>"]);
           break;
         }
-        const path = normalizePath(cwd, rawPath);
+        const path = resolvePath(rawPath);
         const node = fsRef.current[path];
         if (!node) {
           setLines((prev) => [...prev, `write: ${rawPath}: No such file`]);
@@ -523,10 +534,12 @@ const Terminal = ({
           setLines((prev) => [...prev, "chmod: usage: chmod <octal mode> <path>"]);
           break;
         }
-        const path = normalizePath(cwd, rawPath);
+        const path = resolvePath(rawPath);
         const node = fsRef.current[path];
         if (!node) {
           setLines((prev) => [...prev, `chmod: cannot access '${rawPath}': No such file or directory`]);
+        } else if (!canTraverse(fsRef.current, parentPath(path), sessionUser)) {
+          setLines((prev) => [...prev, `chmod: cannot access '${rawPath}': Permission denied`]);
         } else if (node.owner !== sessionUser.username) {
           setLines((prev) => [...prev, `chmod: changing permissions of '${rawPath}': Operation not permitted`]);
         } else {
@@ -540,7 +553,7 @@ const Terminal = ({
           setLines((prev) => [...prev, "rm: missing operand"]);
           break;
         }
-        const path = normalizePath(cwd, argString);
+        const path = resolvePath(argString);
         const node = fsRef.current[path];
         const parent = parentPath(path);
         const parentNode = fsRef.current[parent];
@@ -580,6 +593,12 @@ const Terminal = ({
             ...prev,
             `User recognized: ${argString}`,
             "ENTER PASSPHRASE:",
+          ]);
+        } else if (!isValidUsername(argString)) {
+          setLines((prev) => [
+            ...prev,
+            `login: invalid username '${argString}'`,
+            "Use letters, digits, '_' or '-' (max 32 chars).",
           ]);
         } else {
           const publicUser = createPublicUser(argString);

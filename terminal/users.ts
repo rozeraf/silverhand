@@ -16,8 +16,15 @@ export const SILVERHAND_USER: TerminalUser = {
   home: "/home/silverhand",
 };
 
+const normalizeUsername = (username: string) =>
+  username.trim().toLowerCase().replace(/\s+/g, "_");
+
+/** Public usernames become a path segment (/home/<name>), so keep them path-safe. */
+export const isValidUsername = (username: string) =>
+  /^[a-z0-9_-]{1,32}$/.test(normalizeUsername(username));
+
 export const createPublicUser = (username: string): TerminalUser => {
-  const normalizedUsername = username.toLowerCase().replace(/\s+/g, "_");
+  const normalizedUsername = normalizeUsername(username);
   return {
     username: normalizedUsername,
     uid: 1001,
