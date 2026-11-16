@@ -43,17 +43,16 @@ export const SettingsProvider = ({
       };
     }
 
-    return { ...defaultSettings, ...JSON.parse(saved) };
+    try {
+      return { ...defaultSettings, ...JSON.parse(saved) };
+    } catch {
+      return defaultSettings;
+    }
   });
 
   useEffect(() => {
     localStorage.setItem("cyber_settings", JSON.stringify(settings));
-
-    if (settings.bootSequence) {
-      localStorage.removeItem("has_visited");
-    } else {
-      localStorage.setItem("has_visited", "true");
-    }
+    localStorage.removeItem("has_visited");
   }, [settings]);
 
   const updateSetting = (key: keyof Settings, value: boolean) => {

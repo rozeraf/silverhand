@@ -10,7 +10,12 @@ import type {
   VirtualFileSystem,
 } from "./types";
 
-export { GUEST_USER, SILVERHAND_USER, createPublicUser } from "./users";
+export {
+  GUEST_USER,
+  SILVERHAND_USER,
+  createPublicUser,
+  isValidUsername,
+} from "./users";
 export type { FsNode, TerminalUser, VirtualFileSystem } from "./types";
 
 const textFiles = import.meta.glob("./files/**/*.txt", {

@@ -89,7 +89,7 @@ const CustomCursor = ({
   return createPortal(
     <div
       ref={cursorRef}
-      className={`fixed top-0 left-0 pointer-events-none z-[9999] mix-blend-difference hidden md:block transition-opacity duration-300 ${hidden ? "opacity-0" : "opacity-100"}`}
+      className={`fixed top-0 left-0 pointer-events-none z-[9999] mix-blend-difference transition-opacity duration-300 ${hidden ? "opacity-0" : "opacity-100"}`}
       style={{
         transform: `translate3d(-100px, -100px, 0)`,
         willChange: "transform",

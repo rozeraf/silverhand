@@ -20,6 +20,7 @@ import {
   normalizePath,
   parentPath,
   TerminalUser,
+  isValidUsername,
 } from "../terminal/filesystem";
 
 interface TerminalProps {
@@ -62,7 +63,11 @@ const COMMANDS = [
 const getStoredUser = (): TerminalUser => {
   const username = localStorage.getItem("username");
   if (username === "Silverhand") return SILVERHAND_USER;
-  if (localStorage.getItem("authenticated") === "true" && username) {
+  if (
+    localStorage.getItem("authenticated") === "true" &&
+    username &&
+    isValidUsername(username)
+  ) {
     return createPublicUser(username);
   }
   return GUEST_USER;
@@ -89,6 +94,16 @@ const Terminal = ({
   const commandHistoryRef = useRef<string[]>([]);
   const historyIndexRef = useRef(0);
   const historyDraftRef = useRef("");
+  const timersRef = useRef<number[]>([]);
+
+  const schedule = (fn: () => void, ms: number) => {
+    timersRef.current.push(window.setTimeout(fn, ms));
+  };
+
+  const clearTimers = () => {
+    timersRef.current.forEach(clearTimeout);
+    timersRef.current = [];
+  };
 
   if (!fsRef.current[sessionUser.home]) {
     fsRef.current[sessionUser.home] = {
@@ -98,6 +113,15 @@ const Terminal = ({
       mode: 0o750,
     };
   }
+
+  // Resolve a user-typed path, expanding "~" and "~/..." to the home directory.
+  const resolvePath = (input: string) =>
+    normalizePath(
+      cwd,
+      input === "~" || input.startsWith("~/")
+        ? `${sessionUser.home}${input.slice(1)}`
+        : input,
+    );
 
   const handleContainerClick = () => {
     if (!isBooting) inputRef.current?.focus();
@@ -111,6 +135,7 @@ const Terminal = ({
 
   useEffect(() => {
     if (!isOpen) return;
+    clearTimers();
 
     if (skipBoot) {
       setIsBooting(false);
@@ -142,14 +167,16 @@ const Terminal = ({
 
     bootText.forEach((line, index) => {
       delay += Math.random() * 300 + 100;
-      setTimeout(() => {
+      schedule(() => {
         setLines((prev) => [...prev, line]);
         if (index === bootText.length - 1) {
           setIsBooting(false);
-          setTimeout(() => inputRef.current?.focus(), 100);
+          schedule(() => inputRef.current?.focus(), 100);
         }
       }, delay);
     });
+
+    return clearTimers;
   }, [isOpen, skipBoot]);
 
   const handleCommand = (cmd: string) => {
@@ -173,7 +200,7 @@ const Terminal = ({
         localStorage.setItem("classified", "true");
         setAuthMode("none");
         if (onAuthSuccess) onAuthSuccess(true);
-        setTimeout(onClose, 1500);
+        schedule(onClose, 1500);
       } else {
         setLines((prev) => [
           ...prev,
@@ -186,7 +213,7 @@ const Terminal = ({
       return;
     }
 
-    const [command, ...args] = trimmed.split(" ");
+    const [command, ...args] = trimmed.split(/\s+/);
     const argString = args.join(" ");
     setLines((prev) => [...prev, `$ ${trimmed}`]);
 
@@ -246,7 +273,7 @@ const Terminal = ({
       case "ls": {
         const long = args.includes("-l") || args.includes("-la") || args.includes("-al");
         const requested = args.find((arg) => !arg.startsWith("-")) || ".";
-        const path = normalizePath(cwd, requested === "~" ? sessionUser.home : requested);
+        const path = resolvePath(requested);
         const node = fsRef.current[path];
 
         if (!node) {
@@ -283,10 +310,7 @@ const Terminal = ({
 
       case "tree": {
         const requested = argString || ".";
-        const path = normalizePath(
-          cwd,
-          requested === "~" ? sessionUser.home : requested,
-        );
+        const path = resolvePath(requested);
         const node = fsRef.current[path];
 
         if (!node) {
@@ -351,7 +375,7 @@ const Terminal = ({
 
       case "cd": {
         const requested = argString || sessionUser.home;
-        const path = normalizePath(cwd, requested === "~" ? sessionUser.home : requested);
+        const path = resolvePath(requested);
         const node = fsRef.current[path];
 
         if (!node) {
@@ -371,7 +395,7 @@ const Terminal = ({
           setLines((prev) => [...prev, "cat: missing file operand"]);
           break;
         }
-        const path = normalizePath(cwd, argString);
+        const path = resolvePath(argString);
         const node = fsRef.current[path];
         if (!node) {
           setLines((prev) => [...prev, `cat: ${argString}: No such file or directory`]);
@@ -398,7 +422,7 @@ const Terminal = ({
           setLines((prev) => [...prev, "file: missing operand"]);
           break;
         }
-        const path = normalizePath(cwd, argString);
+        const path = resolvePath(argString);
         const node = fsRef.current[path];
         if (!node || !canTraverse(fsRef.current, parentPath(path), sessionUser)) {
           setLines((prev) => [
@@ -430,7 +454,7 @@ const Terminal = ({
           setLines((prev) => [...prev, "stat: missing operand"]);
           break;
         }
-        const path = normalizePath(cwd, argString);
+        const path = resolvePath(argString);
         const node = fsRef.current[path];
         if (!node || !canTraverse(fsRef.current, parentPath(path), sessionUser)) {
           setLines((prev) => [...prev, `stat: cannot stat '${argString}': ${node ? "Permission denied" : "No such file or directory"}`]);
@@ -453,7 +477,7 @@ const Terminal = ({
           setLines((prev) => [...prev, `${command}: missing operand`]);
           break;
         }
-        const path = normalizePath(cwd, argString);
+        const path = resolvePath(argString);
         const parent = parentPath(path);
         const parentNode = fsRef.current[parent];
         if (fsRef.current[path]) {
@@ -485,7 +509,7 @@ const Terminal = ({
           setLines((prev) => [...prev, "write: usage: write <file> <text>"]);
           break;
         }
-        const path = normalizePath(cwd, rawPath);
+        const path = resolvePath(rawPath);
         const node = fsRef.current[path];
         if (!node) {
           setLines((prev) => [...prev, `write: ${rawPath}: No such file`]);
@@ -510,10 +534,12 @@ const Terminal = ({
           setLines((prev) => [...prev, "chmod: usage: chmod <octal mode> <path>"]);
           break;
         }
-        const path = normalizePath(cwd, rawPath);
+        const path = resolvePath(rawPath);
         const node = fsRef.current[path];
         if (!node) {
           setLines((prev) => [...prev, `chmod: cannot access '${rawPath}': No such file or directory`]);
+        } else if (!canTraverse(fsRef.current, parentPath(path), sessionUser)) {
+          setLines((prev) => [...prev, `chmod: cannot access '${rawPath}': Permission denied`]);
         } else if (node.owner !== sessionUser.username) {
           setLines((prev) => [...prev, `chmod: changing permissions of '${rawPath}': Operation not permitted`]);
         } else {
@@ -527,7 +553,7 @@ const Terminal = ({
           setLines((prev) => [...prev, "rm: missing operand"]);
           break;
         }
-        const path = normalizePath(cwd, argString);
+        const path = resolvePath(argString);
         const node = fsRef.current[path];
         const parent = parentPath(path);
         const parentNode = fsRef.current[parent];
@@ -550,7 +576,7 @@ const Terminal = ({
       case "exit":
       case "boot":
         setLines((prev) => [...prev, "Terminating session..."]);
-        setTimeout(onClose, 500);
+        schedule(onClose, 500);
         break;
 
       case "login":
@@ -568,6 +594,12 @@ const Terminal = ({
             `User recognized: ${argString}`,
             "ENTER PASSPHRASE:",
           ]);
+        } else if (!isValidUsername(argString)) {
+          setLines((prev) => [
+            ...prev,
+            `login: invalid username '${argString}'`,
+            "Use letters, digits, '_' or '-' (max 32 chars).",
+          ]);
         } else {
           const publicUser = createPublicUser(argString);
           setSessionUser(publicUser);
@@ -582,7 +614,7 @@ const Terminal = ({
             "Access granted to public archives.",
           ]);
           if (onAuthSuccess) onAuthSuccess(false);
-          setTimeout(onClose, 1000);
+          schedule(onClose, 1000);
         }
         break;
 

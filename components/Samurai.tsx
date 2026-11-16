@@ -121,66 +121,60 @@ const Samurai = ({ onBack }: SamuraiPageProps) => {
   const [progress, setProgress] = useState(0);
   const [currentTime, setCurrentTime] = useState(0);
   const audioRef = useRef<HTMLAudioElement | null>(null);
+  const isPlayingRef = useRef(false);
   const currentTrack = TRACKS[currentTrackIdx];
 
+  const startPlayback = () => {
+    audioRef.current?.play().catch((e) => {
+      // Autoplay policy, missing file or an interrupted load: reflect it in the UI.
+      if (e instanceof DOMException && e.name === "AbortError") return;
+      console.warn("Audio playback failed", e);
+      setIsPlaying(false);
+    });
+  };
+
   useEffect(() => {
-    audioRef.current = new Audio(currentTrack.file);
-    audioRef.current.volume = 0.5;
+    const audio = new Audio();
+    audio.volume = 0.5;
+    audio.preload = "metadata";
+    audioRef.current = audio;
 
     const updateProgress = () => {
-      if (audioRef.current) {
-        const duration = audioRef.current.duration || 1;
-        if (!isNaN(duration)) {
-          setCurrentTime(audioRef.current.currentTime);
-          setProgress((audioRef.current.currentTime / duration) * 100);
-        }
+      setCurrentTime(audio.currentTime);
+      if (Number.isFinite(audio.duration) && audio.duration > 0) {
+        setProgress((audio.currentTime / audio.duration) * 100);
       }
     };
 
-    const handleEnded = () => {
-      setIsPlaying(false);
-      handleNext();
-    };
+    // Keep isPlaying as is so the next track starts automatically.
+    const handleEnded = () => handleNext();
 
-    audioRef.current.addEventListener("timeupdate", updateProgress);
-    audioRef.current.addEventListener("ended", handleEnded);
+    audio.addEventListener("timeupdate", updateProgress);
+    audio.addEventListener("ended", handleEnded);
 
     return () => {
-      if (audioRef.current) {
-        audioRef.current.pause();
-        audioRef.current.removeEventListener("timeupdate", updateProgress);
-        audioRef.current.removeEventListener("ended", handleEnded);
-      }
+      audio.pause();
+      audio.removeEventListener("timeupdate", updateProgress);
+      audio.removeEventListener("ended", handleEnded);
+      audio.removeAttribute("src");
+      audio.load();
+      audioRef.current = null;
     };
   }, []);
 
   useEffect(() => {
-    if (audioRef.current) {
-      const wasPlaying = isPlaying;
-      audioRef.current.src = TRACKS[currentTrackIdx].file;
-      audioRef.current.load();
-      setCurrentTime(0);
-      setProgress(0);
-      if (wasPlaying) {
-        audioRef.current
-          .play()
-          .catch((e) => console.log("Audio file missing or blocked?", e));
-      }
-    }
+    const audio = audioRef.current;
+    if (!audio) return;
+    audio.src = TRACKS[currentTrackIdx].file;
+    setCurrentTime(0);
+    setProgress(0);
+    if (isPlayingRef.current) startPlayback();
   }, [currentTrackIdx]);
 
   useEffect(() => {
-    if (audioRef.current) {
-      if (isPlaying) {
-        audioRef.current
-          .play()
-          .catch((e) =>
-            console.warn("Ensure audio files exist in public/music folder", e),
-          );
-      } else {
-        audioRef.current.pause();
-      }
-    }
+    isPlayingRef.current = isPlaying;
+    if (isPlaying) startPlayback();
+    else audioRef.current?.pause();
   }, [isPlaying]);
 
   useEffect(() => {
