@@ -131,24 +131,28 @@ const Engram = () => {
                 title: "Что такое Энграмма?",
                 text: "Это не душа. Это цифровая копия сознания, записанная на экспериментальный биочип Arasaka. Код, имитирующий мыслительные процессы, воспоминания и эмоции оригинального Джонни. Он заперт в микросхеме, пока несчастный случай не подключает его к нервной системе Ви.",
                 color: "text-[#ff003c]",
+                ring: "group-hover:ring-[#ff003c]",
               },
               {
                 icon: <UserPlus size={20} />,
                 title: "Симбиоз с Ви",
                 text: "Начав как враги, борющиеся за контроль над одним телом, Ви и Джонни проходят путь до глубокой духовной связи. Биочип не просто убивает Ви — он смешивает две личности. Ви становится жестче и решительнее, а Джонни... Джонни учится тому, чего был лишен при жизни: эмпатии.",
                 color: "text-[#00f0ff]",
+                ring: "group-hover:ring-[#00f0ff]",
               },
               {
                 icon: <RefreshCcw size={20} />,
                 title: "Трансформация",
                 text: "Почему мы любим энграмму больше, чем живого Сильверхенда? Потому что эта версия способна на рост. Под влиянием Ви цифровой призрак осознает свои ошибки. От самовлюбленного нарцисса он эволюционирует в друга, готового уйти во тьму киберпространства, чтобы дать Ви шанс на жизнь.",
                 color: "text-[#fcee0a]",
+                ring: "group-hover:ring-[#fcee0a]",
               },
               {
                 icon: <Fingerprint size={20} />,
                 title: "Наследие",
                 text: '"Никогда не переставай бороться." — это кредо, которое он передает нам. Энграмма доказывает, что даже цифровая копия человека может проявить больше человечности, чем живые люди в Найт-Сити.',
                 color: "text-white",
+                ring: "group-hover:ring-white",
               },
             ].map((item, idx) => (
               <RevealOnScroll
@@ -159,7 +163,7 @@ const Engram = () => {
               >
                 <div className="flex-shrink-0 mt-1 relative">
                   <div
-                    className={`w-8 h-8 md:w-10 md:h-10 bg-[#222] flex items-center justify-center ${item.color} group-hover:scale-110 transition-transform duration-300 ring-1 ring-transparent group-hover:ring-${item.color.split("[")[1]?.split("]")[0] || "white"}`}
+                    className={`w-8 h-8 md:w-10 md:h-10 bg-[#222] flex items-center justify-center ${item.color} group-hover:scale-110 transition-transform duration-300 ring-1 ring-transparent ${item.ring}`}
                   >
                     {React.cloneElement(item.icon as React.ReactElement<any>, {
                       size: 18,

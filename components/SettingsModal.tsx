@@ -20,6 +20,65 @@ interface SettingsModalProps {
   onOpenTerminal?: () => void;
 }
 
+const ToggleOption = ({
+  label,
+  description,
+  value,
+  onChange,
+  icon: Icon,
+}: {
+  label: string;
+  description: string;
+  value: boolean;
+  onChange: () => void;
+  icon: React.ElementType;
+}) => (
+  <div className="flex items-center justify-between group py-3 md:py-4 border-b border-[#222] last:border-0">
+    <div className="flex items-start gap-3 md:gap-4">
+      <div
+        className={`p-2 bg-[#111] border border-[#333] group-hover:border-[#00f0ff] transition-colors ${value ? "text-[#00f0ff]" : "text-gray-600"}`}
+      >
+        <Icon size={18} className="md:w-5 md:h-5" />
+      </div>
+      <div>
+        <h4 className="text-white font-cyber text-sm md:text-base tracking-wide group-hover:text-[#00f0ff] transition-colors">
+          {label}
+        </h4>
+        <p className="text-gray-500 text-[10px] md:text-xs font-mono max-w-[180px] md:max-w-[200px] leading-tight mt-1">
+          {description}
+        </p>
+      </div>
+    </div>
+
+    <button
+      type="button"
+      role="switch"
+      aria-checked={value}
+      aria-label={label}
+      onClick={onChange}
+      className={`
+        relative w-10 h-5 md:w-12 md:h-6 border transition-all duration-300 flex-shrink-0 ml-4
+        ${
+          value
+            ? "border-[#00f0ff] bg-[#00f0ff]/10"
+            : "border-[#333] bg-transparent"
+        }
+      `}
+    >
+      <div
+        className={`
+          absolute top-0.5 bottom-0.5 w-4 md:w-5 bg-current transition-all duration-300
+          ${
+            value
+              ? "right-0.5 bg-[#00f0ff] shadow-[0_0_10px_#00f0ff]"
+              : "left-0.5 bg-[#333]"
+          }
+        `}
+      />
+    </button>
+  </div>
+);
+
 const SettingsModal = ({ isOpen, onClose, onOpenTerminal }: SettingsModalProps) => {
   const {
     bootSequence,
@@ -31,61 +90,6 @@ const SettingsModal = ({ isOpen, onClose, onOpenTerminal }: SettingsModalProps) 
   } = useSettings();
 
   if (!isOpen) return null;
-
-  const ToggleOption = ({
-    label,
-    description,
-    value,
-    onChange,
-    icon: Icon,
-  }: {
-    label: string;
-    description: string;
-    value: boolean;
-    onChange: () => void;
-    icon: React.ElementType;
-  }) => (
-    <div className="flex items-center justify-between group py-3 md:py-4 border-b border-[#222] last:border-0">
-      <div className="flex items-start gap-3 md:gap-4">
-        <div
-          className={`p-2 bg-[#111] border border-[#333] group-hover:border-[#00f0ff] transition-colors ${value ? "text-[#00f0ff]" : "text-gray-600"}`}
-        >
-          <Icon size={18} className="md:w-5 md:h-5" />
-        </div>
-        <div>
-          <h4 className="text-white font-cyber text-sm md:text-base tracking-wide group-hover:text-[#00f0ff] transition-colors">
-            {label}
-          </h4>
-          <p className="text-gray-500 text-[10px] md:text-xs font-mono max-w-[180px] md:max-w-[200px] leading-tight mt-1">
-            {description}
-          </p>
-        </div>
-      </div>
-
-      <button
-        onClick={onChange}
-        className={`
-          relative w-10 h-5 md:w-12 md:h-6 border transition-all duration-300 flex-shrink-0 ml-4
-          ${
-            value
-              ? "border-[#00f0ff] bg-[#00f0ff]/10"
-              : "border-[#333] bg-transparent"
-          }
-        `}
-      >
-        <div
-          className={`
-            absolute top-0.5 bottom-0.5 w-4 md:w-5 bg-current transition-all duration-300
-            ${
-              value
-                ? "right-0.5 bg-[#00f0ff] shadow-[0_0_10px_#00f0ff]"
-                : "left-0.5 bg-[#333]"
-            }
-          `}
-        />
-      </button>
-    </div>
-  );
 
   return (
     <div className="fixed inset-0 z-[200] flex items-center justify-center bg-black/80 backdrop-blur-sm p-2 md:p-4 animate-[fadeIn_0.2s_ease-out]">
