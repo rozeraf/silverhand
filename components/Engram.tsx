@@ -1,144 +1,170 @@
-import React, { useState } from "react";
+import React from "react";
+import { ArrowRight } from "lucide-react";
 import RevealOnScroll from "./RevealOnScroll";
 import SectionHead from "./SectionHead";
 import { ASSETS } from "../assets";
-import { useSettings } from "../context/SettingsContext";
 
-const THESES: { title: string; text: string; scrawl?: string }[] = [
-  {
-    title: "Что такое энграмма?",
-    text: "Это не душа. Это цифровая копия сознания, записанная на экспериментальный биочип Arasaka. Код, имитирующий мыслительные процессы, воспоминания и эмоции оригинального Джонни. Он заперт в микросхеме, пока несчастный случай не подключает его к нервной системе Ви.",
-  },
-  {
-    title: "Симбиоз с Ви",
-    text: "Начав как враги, борющиеся за контроль над одним телом, Ви и Джонни проходят путь до глубокой духовной связи. Биочип не просто убивает Ви — он смешивает две личности. Ви становится жёстче и решительнее, а Джонни учится тому, чего был лишён при жизни: эмпатии.",
-  },
-  {
-    title: "Трансформация",
-    text: "Почему мы любим энграмму больше, чем живого Сильверхенда? Потому что эта версия способна на рост. Под влиянием Ви цифровой призрак осознаёт свои ошибки. От самовлюблённого нарцисса он эволюционирует в друга, готового уйти во тьму киберпространства, чтобы дать Ви шанс на жизнь.",
-    scrawl: "«нарцисс». ладно. было дело.",
-  },
-  {
-    title: "Наследие",
-    text: "«Никогда не переставай бороться» — это кредо, которое он передаёт нам. Энграмма доказывает, что даже цифровая копия человека может проявить больше человечности, чем живые люди в Найт-Сити.",
-  },
-];
-
-const Engram = () => {
-  const { crtWarp } = useSettings();
-  const [rotation, setRotation] = useState({ x: 0, y: 0 });
-
-  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
-    if (crtWarp) return;
-    const rect = e.currentTarget.getBoundingClientRect();
-    const x = (e.clientX - rect.left) / rect.width - 0.5;
-    const y = (e.clientY - rect.top) / rect.height - 0.5;
-    setRotation({ x: y * -12, y: x * 12 });
-  };
-
-  return (
-    <section
-      id="engram"
-      className="relative overflow-hidden border-t border-line bg-[#050607] py-20 md:py-32"
+const Engram = () => (
+  <section
+    id="engram"
+    className="relative overflow-hidden border-t border-line bg-[#070505] py-20 md:py-32"
+  >
+    <div
+      className="display outline-text pointer-events-none absolute -right-[4vw] top-10 text-[30vw] leading-none text-blood/15"
+      aria-hidden="true"
     >
-      <div
-        className="display outline-text pointer-events-none absolute -right-[4vw] top-10 text-[30vw] leading-none text-relic/10"
-        aria-hidden="true"
-      >
-        Relic
-      </div>
+      Relic
+    </div>
 
-      <div className="relative mx-auto max-w-[1500px] px-5 md:px-10">
-        <SectionHead
-          className="text-relic"
-          index="B2"
-          kicker="Проект Relic"
-          title={
-            <span className="text-bone">
-              Энграмма
-              <br />и вторая жизнь
-            </span>
-          }
-          aside={<>Secure_data_shard · Encrypted_Lv5</>}
-        />
+    <div className="relative mx-auto max-w-[1500px] px-5 md:px-10">
+      <SectionHead
+        className="text-blood"
+        index="B2"
+        kicker="Проект Relic"
+        title={
+          <span className="text-bone">
+            Энграмма
+            <br />и вторая жизнь
+          </span>
+        }
+        aside={<>Secure_data_shard · Encrypted_Lv5</>}
+      />
 
-        <div className="grid gap-14 lg:grid-cols-12 lg:gap-20">
-          <RevealOnScroll direction="right" className="lg:col-span-5">
-            <div className="lg:sticky lg:top-24" style={{ perspective: 1000 }}>
-              <div
-                className="relic-frame mx-auto max-w-md lg:max-w-none"
-                onMouseMove={handleMouseMove}
-                onMouseLeave={() => setRotation({ x: 0, y: 0 })}
-                style={{
-                  transform: crtWarp
-                    ? "none"
-                    : `rotateX(${rotation.x}deg) rotateY(${rotation.y}deg)`,
-                }}
-              >
-                <img
-                  src={ASSETS.engramCard}
-                  alt="Биочип Relic"
-                  loading="lazy"
-                  className="block aspect-square w-full object-cover"
-                />
-                <div className="relic-frame__scan" />
-                <span className="label absolute right-4 top-4 z-10 text-relic">
-                  Biochip // Relic 2.0
-                </span>
-                <span className="label absolute bottom-4 left-4 z-10 bg-black/70 px-2 py-1 text-relic">
-                  Subject: V &amp; Silverhand
-                </span>
+      {/* The chip itself, in its own colours */}
+      <RevealOnScroll>
+        <figure className="relic-frame aspect-[4/3] sm:aspect-[16/9]">
+          <img
+            src={ASSETS.engramCard}
+            alt="Биочип Relic производства Arasaka"
+            loading="lazy"
+            className="absolute inset-0 h-full w-full object-cover"
+          />
+          <div className="relic-frame__scan" />
+          <span className="tick tick--tr" />
+          <span className="tick tick--br" />
+
+          {/* Sits over a stray icon baked into the source image */}
+          <figcaption className="absolute bottom-0 left-0 z-10 flex h-[25%] min-w-[20%] flex-col justify-end bg-black px-4 py-3 md:px-6 md:py-5">
+            <div className="label text-blood">Subject</div>
+            <div className="font-display text-xl font-bold uppercase leading-tight md:text-3xl">
+              V &amp; Silverhand
+            </div>
+          </figcaption>
+
+          <div className="absolute right-4 top-4 z-10 w-40 bg-black/80 p-3 backdrop-blur-sm md:right-8 md:top-8 md:w-64 md:p-5">
+            <div className="label text-blood">Синхронизация</div>
+            <div className="mt-1 font-display text-4xl font-bold leading-none text-blood md:text-7xl">
+              86%
+            </div>
+            <div className="meter mt-2 text-blood md:mt-3">
+              <i style={{ width: "86%" }} />
+            </div>
+            <div className="label mt-2 hidden text-dust md:block">
+              Статус: <span className="text-bone">перезапись носителя</span>
+            </div>
+          </div>
+        </figure>
+      </RevealOnScroll>
+
+      {/* Four theses, four different shapes */}
+      <div className="mt-5 grid grid-cols-1 gap-5 lg:grid-cols-12">
+        <RevealOnScroll className="lg:col-span-7">
+          <article className="flex h-full flex-col justify-between bg-blood p-7 text-black md:p-10">
+            <div className="label font-bold">01 · Что такое энграмма?</div>
+            <div>
+              <h3 className="display mt-10 text-[clamp(3.5rem,8vw,7.5rem)]">
+                Это не душа.
+              </h3>
+              <p className="mt-6 max-w-2xl text-[15px] font-medium leading-relaxed md:text-lg">
+                Это цифровая копия сознания, записанная на экспериментальный
+                биочип Arasaka. Код, имитирующий мыслительные процессы,
+                воспоминания и эмоции оригинального Джонни. Он заперт в
+                микросхеме, пока несчастный случай не подключает его к нервной
+                системе Ви.
+              </p>
+            </div>
+          </article>
+        </RevealOnScroll>
+
+        <RevealOnScroll delay={120} className="lg:col-span-5">
+          <article className="flex h-full flex-col border border-line p-7 md:p-10">
+            <div className="label text-blood">02 · Симбиоз с Ви</div>
+            <div className="mt-8 grid grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)] items-end gap-3">
+              <div>
+                <div className="display text-[clamp(2rem,9vw,4.5rem)]">Ви</div>
+                <div className="label mt-2 text-dust">жёстче, решительнее</div>
               </div>
-
-              <div className="mx-auto mt-8 max-w-md lg:max-w-none">
-                <div className="mb-2 flex items-end justify-between">
-                  <span className="label text-relic">Синхронизация</span>
-                  <span className="font-display text-5xl font-bold leading-none text-relic">
-                    86%
-                  </span>
+              <span className="display pb-7 text-2xl text-blood md:text-3xl">×</span>
+              <div className="text-right">
+                <div className="display text-[clamp(2rem,9vw,4.5rem)] text-blood">
+                  Джонни
                 </div>
-                <div className="meter">
-                  <i style={{ width: "86%" }} />
-                </div>
-                <dl className="spec mt-6">
-                  <dt>Тип данных</dt>
-                  <dd>Псевдоличность, конструкт</dd>
-                  <dt>Статус</dt>
-                  <dd className="text-blood">Перезапись носителя</dd>
-                </dl>
-                <p className="scrawl scrawl--dark mt-5">
-                  я не «конструкт». я — это я.
-                </p>
+                <div className="label mt-2 text-dust">учится эмпатии</div>
               </div>
             </div>
-          </RevealOnScroll>
+            <div className="mt-5 flex h-2">
+              <i className="block h-full w-[14%] bg-bone" />
+              <i className="block h-full flex-1 bg-blood" />
+            </div>
+            <p className="mt-6 text-[15px] leading-relaxed text-bone/70 md:text-base">
+              Начав как враги, борющиеся за контроль над одним телом, Ви и
+              Джонни проходят путь до глубокой духовной связи. Биочип не просто
+              убивает Ви — он смешивает две личности.
+            </p>
+          </article>
+        </RevealOnScroll>
 
-          <ol className="lg:col-span-7">
-            {THESES.map((item, idx) => (
-              <RevealOnScroll key={item.title} delay={idx * 100}>
-                <li className="group grid gap-x-8 gap-y-3 border-t border-line py-8 md:grid-cols-[5rem_1fr] md:py-10">
-                  <span className="font-display text-5xl font-bold leading-none text-relic/30 transition-colors duration-300 group-hover:text-relic">
-                    0{idx + 1}
-                  </span>
-                  <div>
-                    <h3 className="font-display text-2xl font-bold uppercase md:text-4xl">
-                      {item.title}
-                    </h3>
-                    <p className="mt-3 max-w-2xl text-[15px] leading-relaxed text-bone/70 md:text-base">
-                      {item.text}
-                    </p>
-                    {item.scrawl && (
-                      <p className="scrawl scrawl--dark mt-4">{item.scrawl}</p>
-                    )}
-                  </div>
-                </li>
-              </RevealOnScroll>
-            ))}
-          </ol>
-        </div>
+        <RevealOnScroll className="lg:col-span-5">
+          <article className="flex h-full flex-col border border-line p-7 md:p-10">
+            <div className="label text-blood">03 · Трансформация</div>
+            <div className="mt-8 flex flex-wrap items-center gap-x-5 gap-y-2">
+              <span className="display outline-text text-5xl text-bone/60 md:text-6xl">
+                Нарцисс
+              </span>
+              <ArrowRight className="text-blood" size={36} />
+              <span className="display text-5xl md:text-6xl">Друг</span>
+            </div>
+            <p className="mt-6 text-[15px] leading-relaxed text-bone/70 md:text-base">
+              Почему мы любим энграмму больше, чем живого Сильверхенда? Потому
+              что эта версия способна на рост. Под влиянием Ви цифровой призрак
+              осознаёт свои ошибки и становится другом, готовым уйти во тьму
+              киберпространства, чтобы дать Ви шанс на жизнь.
+            </p>
+            <p className="scrawl scrawl--dark mt-5">
+              «нарцисс». ладно. было дело.
+            </p>
+          </article>
+        </RevealOnScroll>
+
+        <RevealOnScroll delay={120} className="lg:col-span-7">
+          <article className="paper flex h-full flex-col justify-between p-7 md:p-10">
+            <div className="label font-bold">04 · Наследие</div>
+            <div>
+              <blockquote className="display mt-10 text-[clamp(2.75rem,6vw,5.5rem)]">
+                «Никогда не переставай{" "}
+                <span className="text-blood">бороться</span>»
+              </blockquote>
+              <p className="mt-6 max-w-2xl text-[15px] leading-relaxed text-ink/80 md:text-base">
+                Это кредо, которое он передаёт нам. Энграмма доказывает, что
+                даже цифровая копия человека может проявить больше человечности,
+                чем живые люди в Найт-Сити.
+              </p>
+            </div>
+          </article>
+        </RevealOnScroll>
       </div>
-    </section>
-  );
-};
+
+      <div className="mt-8 flex flex-col justify-between gap-4 md:flex-row md:items-end">
+        <dl className="spec md:min-w-[26rem]">
+          <dt>Тип данных</dt>
+          <dd>Псевдоличность, конструкт</dd>
+        </dl>
+        <p className="scrawl scrawl--dark scrawl--right">
+          я не «конструкт». я — это я.
+        </p>
+      </div>
+    </div>
+  </section>
+);
 
 export default Engram;

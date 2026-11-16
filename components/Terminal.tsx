@@ -773,7 +773,7 @@ const Terminal = ({
               </span>
             </h2>
           )}
-          <div className="meter mt-5">
+          <div className="meter mt-5 text-relic">
             <i style={{ width: `${bootProgress * 100}%` }} />
           </div>
         </div>

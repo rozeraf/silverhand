@@ -1,7 +1,8 @@
 /* ==========================================================================
    Johnny Silverhand: The Engram — global styles
    Direction: a punk zine about a dead rocker, read through a failing biochip.
-   Red leads, bone "paper" sections break up the dark, cyan belongs to the Relic.
+   Red leads (the Relic chip itself is red), bone "paper" sections break up the
+   dark, cyan is only for system glitches and the boot screen.
    Layout utilities come from the Tailwind CDN; signature pieces live here.
    ========================================================================== */
 
@@ -675,22 +676,14 @@ article:hover > .evtag {
 .relic-frame {
   position: relative;
   overflow: hidden;
-  border: 1px solid rgba(0, 240, 255, 0.35);
+  border: 1px solid rgba(255, 0, 60, 0.4);
   background: #000;
-  transition: transform 0.12s ease-out;
 }
 .relic-frame img {
-  filter: grayscale(1) contrast(1.3);
-  mix-blend-mode: screen;
+  transition: transform 1.2s cubic-bezier(0.2, 0.8, 0.2, 1);
 }
-.relic-frame::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  z-index: 1;
-  background: var(--cyan);
-  mix-blend-mode: multiply;
-  pointer-events: none;
+.relic-frame:hover img {
+  transform: scale(1.03);
 }
 .relic-frame__scan {
   position: absolute;
@@ -699,10 +692,11 @@ article:hover > .evtag {
   top: -30%;
   height: 30%;
   z-index: 2;
-  background: linear-gradient(rgba(0, 240, 255, 0), rgba(0, 240, 255, 0.28));
-  border-bottom: 1px solid var(--cyan);
+  background: linear-gradient(rgba(255, 0, 60, 0), rgba(255, 0, 60, 0.22));
+  border-bottom: 1px solid var(--red);
+  pointer-events: none;
   will-change: transform;
-  animation: relic-scan 4.5s cubic-bezier(0.5, 0, 0.5, 1) infinite;
+  animation: relic-scan 5.5s cubic-bezier(0.5, 0, 0.5, 1) infinite;
 }
 @keyframes relic-scan {
   to { transform: translateY(440%); }
@@ -711,10 +705,11 @@ article:hover > .evtag {
   height: 10px;
   background: repeating-linear-gradient(90deg, var(--line) 0 3px, transparent 3px 6px);
 }
+/* The fill takes the element's text colour */
 .meter > i {
   display: block;
   height: 100%;
-  background: repeating-linear-gradient(90deg, var(--cyan) 0 3px, transparent 3px 6px);
+  background: repeating-linear-gradient(90deg, currentColor 0 3px, transparent 3px 6px);
 }
 
 /* --- Samurai player ------------------------------------------------------ */
