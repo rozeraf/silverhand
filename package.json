@@ -6,7 +6,9 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "changelog": "git-cliff -o CHANGELOG.md",
+    "release-notes": "git-cliff --latest --strip all"
   },
   "dependencies": {
     "react": "^19.2.4",
@@ -20,6 +22,7 @@
     "@types/react": "^19.2.14",
     "@types/react-dom": "^19.2.3",
     "@vitejs/plugin-react": "^5.1.4",
+    "git-cliff": "2.14.2",
     "typescript": "~5.8.2",
     "vite": "^7.3.1"
   }

@@ -1,12 +1,11 @@
-name: Deploy to Cloudflare Pages
+name: Release
 
+# A version tag (vX.Y.Z) on main is the single release trigger:
+# build → deploy to Cloudflare Pages → GitHub Release with notes from git-cliff.
 on:
   push:
     tags:
       - "v*"
-  release:
-    types:
-      - published
 
 jobs:
   deploy:
@@ -40,3 +39,47 @@ jobs:
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
           command: pages deploy dist --project-name=silverhand --branch=main
           gitHubToken: ${{ secrets.GITHUB_TOKEN }}
+
+  github-release:
+    needs: deploy
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout (full history and tags for git-cliff)
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+
+      - name: Install dependencies
+        run: bun install --frozen-lockfile
+
+      - name: Check CHANGELOG.md has this version
+        run: |
+          version="${GITHUB_REF_NAME#v}"
+          if ! grep -q "^## \[${version//./\\.}\]" CHANGELOG.md; then
+            echo "::warning file=CHANGELOG.md::No section for ${version}. Run 'bun run changelog -- --tag ${GITHUB_REF_NAME}' on dev before tagging."
+          fi
+
+      - name: Generate release notes
+        run: bun run --silent release-notes > RELEASE_NOTES.md
+
+      - name: Create or update GitHub Release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          if gh release view "$GITHUB_REF_NAME" >/dev/null 2>&1; then
+            gh release edit "$GITHUB_REF_NAME" --notes-file RELEASE_NOTES.md
+          else
+            gh release create "$GITHUB_REF_NAME" \
+              --title "$GITHUB_REF_NAME" \
+              --notes-file RELEASE_NOTES.md \
+              --verify-tag
+          fi

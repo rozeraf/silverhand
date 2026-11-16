@@ -120,16 +120,31 @@ bun run preview
 feature work → dev → pull request → main → tag/release → Cloudflare Pages
 ```
 
-Деплой не запускается при обычном push в `dev` или `main`. Workflow начинает сборку только при публикации GitHub Release либо push тега вида `v*`, затем отправляет `dist/` в production-ветку `main` проекта Cloudflare Pages.
+Деплой не запускается при обычном push в `dev` или `main`. Единственный триггер — push тега вида `v*`. Workflow `Release` собирает проект, отправляет `dist/` в production-ветку `main` проекта Cloudflare Pages и после успешного деплоя создаёт GitHub Release с заметками.
 
-Пример релизного тега:
+### Changelog
+
+`CHANGELOG.md` и заметки к релизам генерируются [git-cliff](https://git-cliff.org) (конфиг — `cliff.toml`) из Conventional Commits: `feat` → «Новое», `fix` → «Исправления», `docs`, `refactor`, `ci` и т.д. Коммиты, не соответствующие формату, и merge-коммиты в changelog не попадают, поэтому формат сообщений коммитов важен.
+
+### Выпуск релиза
 
 ```bash
-git switch main
-git pull --ff-only
-git tag v1.0.0
-git push origin v1.0.0
+# 1. На dev: зафиксировать changelog новой версии и влить его через PR
+git switch dev
+bun run changelog -- --tag v1.0.2
+git commit -am "chore(release): v1.0.2"
+git push origin dev            # затем PR dev → main и merge
+
+# 2. На main: поставить тег — он запускает деплой и создание GitHub Release
+git switch main && git pull --ff-only
+git tag -a v1.0.2 -m "v1.0.2"
+git push origin v1.0.2
+
+# 3. Вернуть dev к main
+git switch dev && git merge --ff-only main && git push origin dev
 ```
+
+Если секцию changelog забыли сгенерировать, релиз всё равно выйдет (заметки строятся из истории), но workflow выдаст предупреждение.
 
 Для GitHub Actions необходимы секреты `CLOUDFLARE_API_TOKEN` и `CLOUDFLARE_ACCOUNT_ID`.
 

@@ -92,7 +92,8 @@
 ## Выполнено
 
 - [x] Рабочий процесс упрощён до веток `dev` и `main`; `prod` удалена.
-- [x] Cloudflare Pages deploy запускается только по тегу `v*` или опубликованному GitHub Release.
+- [x] Cloudflare Pages deploy запускается только по тегу `v*`; после деплоя workflow сам создаёт GitHub Release.
+- [x] `CHANGELOG.md` и заметки к релизам генерируются git-cliff из Conventional Commits (`cliff.toml`).
 - [x] Workflow использует Bun и Wrangler 4, не устанавливая Wrangler через конфликтующий npm dependency tree.
 - [x] Все пять треков и обложек подключены к плееру локально.
 - [x] Таймер плеера показывает минуты, секунды и десятые доли секунды.
