@@ -33,6 +33,11 @@ const EVENTS = [
 const Biography = () => (
   <>
     <section id="bio" className="paper overflow-hidden py-20 md:py-32">
+      <img
+        src={ASSETS.samuraiLogo}
+        alt=""
+        className="sticker johnny-only bottom-10 right-[5%] rotate-12"
+      />
       <div className="mx-auto max-w-[1500px] px-5 md:px-10">
         <SectionHead
           index="A1"
@@ -119,6 +124,9 @@ const Biography = () => (
               </dl>
               <p className="scrawl mx-auto mt-4 block max-w-sm lg:mx-0 lg:max-w-md">
                 с ИХ войны я ушёл сам
+              </p>
+              <p className="official-only label mx-auto mt-4 max-w-sm opacity-50 lg:mx-0 lg:max-w-md">
+                Запись заверена Arasaka Corp. Пометки на полях отсутствуют.
               </p>
             </div>
           </RevealOnScroll>

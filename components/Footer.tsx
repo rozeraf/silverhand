@@ -13,6 +13,7 @@ const Footer = () => (
         <div className="md:col-span-5">
           <p className="section-index mb-4 text-blood">Конец записи</p>
           <p className="display text-4xl md:text-5xl">Never fade away</p>
+          <p className="scrawl scrawl--dark mt-4">и не собираюсь.</p>
         </div>
 
         <nav className="md:col-span-3" aria-label="Внешние ссылки">

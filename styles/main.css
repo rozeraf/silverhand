@@ -639,6 +639,37 @@ body {
   padding-bottom: 0.35rem;
 }
 
+.evtag {
+  position: absolute;
+  z-index: 3;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 10px 14px 10px 30px;
+  background:
+    radial-gradient(circle at 14px 50%, var(--ink) 0 4px, transparent 4.5px),
+    var(--bone);
+  color: var(--ink);
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  line-height: 1.3;
+  clip-path: polygon(12px 0, 100% 0, 100% 100%, 12px 100%, 0 72%, 0 28%);
+  transform: rotate(-4deg);
+  transform-origin: 14px 50%;
+  transition: transform 0.4s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+.evtag strong {
+  font-family: var(--font-display);
+  font-size: 22px;
+  letter-spacing: 0;
+  line-height: 1;
+}
+article:hover > .evtag {
+  transform: rotate(3deg);
+}
+
 /* --- Engram -------------------------------------------------------------- */
 
 .relic-frame {
@@ -931,6 +962,60 @@ body.crt-viewport-active {
   border-radius: 50% 46% 52% 48% / 60% 52% 48% 40%;
   transform: rotate(-2deg);
   pointer-events: none;
+}
+
+/* Two views of the same archive. By default the site is the official record;
+   logging in as Silverhand (html[data-view="johnny"]) turns his marker on. */
+html:not([data-view="johnny"]) .scrawl,
+html:not([data-view="johnny"]) .johnny-only {
+  display: none !important;
+}
+html:not([data-view="johnny"]) .struck::before,
+html:not([data-view="johnny"]) .struck::after,
+html:not([data-view="johnny"]) .circled::after {
+  content: none;
+}
+html[data-view="johnny"] .official-only {
+  display: none !important;
+}
+html[data-view="johnny"] .scrawl {
+  animation: scrawl-in 0.7s cubic-bezier(0.3, 0.7, 0.2, 1) both;
+}
+@keyframes scrawl-in {
+  from { clip-path: inset(-20% 100% -20% 0); }
+  to { clip-path: inset(-20% -5% -20% 0); }
+}
+
+.sticker {
+  position: absolute;
+  z-index: 3;
+  width: clamp(64px, 8vw, 112px);
+  pointer-events: none;
+  filter: drop-shadow(0 0 0 #fff) drop-shadow(2px 0 0 #fff) drop-shadow(-2px 0 0 #fff)
+    drop-shadow(0 2px 0 #fff) drop-shadow(0 -2px 0 #fff) drop-shadow(0 6px 10px rgba(0, 0, 0, 0.45));
+}
+
+.view-toast {
+  position: fixed;
+  left: 50%;
+  bottom: 28px;
+  z-index: 300;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 14px 20px;
+  background: var(--yellow);
+  color: #000;
+  box-shadow: 8px 8px 0 #000;
+  transform: translateX(-50%);
+  animation: toast 5.5s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+  pointer-events: none;
+  max-width: calc(100vw - 32px);
+}
+@keyframes toast {
+  0% { opacity: 0; transform: translate(-50%, 30px); }
+  8%, 88% { opacity: 1; transform: translate(-50%, 0); }
+  100% { opacity: 0; transform: translate(-50%, 30px); }
 }
 
 /* --- Torn paper edge ----------------------------------------------------- */

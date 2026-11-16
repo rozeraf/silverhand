@@ -14,6 +14,7 @@ import "@fontsource/jetbrains-mono/700.css";
 import "@fontsource/caveat/700.css";
 import "./styles/main.css";
 import { SettingsProvider } from "./context/SettingsContext";
+import { PlayerProvider } from "./context/PlayerContext";
 
 const rootElement = document.getElementById("root");
 if (!rootElement) {
@@ -24,7 +25,9 @@ const root = ReactDOM.createRoot(rootElement);
 root.render(
   <React.StrictMode>
     <SettingsProvider>
-      <App />
+      <PlayerProvider>
+        <App />
+      </PlayerProvider>
     </SettingsProvider>
   </React.StrictMode>,
 );

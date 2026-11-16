@@ -4,7 +4,7 @@ import SectionHead from "./SectionHead";
 import { ASSETS } from "../assets";
 import { useSettings } from "../context/SettingsContext";
 
-const THESES = [
+const THESES: { title: string; text: string; scrawl?: string }[] = [
   {
     title: "Что такое энграмма?",
     text: "Это не душа. Это цифровая копия сознания, записанная на экспериментальный биочип Arasaka. Код, имитирующий мыслительные процессы, воспоминания и эмоции оригинального Джонни. Он заперт в микросхеме, пока несчастный случай не подключает его к нервной системе Ви.",
@@ -16,6 +16,7 @@ const THESES = [
   {
     title: "Трансформация",
     text: "Почему мы любим энграмму больше, чем живого Сильверхенда? Потому что эта версия способна на рост. Под влиянием Ви цифровой призрак осознаёт свои ошибки. От самовлюблённого нарцисса он эволюционирует в друга, готового уйти во тьму киберпространства, чтобы дать Ви шанс на жизнь.",
+    scrawl: "«нарцисс». ладно. было дело.",
   },
   {
     title: "Наследие",
@@ -105,6 +106,9 @@ const Engram = () => {
                   <dt>Статус</dt>
                   <dd className="text-blood">Перезапись носителя</dd>
                 </dl>
+                <p className="scrawl scrawl--dark mt-5">
+                  я не «конструкт». я — это я.
+                </p>
               </div>
             </div>
           </RevealOnScroll>
@@ -123,6 +127,9 @@ const Engram = () => {
                     <p className="mt-3 max-w-2xl text-[15px] leading-relaxed text-bone/70 md:text-base">
                       {item.text}
                     </p>
+                    {item.scrawl && (
+                      <p className="scrawl scrawl--dark mt-4">{item.scrawl}</p>
+                    )}
                   </div>
                 </li>
               </RevealOnScroll>

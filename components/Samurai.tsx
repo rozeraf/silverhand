@@ -1,13 +1,7 @@
-import React, { useState, useRef, useEffect } from "react";
+import React from "react";
 import { Play, Pause, SkipBack, SkipForward, ArrowLeft } from "lucide-react";
 import { ASSETS } from "../assets";
-
-interface Track {
-  title: string;
-  duration: string;
-  file: string;
-  cover?: string;
-}
+import { TRACKS, usePlayer, usePlayerProgress } from "../context/PlayerContext";
 
 const formatPlaybackTime = (seconds: number) => {
   if (!Number.isFinite(seconds) || seconds < 0) return "0:00.0";
@@ -19,39 +13,6 @@ const formatPlaybackTime = (seconds: number) => {
 
   return `${minutes}:${remainingSeconds.toString().padStart(2, "0")}.${tenths}`;
 };
-
-const TRACKS: Track[] = [
-  {
-    title: "Chippin' In",
-    duration: "3:30",
-    file: ASSETS.music.chippinIn,
-    cover: ASSETS.albumCovers.chippinIn,
-  },
-  {
-    title: "Never Fade Away",
-    duration: "3:10",
-    file: ASSETS.music.neverFadeAway,
-    cover: ASSETS.albumCovers.neverFadeAway,
-  },
-  {
-    title: "A Like Supreme",
-    duration: "3:49",
-    file: ASSETS.music.aLikeSupreme,
-    cover: ASSETS.albumCovers.aLikeSupreme,
-  },
-  {
-    title: "Archangel",
-    duration: "3:00",
-    file: ASSETS.music.archangel,
-    cover: ASSETS.albumCovers.archangel,
-  },
-  {
-    title: "Black Dog",
-    duration: "4:24",
-    file: ASSETS.music.blackDog,
-    cover: ASSETS.albumCovers.blackDog,
-  },
-];
 
 const MEMBERS = [
   { name: "Johnny Silverhand", role: "Вокал / гитара" },
@@ -93,103 +54,21 @@ interface SamuraiPageProps {
 }
 
 const Samurai = ({ onBack }: SamuraiPageProps) => {
-  const [currentTrackIdx, setCurrentTrackIdx] = useState(0);
-  const [isPlaying, setIsPlaying] = useState(false);
-  const [progress, setProgress] = useState(0);
-  const [currentTime, setCurrentTime] = useState(0);
-  const audioRef = useRef<HTMLAudioElement | null>(null);
-  const isPlayingRef = useRef(false);
-  const currentTrack = TRACKS[currentTrackIdx];
+  // Audio lives in PlayerProvider, so it keeps playing after this screen closes.
+  const {
+    trackIndex: currentTrackIdx,
+    track: currentTrack,
+    isPlaying,
+    toggle: togglePlay,
+    next: handleNext,
+    prev: handlePrev,
+    playTrack,
+    seek,
+  } = usePlayer();
+  const { currentTime, progress } = usePlayerProgress();
 
-  const startPlayback = () => {
-    audioRef.current?.play().catch((e) => {
-      // Autoplay policy, missing file or an interrupted load: reflect it in the UI.
-      if (e instanceof DOMException && e.name === "AbortError") return;
-      console.warn("Audio playback failed", e);
-      setIsPlaying(false);
-    });
-  };
-
-  useEffect(() => {
-    const audio = new Audio();
-    audio.volume = 0.5;
-    audio.preload = "metadata";
-    audioRef.current = audio;
-
-    const updateProgress = () => {
-      setCurrentTime(audio.currentTime);
-      if (Number.isFinite(audio.duration) && audio.duration > 0) {
-        setProgress((audio.currentTime / audio.duration) * 100);
-      }
-    };
-
-    // Keep isPlaying as is so the next track starts automatically.
-    const handleEnded = () => handleNext();
-
-    audio.addEventListener("timeupdate", updateProgress);
-    audio.addEventListener("ended", handleEnded);
-
-    return () => {
-      audio.pause();
-      audio.removeEventListener("timeupdate", updateProgress);
-      audio.removeEventListener("ended", handleEnded);
-      audio.removeAttribute("src");
-      audio.load();
-      audioRef.current = null;
-    };
-  }, []);
-
-  useEffect(() => {
-    const audio = audioRef.current;
-    if (!audio) return;
-    audio.src = TRACKS[currentTrackIdx].file;
-    setCurrentTime(0);
-    setProgress(0);
-    if (isPlayingRef.current) startPlayback();
-  }, [currentTrackIdx]);
-
-  useEffect(() => {
-    isPlayingRef.current = isPlaying;
-    if (isPlaying) startPlayback();
-    else audioRef.current?.pause();
-  }, [isPlaying]);
-
-  useEffect(() => {
-    if (!isPlaying) return;
-
-    const syncPlaybackTime = () => {
-      const audio = audioRef.current;
-      if (!audio) return;
-
-      setCurrentTime(audio.currentTime);
-      if (Number.isFinite(audio.duration) && audio.duration > 0) {
-        setProgress((audio.currentTime / audio.duration) * 100);
-      }
-    };
-
-    syncPlaybackTime();
-    const interval = window.setInterval(syncPlaybackTime, 100);
-    return () => window.clearInterval(interval);
-  }, [isPlaying, currentTrackIdx]);
-
-  const togglePlay = () => setIsPlaying(!isPlaying);
-  const handleNext = () =>
-    setCurrentTrackIdx((prev) => (prev + 1) % TRACKS.length);
-  const handlePrev = () =>
-    setCurrentTrackIdx((prev) => (prev - 1 + TRACKS.length) % TRACKS.length);
-
-  const handleSeek = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const val = Number(e.target.value);
-    setProgress(val);
-
-    if (audioRef.current) {
-      const duration = audioRef.current.duration || 0;
-      if (duration > 0 && !isNaN(duration)) {
-        audioRef.current.currentTime = (val / 100) * duration;
-        setCurrentTime(audioRef.current.currentTime);
-      }
-    }
-  };
+  const handleSeek = (e: React.ChangeEvent<HTMLInputElement>) =>
+    seek(Number(e.target.value));
 
   const activeCover = currentTrack.cover || ASSETS.samuraiAlbum;
 
@@ -316,10 +195,7 @@ const Samurai = ({ onBack }: SamuraiPageProps) => {
                 <li key={track.title}>
                   <button
                     type="button"
-                    onClick={() => {
-                      setCurrentTrackIdx(idx);
-                      setIsPlaying(true);
-                    }}
+                    onClick={() => playTrack(idx)}
                     aria-current={active}
                     className={`group flex w-full items-baseline gap-4 border-t border-line py-4 text-left transition-colors md:gap-6 ${active ? "text-blood" : "text-bone hover:text-blood"}`}
                   >

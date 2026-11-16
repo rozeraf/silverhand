@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
-import { Settings, Terminal as TerminalIcon } from "lucide-react";
+import { Pause, Play, Settings, Terminal as TerminalIcon } from "lucide-react";
+import { usePlayer } from "../context/PlayerContext";
 import { useScramble } from "use-scramble";
 import SamuraiButton from "./SamuraiButton";
 import { ASSETS } from "../assets";
@@ -9,6 +10,8 @@ interface NavbarProps {
   onOpenSettings?: () => void;
   onOpenTerminal?: () => void;
   useInternalScroll?: boolean;
+  /** Logged in as Silverhand: the site is shown through his eyes. */
+  johnnyView?: boolean;
 }
 
 const NAV_LINKS = [
@@ -23,7 +26,9 @@ const Navbar = ({
   onOpenSettings,
   onOpenTerminal,
   useInternalScroll = false,
+  johnnyView = false,
 }: NavbarProps) => {
+  const player = usePlayer();
   const [isOpen, setIsOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [active, setActive] = useState(0);
@@ -125,10 +130,50 @@ const Navbar = ({
           </div>
 
           <div className="flex items-center gap-1.5">
-            <span className="label mr-3 hidden text-dust xl:inline">
-              <span className="text-blood">▶</span> {NAV_LINKS[active].side} —{" "}
-              <span className="text-bone">{NAV_LINKS[active].name}</span>
-            </span>
+            {player.hasStarted ? (
+              <span className="mr-2 hidden items-center border border-line md:flex">
+                <button
+                  type="button"
+                  onClick={player.toggle}
+                  aria-label={player.isPlaying ? "Пауза" : "Воспроизвести"}
+                  className="flex h-9 w-9 items-center justify-center text-blood hover:bg-blood hover:text-black"
+                >
+                  {player.isPlaying ? (
+                    <Pause size={14} fill="currentColor" />
+                  ) : (
+                    <Play size={14} fill="currentColor" />
+                  )}
+                </button>
+                <button
+                  type="button"
+                  onClick={onOpenSamurai}
+                  title="Открыть плеер"
+                  className="label flex h-9 max-w-[13rem] items-center gap-2.5 border-l border-line px-3 text-bone hover:text-blood"
+                >
+                  <span
+                    className={`eq text-blood ${player.isPlaying ? "" : "eq--paused"}`}
+                  >
+                    <i />
+                    <i />
+                    <i />
+                  </span>
+                  <span className="truncate">{player.track.title}</span>
+                </button>
+              </span>
+            ) : (
+              <span className="label mr-3 hidden text-dust xl:inline">
+                <span className="text-blood">▶</span> {NAV_LINKS[active].side}{" "}
+                — <span className="text-bone">{NAV_LINKS[active].name}</span>
+              </span>
+            )}
+            {johnnyView && (
+              <span
+                className="label mr-2 hidden bg-acid px-2 py-1 font-bold text-black sm:inline"
+                title="Вы вошли как Silverhand"
+              >
+                Глазами Джонни
+              </span>
+            )}
             <button
               type="button"
               onClick={onOpenTerminal}

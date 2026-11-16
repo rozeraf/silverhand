@@ -30,6 +30,7 @@ const App = () => {
   const [isClassified, setIsClassified] = useState(false);
   const [showSamuraiPage, setShowSamuraiPage] = useState(false);
   const [showSettings, setShowSettings] = useState(false);
+  const [showUnlockToast, setShowUnlockToast] = useState(false);
   const enableCrtGeometry =
     crtWarp && !showTerminal && !showSettings && !showSamuraiPage;
 
@@ -50,7 +51,16 @@ const App = () => {
 
   const handleAuthSuccess = (unlockedClassified: boolean) => {
     setIsClassified(unlockedClassified);
+    setShowUnlockToast(unlockedClassified);
   };
+
+  // The whole site has two views: the official record and Johnny's own.
+  // CSS keys off this attribute (see "Two views" in styles/main.css).
+  useEffect(() => {
+    document.documentElement.dataset.view = isClassified
+      ? "johnny"
+      : "official";
+  }, [isClassified]);
 
   return (
     <div
@@ -78,6 +88,19 @@ const App = () => {
             <b>RELIC MALFUNCTION</b>
           </div>
         </>
+      )}
+
+      {showUnlockToast && (
+        <div
+          className="view-toast"
+          role="status"
+          onAnimationEnd={() => setShowUnlockToast(false)}
+        >
+          <span className="label font-bold">Engram unlocked</span>
+          <span className="font-display text-lg font-bold uppercase leading-none">
+            Теперь вы смотрите глазами Джонни
+          </span>
+        </div>
       )}
 
       <SettingsModal
@@ -114,6 +137,7 @@ const App = () => {
           onOpenSettings={() => setShowSettings(true)}
           onOpenTerminal={handleOpenTerminal}
           useInternalScroll={crtWarp}
+          johnnyView={isClassified}
         />
 
         <main>

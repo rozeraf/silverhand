@@ -13,18 +13,33 @@ interface Item {
   note?: string;
   /** Johnny's own remark, in marker. */
   scrawl: string;
-  iconic?: boolean;
   /** Opaque renders fill the frame; cut-out PNGs sit on the grid. */
   cover?: boolean;
 }
+
+const MALORIAN: Item = {
+  code: "Malorian_Arms_3516",
+  name: "Malorian Arms 3516",
+  image: ASSETS.malorianGun,
+  alt: "Пистолет Malorian Arms 3516",
+  cover: true,
+  text: "Джонни хотел получить настолько мощный пистолет, что его отдача сломала бы кисть обычному человеку. Использовать Malorian в полную силу можно только удерживая его кибернетической серебряной рукой.",
+  specs: [
+    ["Тип", "Полуавтомат"],
+    ["Калибр", "14 мм"],
+    ["Режимы", "Рикошет / Пробитие / Поджог"],
+  ],
+  note: "Внимание: отдача ломает кисть без киберпротеза.",
+  scrawl: "тебе сломает руку. мне — нет.",
+};
 
 const ITEMS: Item[] = [
   {
     code: "Arm_Arasaka_Prototype",
     name: "Серебряная рука",
     image: ASSETS.silverArm,
-    cover: true,
     alt: "Кибернетическая рука Джонни Сильверхенда",
+    cover: true,
     text: "Кибернетический протез левой руки, полученный после ранения во время Центральноамериканской войны. Это не просто замена конечности, а символ его статуса «хромированного рокера».",
     specs: [
       ["Тип", "Киберпротез"],
@@ -48,23 +63,39 @@ const ITEMS: Item[] = [
     ],
     scrawl: "спасал чаще, чем друзья",
   },
-  {
-    code: "Malorian_Arms_3516",
-    name: "Malorian Arms 3516",
-    image: ASSETS.malorianGun,
-    cover: true,
-    alt: "Пистолет Malorian Arms 3516",
-    text: "Джонни хотел получить настолько мощный пистолет, что его отдача сломала бы кисть обычному человеку. Использовать Malorian в полную силу можно только удерживая его кибернетической серебряной рукой.",
-    specs: [
-      ["Тип", "Полуавтомат"],
-      ["Калибр", "14 мм"],
-      ["Режимы", "Рикошет / Пробитие / Поджог"],
-    ],
-    note: "Внимание: отдача ломает кисть без киберпротеза.",
-    scrawl: "тебе сломает руку. мне — нет.",
-    iconic: true,
-  },
 ];
+
+/** Paper tag on a string, as on items in an evidence locker. */
+const EvidenceTag = ({ no, className = "" }: { no: number; className?: string }) => (
+  <div className={`evtag ${className}`}>
+    <span className="opacity-60">Вещдок</span>
+    <strong>№ 0{no}</strong>
+    <span className="opacity-60">NC-2023-0820</span>
+  </div>
+);
+
+const Details = ({ item }: { item: Item }) => (
+  <>
+    <p className="text-[15px] leading-relaxed text-bone/75 md:text-base">
+      {item.text}
+    </p>
+    <dl className="spec mt-6">
+      {item.specs.map(([k, v]) => (
+        <React.Fragment key={k}>
+          <dt>{k}</dt>
+          <dd>{v}</dd>
+        </React.Fragment>
+      ))}
+    </dl>
+    {item.note && (
+      <p className="mt-6 border-l-2 border-blood pl-4 font-mono text-xs leading-relaxed text-bone/60">
+        <span className="text-blood">// </span>
+        {item.note}
+      </p>
+    )}
+    <p className="scrawl scrawl--dark mt-5">{item.scrawl}</p>
+  </>
+);
 
 const Arsenal = () => (
   <section
@@ -80,7 +111,7 @@ const Arsenal = () => (
             Стиль <span className="outline-text text-blood">и</span> арсенал
           </>
         }
-        aside={<>Character_loadout · 03 предмета</>}
+        aside={<>Хранилище вещдоков · 03 предмета</>}
         lede={
           <p>
             Визуальный код легенды. Каждая деталь его образа — от
@@ -90,78 +121,77 @@ const Arsenal = () => (
         }
       />
 
-      <div className="space-y-20 md:space-y-32">
-        {ITEMS.map((item, index) => {
-          const flip = index % 2 === 1;
-          return (
-            <article
-              key={item.code}
-              className="grid items-center gap-8 lg:grid-cols-12 lg:gap-14"
-            >
-              <RevealOnScroll
-                direction={flip ? "left" : "right"}
-                className={`lg:col-span-7 ${flip ? "lg:order-2" : ""}`}
-              >
-                <div className="blueprint aspect-[16/10]">
-                  <span className="tick tick--tl" />
-                  <span className="tick tick--tr" />
-                  <span className="tick tick--bl" />
-                  <span className="tick tick--br" />
-                  <img
-                    src={item.image}
-                    alt={item.alt}
-                    loading="lazy"
-                    className={`absolute inset-0 h-full w-full ${item.cover ? "object-cover" : "object-contain p-6 md:p-10"}`}
-                  />
-                  <span
-                    className="display outline-text pointer-events-none absolute -bottom-5 right-4 text-[8rem] text-bone/50 md:text-[13rem]"
-                    aria-hidden="true"
-                  >
-                    0{index + 1}
-                  </span>
-                  <span className="label absolute left-7 top-7 bg-ink/80 px-2 py-1 text-bone/80">
-                    {item.code}
-                  </span>
-                  {item.iconic && (
-                    <span className="label absolute right-7 top-7 bg-acid px-2 py-1 text-black">
-                      Iconic
-                    </span>
-                  )}
-                </div>
-              </RevealOnScroll>
+      {/* Main exhibit */}
+      <RevealOnScroll>
+        <article className="relative">
+          <div className="blueprint aspect-[4/3] md:aspect-[21/9]">
+            <span className="tick tick--tl" />
+            <span className="tick tick--tr" />
+            <span className="tick tick--bl" />
+            <span className="tick tick--br" />
+            <img
+              src={MALORIAN.image}
+              alt={MALORIAN.alt}
+              loading="lazy"
+              className="absolute inset-0 h-full w-full object-cover"
+            />
+            <div className="absolute inset-0 bg-gradient-to-t from-ink via-ink/20 to-transparent" />
+            <span className="label absolute right-7 top-7 bg-acid px-2 py-1 text-black">
+              Iconic
+            </span>
+            <h3 className="display absolute bottom-5 left-5 right-5 text-[clamp(2.75rem,9.5vw,9rem)] md:bottom-8 md:left-8">
+              Malorian <span className="outline-text">Arms</span> 3516
+            </h3>
+          </div>
+          <EvidenceTag no={1} className="-top-5 left-6 md:left-10" />
+          <div className="mt-8 grid gap-8 md:grid-cols-12">
+            <div className="label text-blood md:col-span-3">
+              Главный экспонат
+              <br />
+              <span className="text-dust">{MALORIAN.code}</span>
+            </div>
+            <div className="md:col-span-9 lg:col-span-7">
+              <Details item={MALORIAN} />
+            </div>
+          </div>
+        </article>
+      </RevealOnScroll>
 
-              <RevealOnScroll
-                delay={120}
-                className={`lg:col-span-5 ${flip ? "lg:order-1" : ""}`}
-              >
-                <div className="label mb-4 text-blood">
-                  Предмет 0{index + 1} / 03
-                </div>
-                <h3 className="display text-5xl md:text-6xl xl:text-7xl">
-                  {item.name}
-                </h3>
-                <p className="mt-6 text-[15px] leading-relaxed text-bone/75 md:text-base">
-                  {item.text}
-                </p>
-                <dl className="spec mt-8">
-                  {item.specs.map(([k, v]) => (
-                    <React.Fragment key={k}>
-                      <dt>{k}</dt>
-                      <dd>{v}</dd>
-                    </React.Fragment>
-                  ))}
-                </dl>
-                {item.note && (
-                  <p className="mt-8 border-l-2 border-blood pl-4 font-mono text-xs leading-relaxed text-bone/60">
-                    <span className="text-blood">// </span>
-                    {item.note}
-                  </p>
-                )}
-                <p className="scrawl scrawl--dark mt-6">{item.scrawl}</p>
-              </RevealOnScroll>
+      {/* The rest of the locker */}
+      <div className="mt-20 grid gap-x-10 gap-y-20 md:mt-28 md:grid-cols-2 lg:gap-x-16">
+        {ITEMS.map((item, index) => (
+          <RevealOnScroll key={item.code} delay={index * 150}>
+            <article className={`relative ${index === 1 ? "md:mt-24" : ""}`}>
+              <div className="blueprint aspect-[4/3]">
+                <span className="tick tick--tl" />
+                <span className="tick tick--tr" />
+                <span className="tick tick--bl" />
+                <span className="tick tick--br" />
+                <img
+                  src={item.image}
+                  alt={item.alt}
+                  loading="lazy"
+                  className={`absolute inset-0 h-full w-full ${item.cover ? "object-cover" : "object-contain p-6 md:p-10"}`}
+                />
+                <span
+                  className="display outline-text pointer-events-none absolute -bottom-4 right-4 text-[7rem] text-bone/50 md:text-[10rem]"
+                  aria-hidden="true"
+                >
+                  0{index + 2}
+                </span>
+              </div>
+              <EvidenceTag
+                no={index + 2}
+                className={index === 0 ? "-top-5 right-6" : "-top-5 left-6"}
+              />
+              <div className="label mt-6 text-dust">{item.code}</div>
+              <h3 className="display mt-2 text-5xl md:text-6xl">{item.name}</h3>
+              <div className="mt-5">
+                <Details item={item} />
+              </div>
             </article>
-          );
-        })}
+          </RevealOnScroll>
+        ))}
       </div>
     </div>
   </section>

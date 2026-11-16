@@ -53,9 +53,13 @@ const Hero = ({ onOpenSamurai }: HeroProps) => (
       <div className="mt-8 grid gap-8 md:mt-12 md:grid-cols-[minmax(0,34rem)_1fr] md:items-end">
         <div>
           <p className="max-w-xl border-l-2 border-blood pl-5 text-base leading-relaxed text-bone/85 md:text-lg">
-            Рокербой. Террорист. Призрак в машине.
+            Рокербой. <span className="struck">Террорист.</span> Призрак в
+            машине.
             <br />
             Цифровая тень, которая сожжёт этот город дотла.
+          </p>
+          <p className="scrawl scrawl--dark ml-5 mt-3">
+            «террорист» — их слово. не моё.
           </p>
           <div className="mt-8 flex flex-col gap-3 sm:flex-row">
             <a href="#bio" className="btn">
