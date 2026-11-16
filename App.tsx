@@ -7,7 +7,6 @@ import SettingsModal from "./components/SettingsModal";
 import CrtShader from "./components/CrtShader";
 import SectionTransition from "./components/SectionTransition";
 import { useSettings } from "./context/SettingsContext";
-import { ASSETS } from "./assets";
 
 const Biography = lazy(() => import("./components/Biography"));
 const ClassifiedSection = lazy(() => import("./components/ClassifiedSection"));
@@ -18,7 +17,8 @@ const DeveloperNote = lazy(() => import("./components/DeveloperNote"));
 const Footer = lazy(() => import("./components/Footer"));
 
 const App = () => {
-  const { enableNoise, enableScanlines, enableCustomCursor } = useSettings();
+  const { bootSequence, enableNoise, enableScanlines, enableCustomCursor } =
+    useSettings();
 
   const [showTerminal, setShowTerminal] = useState(false);
   const [skipBoot, setSkipBoot] = useState(false);
@@ -29,28 +29,13 @@ const App = () => {
     enableScanlines && !showTerminal && !showSettings && !showSamuraiPage;
 
   useEffect(() => {
-    const hasVisited = localStorage.getItem("has_visited");
-    const classifiedStatus = localStorage.getItem("classified") === "true";
-    setIsClassified(classifiedStatus);
-
-    if (!hasVisited) {
-      setShowTerminal(true);
+    setIsClassified(localStorage.getItem("classified") === "true");
+    if (bootSequence) {
       setSkipBoot(false);
-      localStorage.setItem("has_visited", "true");
-    } else {
-      setShowTerminal(false);
-      setSkipBoot(true);
+      setShowTerminal(true);
     }
-  }, []);
-
-  useEffect(() => {
-    const link =
-      document.querySelector("link[rel*='icon']") ||
-      document.createElement("link");
-    (link as HTMLLinkElement).type = "image/png";
-    (link as HTMLLinkElement).rel = "icon";
-    (link as HTMLLinkElement).href = ASSETS.favicon;
-    document.getElementsByTagName("head")[0].appendChild(link);
+    // Boot sequence is decided once per page load.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const handleOpenTerminal = () => {

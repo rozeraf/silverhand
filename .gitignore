@@ -140,7 +140,6 @@ vite.config.ts.timestamp-*
 
 # Bun specific files
 bun.lockb
-bun.lock
 .bunfig.toml
 
 # Bun cache and temp directories

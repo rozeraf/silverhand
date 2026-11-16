@@ -89,6 +89,16 @@ const Terminal = ({
   const commandHistoryRef = useRef<string[]>([]);
   const historyIndexRef = useRef(0);
   const historyDraftRef = useRef("");
+  const timersRef = useRef<number[]>([]);
+
+  const schedule = (fn: () => void, ms: number) => {
+    timersRef.current.push(window.setTimeout(fn, ms));
+  };
+
+  const clearTimers = () => {
+    timersRef.current.forEach(clearTimeout);
+    timersRef.current = [];
+  };
 
   if (!fsRef.current[sessionUser.home]) {
     fsRef.current[sessionUser.home] = {
@@ -111,6 +121,7 @@ const Terminal = ({
 
   useEffect(() => {
     if (!isOpen) return;
+    clearTimers();
 
     if (skipBoot) {
       setIsBooting(false);
@@ -142,14 +153,16 @@ const Terminal = ({
 
     bootText.forEach((line, index) => {
       delay += Math.random() * 300 + 100;
-      setTimeout(() => {
+      schedule(() => {
         setLines((prev) => [...prev, line]);
         if (index === bootText.length - 1) {
           setIsBooting(false);
-          setTimeout(() => inputRef.current?.focus(), 100);
+          schedule(() => inputRef.current?.focus(), 100);
         }
       }, delay);
     });
+
+    return clearTimers;
   }, [isOpen, skipBoot]);
 
   const handleCommand = (cmd: string) => {
@@ -173,7 +186,7 @@ const Terminal = ({
         localStorage.setItem("classified", "true");
         setAuthMode("none");
         if (onAuthSuccess) onAuthSuccess(true);
-        setTimeout(onClose, 1500);
+        schedule(onClose, 1500);
       } else {
         setLines((prev) => [
           ...prev,
@@ -550,7 +563,7 @@ const Terminal = ({
       case "exit":
       case "boot":
         setLines((prev) => [...prev, "Terminating session..."]);
-        setTimeout(onClose, 500);
+        schedule(onClose, 500);
         break;
 
       case "login":
@@ -582,7 +595,7 @@ const Terminal = ({
             "Access granted to public archives.",
           ]);
           if (onAuthSuccess) onAuthSuccess(false);
-          setTimeout(onClose, 1000);
+          schedule(onClose, 1000);
         }
         break;
 
