@@ -140,8 +140,16 @@ const Terminal = ({
         : input,
     );
 
-  const handleContainerClick = () => {
-    if (!isBooting) inputRef.current?.focus();
+  // Clicking anywhere focuses the prompt, except when the click ends a text
+  // selection: focusing the input would drop the selection before it can be
+  // copied. On touch, tapping the output itself doesn't pop up the keyboard
+  // either, so long-press selection works there too.
+  const handleContainerClick = (event: React.MouseEvent) => {
+    if (isBooting) return;
+    const selection = window.getSelection();
+    if (selection && !selection.isCollapsed && selection.toString()) return;
+    if (isTouch && (event.target as HTMLElement).closest("[data-line]")) return;
+    inputRef.current?.focus();
   };
 
   useEffect(() => {
@@ -844,6 +852,7 @@ const Terminal = ({
             return (
               <div
                 key={i}
+                data-line
                 className={`whitespace-pre-wrap break-words ${
                   isCommand
                     ? "mt-4 border-t border-line pt-3 font-bold text-bone"
@@ -871,25 +880,33 @@ const Terminal = ({
           {!isBooting && (
             <form
               onSubmit={handleSubmit}
-              className="mt-4 flex items-center border-t border-line pt-3"
+              className="mt-4 border-t border-line pt-3"
             >
-              <span className="mr-2 whitespace-nowrap text-acid">
+              {/* Two-line prompt: the long user@host:path line on top, so the
+                  input below gets the full width (on phones it used to get a
+                  sliver). */}
+              <div className="break-all text-acid">
                 {authMode === "password"
-                  ? "PASSWORD $"
-                  : `${sessionUser.username}@NC_NET:${cwd} $`}
-              </span>
-              <input
+                  ? "PASSWORD"
+                  : `${sessionUser.username}@NC_NET:${cwd}`}
+              </div>
+              <div className="flex items-center">
+                <span className="mr-2 text-blood" aria-hidden="true">
+                  $
+                </span>
+                <input
                 ref={inputRef}
                 type={authMode === "password" ? "password" : "text"}
                 value={input}
                 onChange={(e) => setInput(e.target.value)}
                 onKeyDown={handleInputKeyDown}
                 aria-label="Команда терминала"
-                className="flex-1 border-none bg-transparent font-mono text-bone caret-blood outline-none"
+                className="min-w-0 flex-1 border-none bg-transparent font-mono text-bone caret-blood outline-none"
                 autoFocus={!isTouch}
                 autoComplete="off"
                 spellCheck="false"
-              />
+                />
+              </div>
             </form>
           )}
 
