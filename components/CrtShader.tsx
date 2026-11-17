@@ -15,6 +15,9 @@ const fragmentShaderSource = `
   uniform vec2 u_resolution;
   uniform float u_time;
   uniform float u_intensity;
+  // Scanline pitch and barrel strength, both in canvas pixels.
+  uniform float u_pitch;
+  uniform float u_warp;
 
   float hash21(vec2 point) {
     point = fract(point * vec2(123.34, 456.21));
@@ -49,8 +52,19 @@ const fragmentShaderSource = `
       smoothstep(0.0, 0.045, 1.0 - screenUv.y);
     float screenMask = edgeX * edgeY;
 
-    float scanline = 0.5 + 0.5 * sin(screenUv.y * u_resolution.y * 3.14159265);
-    scanline *= scanline;
+    // Scanlines and aperture grille, as in CRT lite (.crt-lite in main.css):
+    // lit line and dark gap about equal with soft edges, R/G/B stripes with a
+    // dark wire between triads. They live on the tube, so they bend with the
+    // page: sample them at the source point the barrel filter reads from
+    // (same formula as createBarrelDisplacementMap; map space has y down).
+    vec2 mapPos = vec2(uv.x * 2.0 - 1.0, 1.0 - uv.y * 2.0);
+    float barrel = min(dot(mapPos, mapPos), 1.65) * 0.26 * u_warp;
+    vec2 tubePx = vec2(gl_FragCoord.x, u_resolution.y - gl_FragCoord.y) +
+      mapPos * barrel;
+    float linePhase = fract(tubePx.y / u_pitch);
+    float scanDark = smoothstep(0.28, 0.6, linePhase) *
+      (1.0 - smoothstep(0.78, 1.0, linePhase)) * 0.34;
+    float gridColumn = mod(floor(tubePx.x), 4.0);
 
     float fineNoise = hash21(gl_FragCoord.xy + vec2(u_time * 137.0, u_time * 73.0));
     float cloudNoise = noise(screenUv * vec2(240.0, 135.0) + u_time * 5.0);
@@ -60,12 +74,13 @@ const fragmentShaderSource = `
     float rollingBand = 1.0 - smoothstep(0.0, 0.12, bandY);
     float horizontalTear = step(0.994, hash21(vec2(floor(u_time * 9.0), floor(screenUv.y * 180.0))));
 
-    float pixelColumn = mod(floor(gl_FragCoord.x), 3.0);
-    vec3 phosphor = pixelColumn < 1.0
-      ? vec3(1.0, 0.16, 0.12)
-      : pixelColumn < 2.0
-        ? vec3(0.12, 1.0, 0.18)
-        : vec3(0.12, 0.25, 1.0);
+    vec3 phosphor = gridColumn < 1.0
+      ? vec3(1.0, 0.12, 0.16)
+      : gridColumn < 2.0
+        ? vec3(0.16, 1.0, 0.27)
+        : vec3(0.16, 0.31, 1.0);
+    float grilleWire = gridColumn < 3.0 ? 0.0 : 0.12;
+    float grilleTint = gridColumn < 3.0 ? 0.05 : 0.0;
 
     float vignette = 1.0 - smoothstep(0.22, 1.25, radius2);
     float glassRefraction = smoothstep(0.38, 1.18, radius2) *
@@ -82,7 +97,7 @@ const fragmentShaderSource = `
     ) * glassRefraction * 0.5;
     color *= vignette * flicker;
 
-    float darkness = (1.0 - scanline) * 0.025;
+    float darkness = scanDark + grilleWire;
     darkness += (1.0 - vignette) * 0.06;
     darkness += (1.0 - screenMask) * 0.22;
     darkness *= u_intensity;
@@ -90,8 +105,9 @@ const fragmentShaderSource = `
     float colorAlpha = (0.045 + staticNoise * 0.035 + rollingBand * 0.025 +
       glassRefraction * 0.025) *
       screenMask * u_intensity;
-    vec3 premultiplied = color * colorAlpha;
-    float alpha = clamp(darkness + colorAlpha, 0.0, 0.34);
+    float tintAlpha = grilleTint * screenMask * u_intensity;
+    vec3 premultiplied = color * colorAlpha + phosphor * tintAlpha;
+    float alpha = clamp(darkness + colorAlpha + tintAlpha, 0.0, 0.6);
 
     gl_FragColor = vec4(premultiplied, alpha);
   }
@@ -146,6 +162,10 @@ const createBarrelDisplacementMap = () => {
   return canvas.toDataURL("image/png");
 };
 
+/** Barrel strength in CSS px; the SVG filter and the shader must agree. */
+const barrelScale = () =>
+  Math.max(52, Math.min(140, Math.min(window.innerWidth, window.innerHeight) * 0.12));
+
 let cachedDisplacementMap: string | null = null;
 
 const getBarrelDisplacementMap = () => {
@@ -162,11 +182,7 @@ const CrtShader = () => {
 
   useEffect(() => {
     const updateScale = () => {
-      const scale = Math.max(
-        52,
-        Math.min(140, Math.min(window.innerWidth, window.innerHeight) * 0.12),
-      );
-      displacementRef.current?.setAttribute("scale", String(scale));
+      displacementRef.current?.setAttribute("scale", String(barrelScale()));
     };
 
     document.body.classList.add("crt-viewport-active");
@@ -217,6 +233,8 @@ const CrtShader = () => {
     const resolutionLocation = gl.getUniformLocation(program, "u_resolution");
     const timeLocation = gl.getUniformLocation(program, "u_time");
     const intensityLocation = gl.getUniformLocation(program, "u_intensity");
+    const pitchLocation = gl.getUniformLocation(program, "u_pitch");
+    const warpLocation = gl.getUniformLocation(program, "u_warp");
 
     gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
     gl.bufferData(
@@ -239,16 +257,23 @@ const CrtShader = () => {
     ).matches;
     const frameInterval = 1000 / (reducedMotion ? 10 : 30);
 
+    // Always (re)send the uniforms: under StrictMode the effect runs twice, the
+    // canvas keeps its size from the first run, and an early "size unchanged"
+    // return left the new program with u_resolution = 0 → NaN → the overlay
+    // clamped to full darkness.
     const resize = () => {
-      const renderScale = 0.75;
-      const dpr = Math.min(window.devicePixelRatio || 1, 1.0) * renderScale;
+      // Full CSS-pixel resolution: at 0.75 the scanlines blurred into grey.
+      const dpr = Math.min(window.devicePixelRatio || 1, 1.0);
       const width = Math.max(1, Math.floor(window.innerWidth * dpr));
       const height = Math.max(1, Math.floor(window.innerHeight * dpr));
-      if (canvas.width === width && canvas.height === height) return;
-      canvas.width = width;
-      canvas.height = height;
+      if (canvas.width !== width) canvas.width = width;
+      if (canvas.height !== height) canvas.height = height;
       gl.viewport(0, 0, width, height);
       gl.uniform2f(resolutionLocation, width, height);
+      // Same pitch as CRT lite: a quarter of the root font, whole pixels.
+      const rootPx = parseFloat(getComputedStyle(document.documentElement).fontSize) || 16;
+      gl.uniform1f(pitchLocation, Math.max(2, Math.floor(rootPx * 0.25)) * dpr);
+      gl.uniform1f(warpLocation, barrelScale() * dpr);
     };
 
     const render = (now: number) => {
