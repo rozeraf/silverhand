@@ -57,6 +57,13 @@
 
   --tear: polygon(0 0, 100% 0, 100.0% 87%, 98.6% 51%, 96.3% 42%, 94.7% 71%, 92.8% 44%, 90.8% 68%, 88.5% 37%, 86.0% 46%, 83.7% 68%, 81.4% 47%, 80.0% 41%, 77.8% 70%, 76.7% 47%, 75.7% 48%, 73.9% 63%, 71.8% 40%, 69.5% 99%, 67.4% 83%, 65.1% 41%, 63.4% 40%, 61.2% 70%, 60.2% 64%, 58.0% 71%, 57.0% 96%, 56.1% 90%, 53.6% 84%, 51.1% 70%, 49.9% 66%, 47.7% 85%, 46.3% 97%, 45.4% 67%, 44.5% 58%, 41.9% 43%, 39.4% 94%, 37.3% 39%, 35.7% 80%, 34.7% 54%, 33.7% 90%, 31.3% 95%, 29.1% 72%, 28.2% 66%, 26.1% 84%, 25.2% 36%, 24.3% 95%, 23.3% 60%, 21.6% 92%, 20.6% 52%, 18.4% 41%, 17.3% 37%, 14.7% 50%, 13.0% 60%, 10.5% 81%, 8.6% 67%, 7.3% 90%, 6.3% 75%, 5.0% 53%, 3.4% 47%, 1.5% 40%, 0.7% 44%, 0 93%);
 
+  --torn-a: polygon(0.0% 0.19rem, 2.5% 0.39rem, 4.9% 0.21rem, 7.5% 0.08rem, 9.9% 0.26rem, 13.0% 0.04rem, 14.9% 0.04rem, 18.1% 0.29rem, 19.4% 0.41rem, 22.9% 0.27rem, 25.6% 0.07rem, 26.8% 0.22rem, 28.1% 0.08rem, 29.9% 0.01rem, 32.2% 0.19rem, 35.5% 0.22rem, 38.2% 0.21rem, 41.0% 0.19rem, 42.9% 0.42rem, 46.4% 0.35rem, 49.3% 0.13rem, 51.1% 0.12rem, 52.5% 0.32rem, 54.6% 0.36rem, 56.8% 0.40rem, 60.0% 0.00rem, 61.7% 0.38rem, 64.0% 0.41rem, 66.2% 0.03rem, 68.9% 0.33rem, 70.7% 0.04rem, 72.7% 0.40rem, 75.7% 0.05rem, 77.5% 0.04rem, 78.9% 0.33rem, 80.5% 0.23rem, 82.8% 0.08rem, 85.7% 0.06rem, 88.5% 0.05rem, 90.7% 0.09rem, 92.5% 0.41rem, 95.7% 0.13rem, 99.0% 0.09rem, 100% 0.36rem, 100.0% calc(100% - 0.32rem), 98.6% calc(100% - 0.49rem), 96.8% calc(100% - 0.13rem), 93.8% calc(100% - 0.16rem), 91.9% calc(100% - 0.04rem), 90.5% calc(100% - 0.29rem), 88.7% calc(100% - 0.30rem), 86.6% calc(100% - 0.23rem), 83.1% calc(100% - 0.24rem), 80.5% calc(100% - 0.43rem), 78.9% calc(100% - 0.08rem), 75.5% calc(100% - 0.41rem), 73.7% calc(100% - 0.09rem), 70.7% calc(100% - 0.47rem), 69.0% calc(100% - 0.48rem), 65.7% calc(100% - 0.30rem), 63.5% calc(100% - 0.05rem), 62.2% calc(100% - 0.48rem), 60.5% calc(100% - 0.35rem), 58.6% calc(100% - 0.41rem), 56.0% calc(100% - 0.15rem), 54.4% calc(100% - 0.36rem), 53.0% calc(100% - 0.11rem), 50.5% calc(100% - 0.43rem), 47.8% calc(100% - 0.14rem), 44.4% calc(100% - 0.10rem), 43.2% calc(100% - 0.13rem), 40.9% calc(100% - 0.03rem), 39.3% calc(100% - 0.18rem), 36.7% calc(100% - 0.07rem), 34.6% calc(100% - 0.45rem), 31.1% calc(100% - 0.33rem), 28.2% calc(100% - 0.29rem), 26.7% calc(100% - 0.02rem), 25.4% calc(100% - 0.46rem), 22.5% calc(100% - 0.48rem), 21.3% calc(100% - 0.32rem), 18.9% calc(100% - 0.37rem), 17.0% calc(100% - 0.50rem), 15.6% calc(100% - 0.27rem), 12.6% calc(100% - 0.45rem), 9.7% calc(100% - 0.35rem), 6.6% calc(100% - 0.46rem), 4.5% calc(100% - 0.34rem), 1.1% calc(100% - 0.44rem), 0% calc(100% - 0.40rem));
+  --torn-b: polygon(0.0% 0.08rem, 2.8% 0.14rem, 4.5% 0.21rem, 6.8% 0.20rem, 9.1% 0.11rem, 11.0% 0.29rem, 12.9% 0.28rem, 16.0% 0.36rem, 19.5% 0.10rem, 21.3% 0.31rem, 23.8% 0.08rem, 26.7% 0.37rem, 29.9% 0.09rem, 31.8% 0.00rem, 35.3% 0.09rem, 38.3% 0.23rem, 40.9% 0.22rem, 44.1% 0.25rem, 46.0% 0.05rem, 48.4% 0.39rem, 49.9% 0.29rem, 52.6% 0.07rem, 54.3% 0.29rem, 56.6% 0.17rem, 58.9% 0.04rem, 61.8% 0.25rem, 64.3% 0.14rem, 67.4% 0.35rem, 69.9% 0.04rem, 71.5% 0.06rem, 72.9% 0.27rem, 75.4% 0.09rem, 78.8% 0.26rem, 81.9% 0.34rem, 84.7% 0.22rem, 88.3% 0.06rem, 91.1% 0.37rem, 93.5% 0.34rem, 95.1% 0.17rem, 97.0% 0.17rem, 99.9% 0.06rem, 100% 0.36rem, 100.0% calc(100% - 0.15rem), 98.5% calc(100% - 0.50rem), 96.0% calc(100% - 0.01rem), 93.4% calc(100% - 0.07rem), 91.8% calc(100% - 0.37rem), 89.1% calc(100% - 0.21rem), 86.6% calc(100% - 0.28rem), 84.3% calc(100% - 0.05rem), 81.3% calc(100% - 0.39rem), 79.1% calc(100% - 0.20rem), 76.4% calc(100% - 0.24rem), 74.2% calc(100% - 0.44rem), 70.8% calc(100% - 0.08rem), 69.2% calc(100% - 0.39rem), 65.7% calc(100% - 0.37rem), 63.8% calc(100% - 0.03rem), 60.6% calc(100% - 0.47rem), 57.6% calc(100% - 0.37rem), 54.1% calc(100% - 0.26rem), 50.6% calc(100% - 0.13rem), 49.3% calc(100% - 0.42rem), 46.4% calc(100% - 0.40rem), 44.9% calc(100% - 0.15rem), 42.3% calc(100% - 0.03rem), 40.3% calc(100% - 0.30rem), 36.8% calc(100% - 0.36rem), 34.7% calc(100% - 0.20rem), 32.2% calc(100% - 0.37rem), 28.7% calc(100% - 0.01rem), 25.2% calc(100% - 0.40rem), 23.9% calc(100% - 0.13rem), 22.1% calc(100% - 0.11rem), 20.5% calc(100% - 0.07rem), 17.7% calc(100% - 0.22rem), 16.2% calc(100% - 0.42rem), 13.0% calc(100% - 0.13rem), 9.8% calc(100% - 0.39rem), 7.3% calc(100% - 0.04rem), 4.4% calc(100% - 0.44rem), 1.1% calc(100% - 0.47rem), 0% calc(100% - 0.49rem));
+  --torn-c: polygon(0.0% 0.16rem, 3.4% 0.35rem, 5.1% 0.37rem, 7.9% 0.02rem, 11.4% 0.11rem, 13.3% 0.18rem, 15.9% 0.05rem, 18.7% 0.35rem, 21.2% 0.33rem, 23.9% 0.35rem, 25.5% 0.15rem, 27.8% 0.04rem, 31.4% 0.27rem, 32.8% 0.24rem, 35.0% 0.08rem, 36.6% 0.19rem, 38.0% 0.24rem, 40.4% 0.05rem, 43.7% 0.02rem, 45.3% 0.34rem, 47.0% 0.18rem, 49.6% 0.18rem, 52.0% 0.21rem, 54.3% 0.02rem, 57.5% 0.12rem, 58.8% 0.17rem, 62.0% 0.26rem, 64.3% 0.20rem, 66.0% 0.26rem, 68.0% 0.03rem, 69.5% 0.04rem, 72.4% 0.37rem, 75.4% 0.09rem, 76.9% 0.40rem, 79.0% 0.07rem, 81.6% 0.26rem, 84.1% 0.19rem, 86.0% 0.21rem, 88.3% 0.29rem, 90.6% 0.15rem, 94.2% 0.05rem, 97.2% 0.18rem, 100% 0.30rem, 100.0% calc(100% - 0.28rem), 97.3% calc(100% - 0.11rem), 96.1% calc(100% - 0.37rem), 94.3% calc(100% - 0.06rem), 91.1% calc(100% - 0.30rem), 89.9% calc(100% - 0.26rem), 88.3% calc(100% - 0.43rem), 86.4% calc(100% - 0.47rem), 83.7% calc(100% - 0.04rem), 81.6% calc(100% - 0.48rem), 78.7% calc(100% - 0.08rem), 76.6% calc(100% - 0.14rem), 75.2% calc(100% - 0.30rem), 72.3% calc(100% - 0.11rem), 69.8% calc(100% - 0.43rem), 66.4% calc(100% - 0.09rem), 65.1% calc(100% - 0.46rem), 63.1% calc(100% - 0.08rem), 60.0% calc(100% - 0.13rem), 57.0% calc(100% - 0.35rem), 55.1% calc(100% - 0.23rem), 53.2% calc(100% - 0.40rem), 51.4% calc(100% - 0.14rem), 48.1% calc(100% - 0.14rem), 45.8% calc(100% - 0.26rem), 44.6% calc(100% - 0.14rem), 41.7% calc(100% - 0.49rem), 39.6% calc(100% - 0.24rem), 38.3% calc(100% - 0.24rem), 36.2% calc(100% - 0.25rem), 34.3% calc(100% - 0.16rem), 30.9% calc(100% - 0.39rem), 28.9% calc(100% - 0.04rem), 27.5% calc(100% - 0.05rem), 26.0% calc(100% - 0.29rem), 23.6% calc(100% - 0.06rem), 20.3% calc(100% - 0.34rem), 17.4% calc(100% - 0.45rem), 15.4% calc(100% - 0.45rem), 11.9% calc(100% - 0.45rem), 10.6% calc(100% - 0.43rem), 7.0% calc(100% - 0.05rem), 3.7% calc(100% - 0.41rem), 2.4% calc(100% - 0.35rem), 0% calc(100% - 0.37rem));
+  /* Redaction: a felt-marker stroke, and the highlighter it turns into when
+     revealed. Plain SVG paths, no filters (see the grain note below). */
+  --marker-stroke: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 20' preserveAspectRatio='none'%3E%3Cpath d='M1.5 4.6C14 2.9 27 5.2 41 3.6S72 2.7 86 4.1 97.6 3.4 98.8 5.2 99.4 13.8 98.4 15.6C84 17.4 70 14.9 55 16.6S22 17.8 9 16.1 0.6 15.8 0.9 12.4 0.4 6 1.5 4.6Z' fill='%230a0908' fill-opacity='0.96'/%3E%3Cpath d='M3 7.2C30 6.1 60 7.6 97 6.6' stroke='%234a433b' stroke-width='.7' stroke-opacity='.35' fill='none'/%3E%3Cpath d='M2 12.6C35 13.5 64 11.9 98 12.9' stroke='%234a433b' stroke-width='.6' stroke-opacity='.3' fill='none'/%3E%3C/svg%3E");
+  --marker-highlight: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 20' preserveAspectRatio='none'%3E%3Cpath d='M1.5 4.6C14 2.9 27 5.2 41 3.6S72 2.7 86 4.1 97.6 3.4 98.8 5.2 99.4 13.8 98.4 15.6C84 17.4 70 14.9 55 16.6S22 17.8 9 16.1 0.6 15.8 0.9 12.4 0.4 6 1.5 4.6Z' fill='%23fcee0a' fill-opacity='0.55'/%3E%3C/svg%3E");
   /* Film grain / paper fibre. These used to be inline SVGs with
      feTurbulence; Firefox recomputes that noise on every repaint, and under
      the CRT warp filter every frame repaints the whole page, which cost more
@@ -634,12 +641,72 @@ button:not(:disabled),
 
 /* --- Classified document ------------------------------------------------- */
 
+/* Old paper: yellowed toward the edges, a faint nicotine tint, one pale
+   stain per sheet (placed by --stain-x/-y, sized by --stain). Kept subtle on
+   purpose: aged, not a prop from a horror film. */
 .dossier-sheet {
+  --stain-x: 82%;
+  --stain-y: 18%;
+  --stain: 11rem;
   position: relative;
   background-color: var(--bone-dim);
+  background-image:
+    radial-gradient(
+      var(--stain) calc(var(--stain) * 0.72) at var(--stain-x) var(--stain-y),
+      rgba(150, 104, 28, 0.13),
+      rgba(150, 104, 28, 0.07) 45%,
+      transparent 72%
+    ),
+    radial-gradient(ellipse at 50% 45%, transparent 52%, rgba(128, 92, 30, 0.2) 100%),
+    linear-gradient(rgba(196, 156, 74, 0.07), rgba(196, 156, 74, 0.07));
   color: var(--ink);
   font-family: var(--font-mono);
   box-shadow: 0 1.875rem 3.75rem -1.875rem #000, 0 0 0 1px rgba(0, 0, 0, 0.4);
+}
+/* The cover also carries the ring of a mug once left on it. */
+.dossier-cover {
+  background-image:
+    radial-gradient(
+      circle 4.6rem at 84% 70%,
+      transparent 86%,
+      rgba(120, 78, 22, 0.16) 90%,
+      rgba(120, 78, 22, 0.05) 95%,
+      transparent 98%
+    ),
+    radial-gradient(
+      var(--stain) calc(var(--stain) * 0.72) at var(--stain-x) var(--stain-y),
+      rgba(150, 104, 28, 0.13),
+      rgba(150, 104, 28, 0.07) 45%,
+      transparent 72%
+    ),
+    radial-gradient(ellipse at 50% 45%, transparent 52%, rgba(128, 92, 30, 0.2) 100%),
+    linear-gradient(rgba(196, 156, 74, 0.07), rgba(196, 156, 74, 0.07));
+}
+/* Finding slips: torn top and bottom (three tear patterns), so the shadow
+   comes from a drop-shadow on the wrapper; box-shadow would be clipped. */
+.dossier-slip {
+  position: relative;
+  filter: drop-shadow(0 1rem 1.25rem rgba(0, 0, 0, 0.6));
+}
+.dossier-slip > .dossier-sheet {
+  clip-path: var(--torn-a);
+  box-shadow: none;
+}
+.dossier-slip:nth-child(3n + 2) > .dossier-sheet {
+  clip-path: var(--torn-b);
+  --stain-x: 14%;
+  --stain-y: 78%;
+  --stain: 9rem;
+}
+.dossier-slip:nth-child(3n) > .dossier-sheet {
+  clip-path: var(--torn-c);
+  --stain-x: 62%;
+  --stain-y: 92%;
+  --stain: 13rem;
+}
+.dossier-slip:nth-child(4n) > .dossier-sheet {
+  --stain-x: 36%;
+  --stain-y: 6%;
 }
 @media (min-width: 768px) {
   .dossier-sheet {
@@ -651,9 +718,14 @@ button:not(:disabled),
 @media (min-width: 768px) {
   .dossier-slip:nth-child(odd) {
     transform: rotate(-0.4deg);
+    margin-right: 2.5rem;
   }
   .dossier-slip:nth-child(even) {
-    transform: rotate(0.5deg) translateX(0.5rem);
+    transform: rotate(0.6deg);
+    margin-left: 2.5rem;
+  }
+  .dossier-slip:nth-child(3n) {
+    margin-right: 5rem;
   }
   .dossier-memo {
     transform: rotate(0.3deg);
@@ -667,18 +739,21 @@ button:not(:disabled),
   background-image: var(--grain-dark);
   opacity: 0.22;
 }
+/* Blacked out with a marker, not a box: a wobbly stroke per line (clone
+   gives every line fragment its own). Revealing swaps it for a highlighter. */
 .redact {
-  background: var(--ink);
+  background: var(--marker-stroke) center / 100% 100% no-repeat;
   color: transparent;
-  padding: 0 0.2em;
+  padding: 0.05em 0.3em;
+  margin: 0 -0.1em;
   cursor: help;
-  transition: background-color 0.35s, color 0.35s;
+  transition: color 0.3s;
   -webkit-box-decoration-break: clone;
   box-decoration-break: clone;
 }
 .redact:hover,
 .redact:focus {
-  background: rgba(255, 0, 60, 0.16);
+  background-image: var(--marker-highlight);
   color: var(--ink);
   outline: none;
 }
@@ -1512,6 +1587,9 @@ html[data-perf="lite"] .nav--solid {
 html[data-perf="lite"] :is(.paper, .dossier-sheet)::before,
 html[data-perf="lite"] .hero__halftone {
   display: none;
+}
+html[data-perf="lite"] .dossier-slip {
+  filter: none;
 }
 html[data-perf="lite"] :is(.evidence, .dossier-sheet) {
   box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.35);

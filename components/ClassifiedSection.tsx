@@ -109,6 +109,9 @@ const FINDINGS: Finding[] = [
   },
 ];
 
+/** Findings held down with a strip of tape, to break the column's rhythm. */
+const TAPED = new Set([1, 4]);
+
 /** Cover-page particulars, all restated from the findings below. */
 const CASE_FIELDS: [string, string][] = [
   ["Дата", "20.08.2023"],
@@ -156,7 +159,7 @@ const ClassifiedSection = () => (
           direction="right"
           className="lg:[@media(min-height:50rem)]:sticky lg:[@media(min-height:50rem)]:top-20"
         >
-          <article className="dossier-sheet px-5 py-8 md:px-10 md:py-9">
+          <article className="dossier-sheet dossier-cover px-5 py-8 md:px-10 md:py-9">
             <div className="relative">
               <header className="flex flex-wrap items-start justify-between gap-4 border-b-2 border-ink pb-5">
                 <div>
@@ -202,12 +205,14 @@ const ClassifiedSection = () => (
         </RevealOnScroll>
 
         {/* One slip per finding */}
-        <ol className="space-y-4 md:space-y-7">
+        {/* Starts lower than the cover on desktop, so the headline is read
+            first and the details follow. */}
+        <ol className="space-y-4 md:space-y-7 lg:mt-[min(30vh,16rem)]">
           {/* Witness statement first: the engram itself is unreliable.
               Alt's lines are verbatim from Cyberpunk 2077; the Russian is ours. */}
-          <li className="dossier-sheet dossier-slip">
-            <RevealOnScroll>
-              <figure className="relative px-5 py-6 md:px-9 md:py-8">
+          <li className="dossier-slip">
+            <RevealOnScroll className="dossier-sheet">
+              <figure className="relative px-5 py-7 md:px-9 md:py-9">
                 <figcaption className="mb-4 flex flex-wrap items-baseline justify-between gap-2 text-[0.6875rem] font-bold uppercase tracking-[0.2em]">
                   <span className="text-blood">Показания свидетеля</span>
                   <span className="opacity-60">Альт Каннингем · Cyberpunk 2077</span>
@@ -233,11 +238,14 @@ const ClassifiedSection = () => (
           </li>
 
           {FINDINGS.map((item, i) => (
-            <li key={item.title} className="dossier-sheet dossier-slip">
-              <RevealOnScroll>
+            <li key={item.title} className="dossier-slip">
+              {TAPED.has(i) && (
+                <span className="tape tape--tl z-10" aria-hidden="true" />
+              )}
+              <RevealOnScroll className="dossier-sheet">
                 {/* Phones: number and title share a row, text runs full width
                     below. Desktop: the number gets its own column. */}
-                <div className="relative px-5 py-6 md:grid md:grid-cols-[4rem_1fr] md:gap-x-6 md:px-9 md:py-8">
+                <div className="relative px-5 py-7 md:grid md:grid-cols-[4rem_1fr] md:gap-x-6 md:px-9 md:py-9">
                   <div className="flex items-start gap-3 md:contents">
                     <span className="font-display text-4xl font-bold leading-none text-blood md:row-span-3 md:text-5xl">
                       0{i + 1}
