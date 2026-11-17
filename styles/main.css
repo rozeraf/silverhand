@@ -1199,14 +1199,14 @@ html[data-marker] .scrawl {
   background: linear-gradient(
       90deg,
       var(--ink) var(--ink-at),
-      transparent calc(var(--ink-at) + 0.45em)
+      transparent calc(var(--ink-at) + 0.08em)
     )
     no-repeat;
   -webkit-background-clip: text;
   background-clip: text;
 }
 html[data-marker] .scrawl:not(.is-written) {
-  --ink-at: -0.5em;
+  --ink-at: -0.1em;
 }
 html[data-marker] .scrawl.is-written {
   animation: marker-write var(--write-dur) var(--write-delay) linear both;
@@ -1215,19 +1215,18 @@ html[data-marker] .scrawl.is-written::after {
   content: "";
   position: absolute;
   left: var(--ink-at);
-  top: 38%;
-  width: 0.3em;
-  height: 0.3em;
-  margin-left: -0.1em;
+  top: 40%;
+  width: 0.2em;
+  height: 0.2em;
+  margin-left: -0.06em;
   border-radius: 50%;
   background: var(--ink);
-  box-shadow: 0 0 0.35em var(--ink);
   animation: marker-tip var(--write-dur) var(--write-delay) linear both;
   pointer-events: none;
 }
 /* A hand doesn't move at a constant speed: short holds between bursts. */
 @keyframes marker-write {
-  0% { --ink-at: -0.5em; }
+  0% { --ink-at: -0.1em; }
   20% { --ink-at: 24%; }
   26% { --ink-at: 27%; }
   55% { --ink-at: 61%; }

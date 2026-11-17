@@ -5,15 +5,17 @@ const MARKS = ".scrawl, .struck, .circled";
 
 /** How long one mark takes to "write", in ms. */
 const durationOf = (el: Element) => {
-  if (el.classList.contains("struck")) return 420;
-  if (el.classList.contains("circled")) return 620;
-  // Notes: about a hand's pace per character, within sane bounds.
+  if (el.classList.contains("struck")) return 300;
+  if (el.classList.contains("circled")) return 480;
+  // Notes: a quick scribble per character, within sane bounds.
   const chars = (el.textContent ?? "").trim().length;
-  return Math.min(1500, Math.max(450, chars * 42));
+  return Math.min(900, Math.max(280, chars * 24));
 };
 
-/** Never let a fast scroller build up a long backlog of notes to wait for. */
-const MAX_QUEUE_MS = 450;
+/** The hand moving on to the next mark. */
+const GAP_MS = 70;
+/** Past this much waiting, marks are written twice as fast to catch up. */
+const BACKLOG_MS = 1200;
 
 /**
  * Writes Johnny's marks as they scroll into view instead of showing them
@@ -38,7 +40,9 @@ export const useMarkerWriting = (active: boolean) => {
     const io = new IntersectionObserver(
       (entries) => {
         const now = performance.now();
-        let start = Math.max(now, Math.min(queueEnd, now + MAX_QUEUE_MS));
+        // Strictly one at a time: notes on the same line used to overlap and
+        // read as written all at once.
+        let start = Math.max(now, queueEnd);
         entries
           .filter((entry) => entry.isIntersecting)
           .map((entry) => entry.target as HTMLElement)
@@ -49,12 +53,12 @@ export const useMarkerWriting = (active: boolean) => {
           )
           .forEach((el) => {
             io.unobserve(el);
-            const duration = durationOf(el);
+            const rushed = start - now > BACKLOG_MS;
+            const duration = durationOf(el) * (rushed ? 0.5 : 1);
             el.style.setProperty("--write-delay", `${Math.round(start - now)}ms`);
             el.style.setProperty("--write-dur", `${duration}ms`);
             el.classList.add("is-written");
-            // Overlap a little: the next mark starts before this one ends.
-            start += duration * 0.65;
+            start += duration + (rushed ? 0 : GAP_MS);
           });
         queueEnd = start;
       },
