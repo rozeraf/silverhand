@@ -73,10 +73,12 @@ const Samurai = ({ onBack }: SamuraiPageProps) => {
   const activeCover = currentTrack.cover || ASSETS.samuraiAlbum;
 
   return (
-    <div className="fixed inset-0 z-[100] overflow-y-auto bg-ink text-bone animate-[fadeIn_0.35s_ease-out] lg:grid lg:grid-cols-[minmax(0,5fr)_minmax(0,7fr)] lg:overflow-hidden">
+    // A page in the normal flow, not a fixed layer: App hides the site while it
+    // is open, the document scrolls it, and on desktop the deck stays pinned.
+    <div className="relative min-h-[100svh] bg-ink text-bone animate-[fadeIn_0.35s_ease-out] lg:grid lg:grid-cols-[minmax(0,5fr)_minmax(0,7fr)] lg:items-start">
       {/* Deck */}
       <div
-        className={`relative flex min-h-[100svh] flex-col bg-blood text-black lg:min-h-0 lg:overflow-y-auto ${isPlaying ? "deck--playing" : ""}`}
+        className={`relative flex min-h-[100svh] flex-col bg-blood text-black lg:sticky lg:top-0 lg:h-[100svh] lg:min-h-0 lg:overflow-y-auto ${isPlaying ? "deck--playing" : ""}`}
       >
         <div className="flex items-center justify-between border-b-2 border-black px-5 py-4 md:px-8">
           <button
@@ -169,7 +171,7 @@ const Samurai = ({ onBack }: SamuraiPageProps) => {
       </div>
 
       {/* Liner notes */}
-      <div className="custom-scrollbar relative lg:overflow-y-auto">
+      <div className="relative overflow-x-clip">
         <img
           src={ASSETS.samuraiLogo}
           alt=""

@@ -4,6 +4,7 @@ import React, {
   lazy,
   useEffect,
   useLayoutEffect,
+  useRef,
 } from "react";
 import { useEscape, useScrollLock } from "./hooks/useOverlay";
 import Terminal from "./components/Terminal";
@@ -44,9 +45,64 @@ const App = () => {
   const enableCrtGeometry =
     crtWarp && !showTerminal && !showSettings && !showSamuraiPage;
 
+  // Full-screen overlays (terminal, player) hide the page instead of covering
+  // it: a fixed layer over a full-height page let the page show through on slow
+  // phones and ended up in full-page screenshots. The scroll position is kept
+  // here and restored on close.
+  const fullScreen = showTerminal || showSamuraiPage;
+  const savedScroll = useRef(0);
+  const scroller = () =>
+    crtWarp
+      ? document.querySelector<HTMLElement>(".crt-scroll-container")
+      : null;
+  const rememberScroll = () => {
+    if (fullScreen) return;
+    savedScroll.current = scroller()?.scrollTop ?? window.scrollY;
+  };
+  const firstRun = useRef(true);
+  useLayoutEffect(() => {
+    if (firstRun.current) {
+      firstRun.current = false;
+      return;
+    }
+    const top = fullScreen ? 0 : savedScroll.current;
+    const el = scroller();
+    if (el) el.scrollTop = top;
+    else window.scrollTo({ top, behavior: "instant" });
+    // Only the open/close transition matters here.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [fullScreen]);
+
+  // The player has its own address (#samurai), so Back closes it instead of
+  // leaving the site, and a link with #samurai opens it.
+  const openSamurai = () => {
+    rememberScroll();
+    if (history.state?.overlay !== "samurai") {
+      history.pushState({ overlay: "samurai" }, "", "#samurai");
+    }
+    setShowSamuraiPage(true);
+  };
+  const closeSamurai = () => {
+    if (history.state?.overlay === "samurai") history.back();
+    else setShowSamuraiPage(false);
+  };
+  useEffect(() => {
+    const onPop = () =>
+      setShowSamuraiPage(history.state?.overlay === "samurai");
+    window.addEventListener("popstate", onPop);
+    if (location.hash === "#samurai" && history.state?.overlay !== "samurai") {
+      // Put a plain entry under the player so Back lands on the site.
+      history.replaceState(null, "", location.pathname + location.search);
+      history.pushState({ overlay: "samurai" }, "", "#samurai");
+    }
+    if (history.state?.overlay === "samurai") setShowSamuraiPage(true);
+    return () => window.removeEventListener("popstate", onPop);
+  }, []);
+
   useEffect(() => {
     setIsClassified(localStorage.getItem("classified") === "true");
     if (bootSequence) {
+      rememberScroll();
       setSkipBoot(false);
       setShowTerminal(true);
     }
@@ -70,15 +126,18 @@ const App = () => {
   }, [crtWarp, enableScanlines]);
 
   const overlayOpen = showTerminal || showSettings || showSamuraiPage;
-  useScrollLock(overlayOpen);
+  // Full-screen overlays hide the page, so only the settings dialog, which
+  // floats over the page, needs to lock its scroll.
+  useScrollLock(showSettings);
   // Escape closes the topmost overlay.
   useEscape(overlayOpen, () => {
     if (showSettings) setShowSettings(false);
     else if (showTerminal) setShowTerminal(false);
-    else setShowSamuraiPage(false);
+    else closeSamurai();
   });
 
   const handleOpenTerminal = () => {
+    rememberScroll();
     setSkipBoot(true);
     setShowTerminal(true);
   };
@@ -176,13 +235,13 @@ const App = () => {
             </div>
           }
         >
-          <Samurai onBack={() => setShowSamuraiPage(false)} />
+          <Samurai onBack={closeSamurai} />
         </Suspense>
       )}
 
-      <div>
+      <div hidden={fullScreen}>
         <Navbar
-          onOpenSamurai={() => setShowSamuraiPage(true)}
+          onOpenSamurai={openSamurai}
           onOpenSettings={() => setShowSettings(true)}
           onOpenTerminal={handleOpenTerminal}
           useInternalScroll={crtWarp}
@@ -190,7 +249,7 @@ const App = () => {
         />
 
         <main>
-          <Hero onOpenSamurai={() => setShowSamuraiPage(true)} />
+          <Hero onOpenSamurai={openSamurai} />
 
           <Suspense
             fallback={

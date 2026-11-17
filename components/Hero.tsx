@@ -27,6 +27,21 @@ const Ticker = () => (
 
 const Hero = ({ onOpenSamurai }: HeroProps) => (
   <section id="hero" className="hero">
+    {/* The page is display:none behind the boot terminal, and browsers don't
+        fetch CSS backgrounds there; preload so the photo is ready when the
+        terminal closes. React hoists these into <head>. */}
+    <link
+      rel="preload"
+      as="image"
+      href={ASSETS.heroBackgroundSmall}
+      media="(max-width: 639.98px)"
+    />
+    <link
+      rel="preload"
+      as="image"
+      href={ASSETS.heroBackground}
+      media="(min-width: 640px)"
+    />
     {/* The red duotone is baked into the image: no CSS filter or blend mode. */}
     <div
       className="hero__photo"
