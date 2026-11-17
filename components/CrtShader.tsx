@@ -131,6 +131,8 @@ const compileShader = (
 };
 
 const createBarrelDisplacementMap = () => {
+  // Keep it small: feImage rescales the map to the viewport every frame, and a
+  // 1024² map cut warp from ~57 to ~13 fps in Chromium.
   const size = 256;
   const canvas = document.createElement("canvas");
   canvas.width = size;
@@ -346,9 +348,21 @@ const CrtShader = () => {
               preserveAspectRatio="none"
               result="barrelMap"
             />
+            {/* Anti-aliasing. feDisplacementMap samples the nearest pixel, and
+                toward the edges the barrel squeezes the page, so some source
+                rows and columns are skipped: a 1px border fell into those gaps
+                and turned into dashes. Pre-blurring by half a pixel (a poor
+                man's mipmap) spreads every line over two pixels, so none can
+                vanish. Vertical only: a 1D blur costs ~5% of warp's frames,
+                a 2D one about 40%, and vertical edges held up without it. */}
+            <feGaussianBlur
+              in="SourceGraphic"
+              stdDeviation="0 0.5"
+              result="prefiltered"
+            />
             <feDisplacementMap
               ref={displacementRef}
-              in="SourceGraphic"
+              in="prefiltered"
               in2="barrelMap"
               scale="52"
               xChannelSelector="R"
