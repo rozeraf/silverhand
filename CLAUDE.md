@@ -50,6 +50,7 @@ There are no tests and no linter. "Verified" means `bunx tsc --noEmit` and `bun 
   - fonts must support Cyrillic (the old Orbitron/Rajdhani did not) and are self-hosted: `@fontsource/*` packages imported in `index.tsx`, never a font CDN — when Google Fonts failed to load, the whole layout fell apart;
   - animate only `transform`/`opacity`, and add new animations to the `prefers-reduced-motion` block at the end of `main.css`;
   - when a `filter` transitions between states, every state must list the same functions in the same order (pad with no-op values like `brightness(1)` or a transparent `drop-shadow(0 0 0 …)`), otherwise the browser can't interpolate and the change snaps in one frame;
+  - textures are raster tiles (`styles/grain-*.webp`), never inline SVGs with `feTurbulence` or other SVG filters: Firefox recomputes those on every repaint, and under CRT warp every frame repaints the page (the paper grain once cost more than everything else there);
   - when converting images, keep the alpha channel of cut-outs (the Biography portrait once lost it and showed as a black box);
   - scan effects use `.scanbeam`: a hard bright line with a shaded raster trail on the side it came from (set the colour with `--beam: r, g, b`). Used by the Relic frame and the CRT lite band.
 - **Adaptation rules.**
