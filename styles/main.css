@@ -1025,7 +1025,6 @@ body.crt-viewport-active {
   z-index: 9995;
   pointer-events: none;
   overflow: hidden;
-  border-radius: 2.5rem;
   /* Aperture grille, as on a Trinitron: vertical R/G/B phosphor stripes with
      a dark wire between triads. Plain alpha, no blend mode, so scrolling
      doesn't have to re-blend the page under it. */
@@ -1038,7 +1037,19 @@ body.crt-viewport-active {
       rgba(40, 80, 255, 0.06) 2px 3px,
       rgba(0, 0, 0, 0.12) 3px 4px
     );
+}
+/* The tube's rounded corners. The effects cover the whole rectangle and the
+   bezel paints the corners outside the rounding dark, as on a real set. It
+   used to be the other way round (the overlay itself clipped to the rounded
+   shape), which left the corners uncovered and brighter than the screen. */
+.crt-lite::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  /* Smaller on phones, whose own screen corners are already rounded. */
+  border-radius: clamp(1rem, 3.5vmin, 2.5rem);
   box-shadow:
+    0 0 0 3rem #050404,
     inset 0 0 2.375rem rgba(0, 0, 0, 0.35),
     inset 0 0 0.625rem rgba(255, 0, 60, 0.1);
 }
