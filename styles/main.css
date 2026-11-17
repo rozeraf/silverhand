@@ -1004,6 +1004,18 @@ body.crt-viewport-active {
   cursor: none;
   overflow: hidden;
 }
+/* While the site cursor is on (Smart cursor or warp), the system one never
+   shows: buttons, links, inputs and .redact set their own cursor and used to
+   bring it back on hover. Mouse devices only; CustomCursor isn't rendered on
+   touch screens. */
+@media (hover: hover) {
+  html[data-cursor="custom"],
+  html[data-cursor="custom"] *,
+  html[data-cursor="custom"] *::before,
+  html[data-cursor="custom"] *::after {
+    cursor: none !important;
+  }
+}
 
 /* --- CRT lite: one static layer + two compositor-only animated layers ---- */
 

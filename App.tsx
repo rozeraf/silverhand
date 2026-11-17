@@ -128,6 +128,12 @@ const App = () => {
         : "off";
   }, [crtWarp, enableScanlines]);
 
+  // html[data-cursor="custom"] hides the system cursor everywhere (main.css).
+  const siteCursor = enableCustomCursor || crtWarp;
+  useLayoutEffect(() => {
+    document.documentElement.dataset.cursor = siteCursor ? "custom" : "native";
+  }, [siteCursor]);
+
   const overlayOpen = showTerminal || showSettings || showSamuraiPage;
   // Full-screen overlays hide the page, so only the settings dialog, which
   // floats over the page, needs to lock its scroll.
@@ -165,9 +171,9 @@ const App = () => {
         crtWarp
           ? `crt-scroll-container h-screen overflow-x-hidden overflow-y-auto ${enableCrtGeometry ? "crt-barrel-surface" : ""}`
           : "min-h-screen"
-      } bg-ink text-bone relative ${enableCustomCursor || crtWarp ? "cursor-none" : "cursor-auto"}`}
+      } bg-ink text-bone relative`}
     >
-      {(enableCustomCursor || crtWarp) && (
+      {siteCursor && (
         <CustomCursor
           forceEnabled={crtWarp}
           applyCrtWarp={enableCrtGeometry}

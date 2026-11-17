@@ -2,6 +2,25 @@ import React, { useEffect, useState, useRef } from "react";
 import { createPortal } from "react-dom";
 import { useSettings } from "../context/SettingsContext";
 
+// Last known pointer position, tracked even while the site cursor is off, so
+// turning it on (or remounting it) puts it under the mouse straight away
+// instead of off-screen until the next move.
+const lastPointer = { x: -100, y: -100 };
+if (typeof document !== "undefined") {
+  document.addEventListener(
+    "mousemove",
+    (e) => {
+      lastPointer.x = e.clientX;
+      lastPointer.y = e.clientY;
+    },
+    { passive: true, capture: true },
+  );
+}
+
+/** Things that react to a click: the ring grows over them. */
+const INTERACTIVE =
+  'a, button, label, input, select, textarea, summary, [role="button"], [role="switch"], [role="tab"], [tabindex]:not([tabindex="-1"]), .redact';
+
 interface CustomCursorProps {
   forceEnabled?: boolean;
   applyCrtWarp?: boolean;
@@ -22,10 +41,10 @@ const CustomCursor = ({
   useEffect(() => {
     if (!isEnabled) return;
 
-    const mMove = (el: MouseEvent) => {
+    const place = (clientX: number, clientY: number) => {
       if (cursorRef.current) {
-        let x = el.clientX;
-        let y = el.clientY;
+        let x = clientX;
+        let y = clientY;
 
         if (applyCrtWarp) {
           const normalizedX = (x / window.innerWidth) * 2 - 1;
@@ -46,16 +65,13 @@ const CustomCursor = ({
 
         cursorRef.current.style.transform = `translate3d(${x}px, ${y}px, 0)`;
       }
+    };
+    place(lastPointer.x, lastPointer.y);
 
-      const target = el.target as HTMLElement;
-      const isLink =
-        target.tagName === "A" ||
-        target.tagName === "BUTTON" ||
-        target.closest("a") !== null ||
-        target.closest("button") !== null ||
-        target.getAttribute("role") === "button";
-
-      setLinkHovered(isLink);
+    const mMove = (el: MouseEvent) => {
+      place(el.clientX, el.clientY);
+      const target = el.target as Element | null;
+      setLinkHovered(!!target?.closest?.(INTERACTIVE));
     };
 
     const mDown = () => setClicked(true);
