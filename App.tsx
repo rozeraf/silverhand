@@ -59,6 +59,16 @@ const App = () => {
     document.documentElement.dataset.perf = performanceMode ? "lite" : "full";
   }, [performanceMode]);
 
+  // html[data-crt="lite"] adds the CRT touches that live on page elements
+  // (heading colour fringe); the overlay itself is CrtOverlay.
+  useLayoutEffect(() => {
+    document.documentElement.dataset.crt = crtWarp
+      ? "warp"
+      : enableScanlines
+        ? "lite"
+        : "off";
+  }, [crtWarp, enableScanlines]);
+
   const overlayOpen = showTerminal || showSettings || showSamuraiPage;
   useScrollLock(overlayOpen);
   // Escape closes the topmost overlay.

@@ -679,17 +679,28 @@ button:not(:disabled),
   background-size: 1.75rem 1.75rem;
   border: 1px solid var(--line);
 }
+/* Every state lists the same filter functions in the same order: if the lists
+   differ, the browser can't interpolate and the filter snaps in one frame. */
 .blueprint img {
   filter: grayscale(1) contrast(1.15) brightness(1.15);
   transition: filter 0.6s, transform 0.8s cubic-bezier(0.2, 0.8, 0.2, 1);
 }
 .blueprint:hover img {
-  filter: grayscale(0) contrast(1.05);
+  filter: grayscale(0) contrast(1.05) brightness(1);
   transform: scale(1.05);
 }
-/* Cut-out PNGs get a hard "sticker" offset on hover */
+/* Cut-out PNGs get a hard "sticker" offset on hover: the yellow copy sits
+   hidden right behind the image and slides out from under it. */
+.blueprint--cutout img {
+  filter: grayscale(1) contrast(1.15) brightness(1.15)
+    drop-shadow(0 0 0 rgba(252, 238, 10, 0));
+  transition:
+    filter 0.5s cubic-bezier(0.4, 0, 0.2, 1),
+    transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
 .blueprint--cutout:hover img {
-  filter: grayscale(0) drop-shadow(0.625rem 0.625rem 0 var(--yellow));
+  filter: grayscale(0) contrast(1.05) brightness(1)
+    drop-shadow(0.625rem 0.625rem 0 var(--yellow));
   transform: scale(1.04) translate(-4px, -4px);
 }
 .tick {
@@ -985,25 +996,55 @@ body.crt-viewport-active {
   pointer-events: none;
   overflow: hidden;
   border-radius: 2.5rem;
+  /* Aperture grille, as on a Trinitron: vertical R/G/B phosphor stripes with
+     a dark wire between triads. Plain alpha, no blend mode, so scrolling
+     doesn't have to re-blend the page under it. */
   background:
     radial-gradient(ellipse at center, rgba(0, 0, 0, 0) 68%, rgba(0, 0, 0, 0.32) 100%),
     repeating-linear-gradient(
       90deg,
-      rgba(255, 40, 30, 0.035) 0 1px,
-      rgba(30, 255, 45, 0.025) 1px 2px,
-      rgba(30, 65, 255, 0.035) 2px 3px
+      rgba(255, 30, 40, 0.055) 0 1px,
+      rgba(40, 255, 70, 0.045) 1px 2px,
+      rgba(40, 80, 255, 0.06) 2px 3px,
+      rgba(0, 0, 0, 0.12) 3px 4px
     );
   box-shadow:
     inset 0 0 2.375rem rgba(0, 0, 0, 0.35),
     inset 0 0 0.625rem rgba(255, 0, 60, 0.1);
 }
+/* Scanlines: on a real tube the lit line and the dark gap are about the same
+   height and the line has soft, rounded edges, so the darkening ramps in and
+   out instead of being a hard hairline. The pitch follows the root font size
+   (bigger screens get proportionally thicker lines, not a fine moiré), rounded
+   to whole pixels so the pattern doesn't beat against the pixel grid. */
 .crt-lite__scanlines {
   position: absolute;
   inset: 0;
-  background: linear-gradient(rgba(0, 0, 0, 0) 50%, rgba(0, 0, 0, 0.16) 50%);
-  background-size: 100% 3px;
+  background: linear-gradient(
+    rgba(0, 0, 0, 0) 0%,
+    rgba(0, 0, 0, 0) 28%,
+    rgba(0, 0, 0, 0.16) 42%,
+    rgba(0, 0, 0, 0.34) 60%,
+    rgba(0, 0, 0, 0.34) 78%,
+    rgba(0, 0, 0, 0.14) 92%,
+    rgba(0, 0, 0, 0) 100%
+  );
+  /* Older browsers drop the round() line at parse time and keep 4px. */
+  background-size: 100% 4px;
+  background-size: 100% round(down, 0.25rem, 1px);
   will-change: opacity;
   animation: crt-lite-flicker 3.2s steps(1, end) infinite;
+}
+/* Convergence error: bright edges fringe cyan on one side and red on the
+   other. Only on poster headings, where it reads as the tube and not as blur;
+   a static text-shadow costs one paint. */
+html[data-crt="lite"] .display {
+  text-shadow:
+    -0.09rem 0 rgba(0, 235, 255, 0.3),
+    0.09rem 0 rgba(255, 0, 60, 0.4);
+}
+html[data-crt="lite"] .outline-text {
+  text-shadow: none;
 }
 /* Full-screen sweep: a thin line with a short trail. A tall trail read as a
    grey slab with a hard edge sliding over the page. */
