@@ -989,8 +989,16 @@ article:hover > .evtag {
   contain: layout paint style;
   overscroll-behavior: none;
 }
+/* Under warp every running animation re-filters the whole page each frame,
+   so looping ones are frozen. One-shot animations still have to play: frozen
+   at frame 0 the Samurai page stayed invisible (fadeIn from opacity 0) and
+   the unlock toast never ended. */
 .crt-barrel-surface * {
   animation-play-state: paused !important;
+}
+.crt-barrel-surface
+  :is([class*="animate-[fadeIn"], [class*="animate-[rise"], .view-toast, .smear-cut, .smear-cut *) {
+  animation-play-state: running !important;
 }
 body.crt-viewport-active {
   cursor: none;

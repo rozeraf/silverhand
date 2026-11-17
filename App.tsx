@@ -42,8 +42,11 @@ const App = () => {
   const [showUnlockToast, setShowUnlockToast] = useState(false);
   // Bumped whenever the view switches, to replay the smear cut.
   const [cut, setCut] = useState(0);
-  const enableCrtGeometry =
-    crtWarp && !showTerminal && !showSettings && !showSamuraiPage;
+  // The barrel filter makes the scroll container the containing block for
+  // fixed elements, so they scroll with it. The terminal and the player are
+  // fine (the page is hidden and scrolled to the top while they are open);
+  // the settings dialog floats over a scrolled page, so it turns warp off.
+  const enableCrtGeometry = crtWarp && !showSettings;
 
   // Full-screen overlays (terminal, player) hide the page instead of covering
   // it: a fixed layer over a full-height page let the page show through on slow
