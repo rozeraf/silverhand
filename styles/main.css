@@ -646,6 +646,19 @@ button:not(:disabled),
     transform: rotate(-0.6deg);
   }
 }
+/* Finding slips and the memo lie slightly askew, each its own way, like
+   papers spread on a desk. */
+@media (min-width: 768px) {
+  .dossier-slip:nth-child(odd) {
+    transform: rotate(-0.4deg);
+  }
+  .dossier-slip:nth-child(even) {
+    transform: rotate(0.5deg) translateX(0.5rem);
+  }
+  .dossier-memo {
+    transform: rotate(0.3deg);
+  }
+}
 .dossier-sheet::before {
   content: "";
   position: absolute;

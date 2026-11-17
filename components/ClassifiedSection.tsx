@@ -109,6 +109,15 @@ const FINDINGS: Finding[] = [
   },
 ];
 
+/** Cover-page particulars, all restated from the findings below. */
+const CASE_FIELDS: [string, string][] = [
+  ["Дата", "20.08.2023"],
+  ["Объект", "Башни Arasaka, Найт-Сити"],
+  ["Операция", "Militech, три группы"],
+  ["Субъект", "Сильверхенд, Джонни"],
+  ["Источник", "Независимый, не энграмма"],
+];
+
 const COMPARISON: [string, string, string][] = [
   ["Состав", "Четверо: он, Бестия, Шайтан, Мёрфи", "Три группы и бойцы Militech"],
   ["Бомба", "Нёс и взвёл сам", "Шла с группой Beta"],
@@ -125,93 +134,145 @@ const COMPARISON: [string, string, string][] = [
   ],
 ];
 
+// Laid out as a case file spread on a desk rather than one endless sheet: a
+// cover page (pinned on desktop), one slip per finding, and the comparison
+// table on a landscape memo.
 const ClassifiedSection = () => (
-  <section className="relative overflow-hidden bg-ink py-20 md:py-28">
+  <section className="relative overflow-clip bg-ink py-20 md:py-28">
     <div className="hazard absolute inset-x-0 top-0 h-3" />
     <div className="hazard absolute inset-x-0 bottom-0 h-3" />
 
-    <div className="relative mx-auto max-w-5xl px-2 md:px-5">
-      <RevealOnScroll>
-        <div className="mb-6 flex items-center justify-between gap-4 text-blood">
-          <span className="section-index">A2 — Вскрытый архив</span>
-          <span className="label hidden sm:inline">Clearance: Omega</span>
-        </div>
+    <div className="relative mx-auto max-w-(--page) px-3 md:px-10">
+      <div className="mb-8 flex items-center justify-between gap-4 text-blood">
+        <span className="section-index">A2 — Вскрытый архив</span>
+        <span className="label hidden sm:inline">Clearance: Omega</span>
+      </div>
 
-        <article className="dossier-sheet px-5 py-10 md:px-14 md:py-14">
+      <div className="grid items-start gap-10 lg:grid-cols-[minmax(0,5fr)_minmax(0,7fr)] lg:gap-14 xl:gap-20">
+        {/* Cover page */}
+        {/* Pinned while the slips scroll by, but only where it fits the
+            screen; a sticky element taller than the viewport hides its end. */}
+        <RevealOnScroll
+          direction="right"
+          className="lg:[@media(min-height:50rem)]:sticky lg:[@media(min-height:50rem)]:top-20"
+        >
+          <article className="dossier-sheet px-5 py-8 md:px-10 md:py-9">
+            <div className="relative">
+              <header className="flex flex-wrap items-start justify-between gap-4 border-b-2 border-ink pb-5">
+                <div>
+                  <div className="text-xs font-bold uppercase tracking-[0.2em]">
+                    Arasaka Secure Archive
+                  </div>
+                  <div className="mt-1 text-[0.6875rem] uppercase tracking-[0.2em] opacity-60">
+                    File 9482-BETA-X · 20.08.2023 · Eyes only
+                  </div>
+                </div>
+                <span className="rubber-stamp text-2xl md:text-3xl">
+                  Top secret
+                </span>
+              </header>
+
+              <h2 className="display mt-7 text-4xl md:text-5xl">
+                Что произошло
+                <br />в башне на самом деле
+              </h2>
+              <p className="mt-5 text-sm leading-7 md:text-[0.9375rem]">
+                Энграмма — не протокол. Она хранит события такими, какими их
+                запомнил и пересказал себе Сильверхенд. Ниже то, что удалось
+                восстановить по независимым источникам.
+              </p>
+<dl className="mt-7 grid grid-cols-[auto_1fr] gap-x-6 border-y-2 border-ink text-[0.6875rem] uppercase tracking-[0.14em]">
+                {CASE_FIELDS.map(([k, v]) => (
+                  <React.Fragment key={k}>
+                    <dt className="border-t border-ink/20 py-2.5 opacity-60 first-of-type:border-t-0">
+                      {k}
+                    </dt>
+                    <dd className="border-t border-ink/20 py-2.5 font-bold first-of-type:border-t-0">
+                      {v}
+                    </dd>
+                  </React.Fragment>
+                ))}
+              </dl>
+
+              <p className="mt-6 text-[0.6875rem] uppercase tracking-[0.2em] opacity-60">
+                Наведите на закрашенные фрагменты, чтобы снять цензуру
+              </p>
+            </div>
+          </article>
+        </RevealOnScroll>
+
+        {/* One slip per finding */}
+        <ol className="space-y-4 md:space-y-7">
+          {/* Witness statement first: the engram itself is unreliable.
+              Alt's lines are verbatim from Cyberpunk 2077; the Russian is ours. */}
+          <li className="dossier-sheet dossier-slip">
+            <RevealOnScroll>
+              <figure className="relative px-5 py-6 md:px-9 md:py-8">
+                <figcaption className="mb-4 flex flex-wrap items-baseline justify-between gap-2 text-[0.6875rem] font-bold uppercase tracking-[0.2em]">
+                  <span className="text-blood">Показания свидетеля</span>
+                  <span className="opacity-60">Альт Каннингем · Cyberpunk 2077</span>
+                </figcaption>
+                <blockquote className="border-l-4 border-blood pl-4 font-display text-xl font-bold uppercase leading-snug md:pl-6 md:text-3xl">
+                  «То, что ты видел, — его субъективный взгляд на случившееся.
+                  Искажённая версия событий, которую он запер в подсознании и
+                  проигрывал снова и снова. Она не имеет ничего общего с
+                  правдой.»
+                </blockquote>
+                <p
+                  lang="en"
+                  className="mt-4 text-xs leading-relaxed opacity-70 md:pl-6 md:text-[0.8125rem]"
+                >
+                  “What you saw was his subjective view of what happened. A
+                  warped account of events he locked away in his subconscious
+                  and replayed time and again. It bears no resemblance to the
+                  truth.”
+                </p>
+                <p className="scrawl mt-3">Альт. и ты туда же.</p>
+              </figure>
+            </RevealOnScroll>
+          </li>
+
+          {FINDINGS.map((item, i) => (
+            <li key={item.title} className="dossier-sheet dossier-slip">
+              <RevealOnScroll>
+                {/* Phones: number and title share a row, text runs full width
+                    below. Desktop: the number gets its own column. */}
+                <div className="relative px-5 py-6 md:grid md:grid-cols-[4rem_1fr] md:gap-x-6 md:px-9 md:py-8">
+                  <div className="flex items-start gap-3 md:contents">
+                    <span className="font-display text-4xl font-bold leading-none text-blood md:row-span-3 md:text-5xl">
+                      0{i + 1}
+                    </span>
+                    <h3 className="font-display text-2xl font-bold uppercase leading-tight md:col-start-2 md:text-3xl">
+                      {item.title}
+                    </h3>
+                  </div>
+                  <p className="mt-3 text-sm leading-7 md:col-start-2 md:text-[0.9375rem] md:leading-8">
+                    {item.body}
+                  </p>
+                  <div className="md:col-start-2">
+                    <p className="scrawl mt-3">{item.scrawl}</p>
+                  </div>
+                </div>
+              </RevealOnScroll>
+            </li>
+          ))}
+        </ol>
+      </div>
+
+      {/* Landscape memo with the comparison table */}
+      <RevealOnScroll>
+        <article className="dossier-sheet dossier-memo mx-auto mt-14 max-w-6xl px-5 py-9 md:mt-20 md:px-12 md:py-11">
           <div className="relative">
-            <header className="flex flex-wrap items-start justify-between gap-4 border-b-2 border-ink pb-5">
-              <div>
-                <div className="text-xs font-bold uppercase tracking-[0.2em]">
-                  Arasaka Secure Archive
-                </div>
-                <div className="mt-1 text-[0.6875rem] uppercase tracking-[0.2em] opacity-60">
-                  File 9482-BETA-X · 20.08.2023 · Eyes only
-                </div>
-              </div>
-              <span className="rubber-stamp text-2xl md:text-4xl">
-                Top secret
+            <header className="mb-6 flex flex-wrap items-end justify-between gap-3 border-b-2 border-ink pb-4">
+              <h3 className="font-display text-2xl font-bold uppercase leading-none md:text-4xl">
+                Сверка показаний
+              </h3>
+              <span className="text-[0.6875rem] uppercase tracking-[0.2em] opacity-60">
+                Memo · энграмма против архива
               </span>
             </header>
 
-            <h2 className="display mt-8 text-4xl md:text-6xl">
-              Что произошло
-              <br />в башне на самом деле
-            </h2>
-            <p className="mt-5 max-w-2xl text-sm leading-7 md:text-[0.9375rem]">
-              Энграмма — не протокол. Она хранит события такими, какими их
-              запомнил и пересказал себе Сильверхенд. Ниже то, что удалось
-              восстановить по независимым источникам.
-            </p>
-            {/* Alt's lines are verbatim from Cyberpunk 2077; the Russian is ours. */}
-            <figure className="mt-8 border-l-4 border-blood bg-ink/[0.06] p-5 md:p-7">
-              <blockquote className="font-display text-xl font-bold uppercase leading-snug md:text-3xl">
-                «То, что ты видел, — его субъективный взгляд на случившееся.
-                Искажённая версия событий, которую он запер в подсознании и
-                проигрывал снова и снова. Она не имеет ничего общего с
-                правдой.»
-              </blockquote>
-              <p
-                lang="en"
-                className="mt-4 text-xs leading-relaxed opacity-70 md:text-[0.8125rem]"
-              >
-                “What you saw was his subjective view of what happened. A
-                warped account of events he locked away in his subconscious
-                and replayed time and again. It bears no resemblance to the
-                truth.”
-              </p>
-              <figcaption className="mt-4 text-[0.6875rem] font-bold uppercase tracking-[0.2em] text-blood">
-                Альт Каннингем · Cyberpunk 2077
-              </figcaption>
-            </figure>
-            <p className="scrawl mt-3">Альт. и ты туда же.</p>
-
-            <p className="mt-6 text-[0.6875rem] uppercase tracking-[0.2em] opacity-60">
-              Наведите на закрашенные фрагменты, чтобы снять цензуру
-            </p>
-
-            <ol className="mt-10">
-              {FINDINGS.map((item, i) => (
-                <li
-                  key={item.title}
-                  className="grid gap-x-6 gap-y-2 border-t border-ink/30 py-7 md:grid-cols-[3.5rem_1fr]"
-                >
-                  <span className="font-display text-4xl font-bold leading-none text-blood">
-                    0{i + 1}
-                  </span>
-                  <div>
-                    <h3 className="font-display text-2xl font-bold uppercase leading-tight md:text-3xl">
-                      {item.title}
-                    </h3>
-                    <p className="mt-3 text-sm leading-7 md:text-[0.9375rem] md:leading-8">
-                      {item.body}
-                    </p>
-                    <p className="scrawl mt-3">{item.scrawl}</p>
-                  </div>
-                </li>
-              ))}
-            </ol>
-
-            <div className="mt-6 border-2 border-ink">
+            <div className="border-2 border-ink">
               <div className="hidden bg-ink text-[0.6875rem] font-bold uppercase tracking-[0.16em] text-bone md:grid md:grid-cols-[9rem_1fr_1fr]">
                 <span className="p-3" />
                 <span className="p-3">Помнит энграмма</span>
@@ -246,7 +307,7 @@ const ClassifiedSection = () => (
               </p>
             </div>
 
-            <footer className="mt-10 flex flex-col justify-between gap-2 border-t border-ink/30 pt-4 text-[0.6875rem] uppercase tracking-[0.16em] opacity-60 md:flex-row">
+            <footer className="mt-8 flex flex-col justify-between gap-2 border-t border-ink/30 pt-4 text-[0.6875rem] uppercase tracking-[0.16em] opacity-60 md:flex-row">
               <span>
                 Сведено по настольному канону Cyberpunk (R. Talsorian Games)
               </span>
