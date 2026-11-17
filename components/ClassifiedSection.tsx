@@ -240,9 +240,11 @@ const ClassifiedSection = () => (
                 </div>
               ))}
             </div>
-            <p className="scrawl scrawl--right mt-4 block text-right">
-              красивая табличка. меня там не было, что ли?
-            </p>
+            <div className="mt-4 text-right">
+              <p className="scrawl scrawl--right">
+                красивая табличка. меня там не было, что ли?
+              </p>
+            </div>
 
             <footer className="mt-10 flex flex-col justify-between gap-2 border-t border-ink/30 pt-4 text-[0.6875rem] uppercase tracking-[0.16em] opacity-60 md:flex-row">
               <span>

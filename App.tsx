@@ -7,6 +7,7 @@ import React, {
   useRef,
 } from "react";
 import { useEscape, useScrollLock } from "./hooks/useOverlay";
+import { useMarkerWriting } from "./hooks/useMarkerWriting";
 import Terminal from "./components/Terminal";
 import Navbar from "./components/Navbar";
 import Hero from "./components/Hero";
@@ -32,6 +33,7 @@ const App = () => {
     enableCustomCursor,
     performanceMode,
     crtWarp,
+    motion,
   } = useSettings();
 
   const [showTerminal, setShowTerminal] = useState(false);
@@ -164,6 +166,9 @@ const App = () => {
       ? "johnny"
       : "official";
   }, [isClassified]);
+
+  // In Johnny's view his marks write themselves as they scroll into view.
+  useMarkerWriting(isClassified && motion);
 
   return (
     <div

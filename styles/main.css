@@ -1101,17 +1101,18 @@ html[data-crt="lite"] .outline-text {
 /* --- Johnny's marker: the second voice over the official record ---------- */
 
 .scrawl {
+  --ink: var(--red);
   display: inline-block;
   font-family: var(--font-hand);
   font-weight: 700;
   font-size: clamp(1.5rem, 2.2vw, 2rem);
   line-height: 1;
-  color: var(--red);
+  color: var(--ink);
   transform: rotate(-3deg);
   transform-origin: left center;
 }
 .scrawl--dark {
-  color: var(--yellow);
+  --ink: var(--yellow);
 }
 .scrawl--right {
   transform: rotate(2.5deg);
@@ -1175,12 +1176,116 @@ html:not([data-view="johnny"]) .circled::after {
 html[data-view="johnny"] .official-only {
   display: none !important;
 }
-html[data-view="johnny"] .scrawl {
-  animation: scrawl-in 0.7s cubic-bezier(0.3, 0.7, 0.2, 1) both;
+/* --- Marker writing (hooks/useMarkerWriting.ts) ----------------------------
+   With html[data-marker] the hook writes each mark when it scrolls into view:
+   blank until it gets .is-written, then drawn at --write-dur after
+   --write-delay. Without the attribute (performance mode, reduced motion,
+   official view) every rule below is inert and the marks are static. */
+@property --ink-at {
+  syntax: "<length-percentage>";
+  inherits: true;
+  initial-value: 100%;
 }
-@keyframes scrawl-in {
-  from { clip-path: inset(-20% 100% -20% 0); }
-  to { clip-path: inset(-20% -5% -20% 0); }
+@property --ring-at {
+  syntax: "<angle>";
+  inherits: true;
+  initial-value: 368deg;
+}
+
+/* Notes: ink fills the letters left to right through background-clip, so the
+   element itself isn't masked and the marker tip (::after) stays visible. */
+html[data-marker] .scrawl {
+  color: transparent;
+  background: linear-gradient(
+      90deg,
+      var(--ink) var(--ink-at),
+      transparent calc(var(--ink-at) + 0.45em)
+    )
+    no-repeat;
+  -webkit-background-clip: text;
+  background-clip: text;
+}
+html[data-marker] .scrawl:not(.is-written) {
+  --ink-at: -0.5em;
+}
+html[data-marker] .scrawl.is-written {
+  animation: marker-write var(--write-dur) var(--write-delay) linear both;
+}
+html[data-marker] .scrawl.is-written::after {
+  content: "";
+  position: absolute;
+  left: var(--ink-at);
+  top: 38%;
+  width: 0.3em;
+  height: 0.3em;
+  margin-left: -0.1em;
+  border-radius: 50%;
+  background: var(--ink);
+  box-shadow: 0 0 0.35em var(--ink);
+  animation: marker-tip var(--write-dur) var(--write-delay) linear both;
+  pointer-events: none;
+}
+/* A hand doesn't move at a constant speed: short holds between bursts. */
+@keyframes marker-write {
+  0% { --ink-at: -0.5em; }
+  20% { --ink-at: 24%; }
+  26% { --ink-at: 27%; }
+  55% { --ink-at: 61%; }
+  61% { --ink-at: 63%; }
+  100% { --ink-at: 100%; }
+}
+@keyframes marker-tip {
+  0% { opacity: 0; transform: translateY(0); }
+  6% { opacity: 0.95; }
+  30% { transform: translateY(-0.12em); }
+  60% { transform: translateY(0.1em); }
+  88% { opacity: 0.95; }
+  100% { opacity: 0; transform: translateY(0); }
+}
+
+/* Strike-throughs: each stroke is pulled from left to right, the second one
+   a beat after the first. */
+html[data-marker] .struck::before,
+html[data-marker] .struck::after {
+  transform-origin: left center;
+}
+html[data-marker] .struck:not(.is-written)::before {
+  transform: rotate(-2.5deg) scaleX(0);
+}
+html[data-marker] .struck:not(.is-written)::after {
+  transform: rotate(1.5deg) scaleX(0);
+}
+html[data-marker] .struck.is-written::before {
+  animation: struck-a calc(var(--write-dur) * 0.6) var(--write-delay) cubic-bezier(0.5, 0, 0.3, 1) both;
+}
+html[data-marker] .struck.is-written::after {
+  animation: struck-b calc(var(--write-dur) * 0.5)
+    calc(var(--write-delay) + var(--write-dur) * 0.5) cubic-bezier(0.5, 0, 0.3, 1) both;
+}
+@keyframes struck-a {
+  from { transform: rotate(-2.5deg) scaleX(0); }
+  to { transform: rotate(-2.5deg) scaleX(1); }
+}
+@keyframes struck-b {
+  from { transform: rotate(1.5deg) scaleX(0); }
+  to { transform: rotate(1.5deg) scaleX(1); }
+}
+
+/* Rings: a conic mask sweeps round the ellipse like a pen going round it,
+   with a soft leading edge and a slight overshoot past the start. */
+html[data-marker] .circled::after {
+  -webkit-mask-image: conic-gradient(from 210deg, #000 var(--ring-at), transparent calc(var(--ring-at) + 10deg));
+  mask-image: conic-gradient(from 210deg, #000 var(--ring-at), transparent calc(var(--ring-at) + 10deg));
+}
+html[data-marker] .circled:not(.is-written)::after {
+  --ring-at: 0deg;
+}
+html[data-marker] .circled.is-written::after {
+  animation: ring-draw var(--write-dur) var(--write-delay) cubic-bezier(0.45, 0.05, 0.35, 1) both;
+}
+@keyframes ring-draw {
+  from { --ring-at: 0deg; }
+  to { --ring-at: 368deg; }
 }
 
 .sticker {

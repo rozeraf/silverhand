@@ -93,9 +93,11 @@ const Biography = () => (
                   <span className="opacity-60">Exhibit 01</span>
                 </figcaption>
               </figure>
-              <p className="scrawl scrawl--right mx-auto mt-5 block max-w-sm text-right lg:mx-0 lg:max-w-md">
-                «deceased». ага, щас
-              </p>
+              {/* The note stays inline-block (right-aligned by its wrapper), so
+                  the marker ink sweeps across the words, not empty space. */}
+              <div className="mx-auto mt-5 max-w-sm text-right lg:mx-0 lg:max-w-md">
+                <p className="scrawl scrawl--right">«deceased». ага, щас</p>
+              </div>
 
               <dl className="mx-auto mt-6 max-w-sm font-mono text-xs uppercase tracking-wider lg:mx-0 lg:max-w-md">
                 {(
@@ -126,9 +128,9 @@ const Biography = () => (
                   </div>
                 ))}
               </dl>
-              <p className="scrawl mx-auto mt-4 block max-w-sm lg:mx-0 lg:max-w-md">
-                с ИХ войны я ушёл сам
-              </p>
+              <div className="mx-auto mt-4 max-w-sm lg:mx-0 lg:max-w-md">
+                <p className="scrawl">с ИХ войны я ушёл сам</p>
+              </div>
               <p className="official-only label mx-auto mt-4 max-w-sm opacity-50 lg:mx-0 lg:max-w-md">
                 Запись заверена Arasaka Corp. Пометки на полях отсутствуют.
               </p>
