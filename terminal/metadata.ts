@@ -151,7 +151,7 @@ export const META_OVERRIDES = {
     owner: "silverhand",
     group: "samurai",
     mode: 0o644,
-    size: 64962,
+    size: 96250,
     mediaType: "image/webp",
   },
   "/srv/silverhand/assets/samurai.png": {
