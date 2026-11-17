@@ -971,7 +971,7 @@ body.crt-viewport-active {
   overflow: hidden;
   border-radius: 2.5rem;
   background:
-    radial-gradient(ellipse at center, rgba(0, 0, 0, 0) 58%, rgba(0, 0, 0, 0.5) 100%),
+    radial-gradient(ellipse at center, rgba(0, 0, 0, 0) 68%, rgba(0, 0, 0, 0.32) 100%),
     repeating-linear-gradient(
       90deg,
       rgba(255, 40, 30, 0.035) 0 1px,
@@ -985,20 +985,24 @@ body.crt-viewport-active {
 .crt-lite__scanlines {
   position: absolute;
   inset: 0;
-  background: linear-gradient(rgba(0, 0, 0, 0) 50%, rgba(0, 0, 0, 0.22) 50%);
+  background: linear-gradient(rgba(0, 0, 0, 0) 50%, rgba(0, 0, 0, 0.16) 50%);
   background-size: 100% 3px;
   will-change: opacity;
   animation: crt-lite-flicker 3.2s steps(1, end) infinite;
 }
+/* Full-screen sweep: a thin line with a short trail. A tall trail read as a
+   grey slab with a hard edge sliding over the page. */
 .crt-lite__band {
-  top: -25vh;
-  height: 22vh;
+  top: -7vh;
+  height: 7vh;
   --beam: 233, 227, 211;
-  opacity: 0.4;
-  animation: crt-lite-roll 9s linear infinite;
+  opacity: 0.32;
+  animation: crt-lite-roll 11s linear infinite;
 }
+/* Sweeps down in ~4 s, then the screen rests before the next pass */
 @keyframes crt-lite-roll {
-  to { transform: translateY(150vh); }
+  0% { transform: translateY(0); }
+  38%, 100% { transform: translateY(115vh); }
 }
 @keyframes crt-lite-flicker {
   0%, 100% { opacity: 1; }
