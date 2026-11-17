@@ -550,6 +550,15 @@ button:not(:disabled),
 .evidence:hover img {
   filter: grayscale(0) contrast(1.05);
 }
+/* The portrait is a transparent cut-out: give it a studio backdrop. */
+.evidence__backdrop {
+  background: radial-gradient(
+    ellipse 70% 60% at 50% 38%,
+    #6b6660 0%,
+    #3a3733 55%,
+    #161412 100%
+  );
+}
 .tape {
   position: absolute;
   width: 6.875rem;
@@ -1317,6 +1326,10 @@ html[data-perf="lite"] .rubber-stamp {
 html[data-perf="lite"] :is(.blueprint, .evidence) img {
   filter: none;
   transition: none;
+}
+/* A static grayscale on one photo is cheap; keep the evidence look. */
+html[data-perf="lite"] .evidence__backdrop img {
+  filter: grayscale(1) contrast(1.2);
 }
 html[data-perf="lite"] .sticker {
   filter: none;

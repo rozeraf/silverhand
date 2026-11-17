@@ -74,7 +74,7 @@ const Biography = () => (
                 />
                 <span className="tape tape--tl" />
                 <span className="tape tape--tr" />
-                <div className="relative aspect-[4/5] overflow-hidden bg-black">
+                <div className="evidence__backdrop relative aspect-[4/5] overflow-hidden">
                   <img
                     src={ASSETS.biographyPortrait}
                     srcSet={ASSETS.srcSet.biographyPortrait}
