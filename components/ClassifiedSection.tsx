@@ -268,8 +268,8 @@ const ClassifiedSection = () => (
       </div>
 
       {/* Landscape memo with the comparison table */}
-      <RevealOnScroll>
-        <article className="dossier-sheet dossier-memo mx-auto mt-14 max-w-6xl px-5 py-9 md:mt-20 md:px-12 md:py-11">
+      <RevealOnScroll className="dossier-memo-wrap mx-auto mt-14 max-w-6xl md:mt-20">
+        <article className="dossier-sheet dossier-memo px-5 pt-9 md:px-12 md:pt-11">
           <div className="relative">
             <header className="mb-6 flex flex-wrap items-end justify-between gap-3 border-b-2 border-ink pb-4">
               <h3 className="font-display text-2xl font-bold uppercase leading-none md:text-4xl">
@@ -322,7 +322,6 @@ const ClassifiedSection = () => (
               <span>Do not distribute</span>
             </footer>
           </div>
-          <div className="tear tear--sheet" aria-hidden="true" />
         </article>
       </RevealOnScroll>
     </div>
