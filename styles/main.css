@@ -78,6 +78,11 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 
+/* No single word left alone on the last line of a paragraph */
+p {
+  text-wrap: pretty;
+}
+
 ::selection {
   background: var(--red);
   color: #000;
@@ -115,7 +120,8 @@ button:not(:disabled),
   font-family: var(--font-display);
   font-weight: 700;
   text-transform: uppercase;
-  line-height: 0.88;
+  /* 0.88 let the breve of Й and the dots of Ё hit the line above */
+  line-height: 0.94;
   letter-spacing: -0.015em;
   text-wrap: balance;
 }
@@ -1067,7 +1073,8 @@ body.crt-viewport-active {
 .circled::after {
   content: "";
   position: absolute;
-  inset: -0.25em -0.5em;
+  /* Wide enough that the ellipse clears the first and last letters */
+  inset: -0.35em -0.85em;
   border: 2px solid var(--red);
   border-radius: 50% 46% 52% 48% / 60% 52% 48% 40%;
   transform: rotate(-2deg);

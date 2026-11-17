@@ -129,12 +129,6 @@ const ClassifiedSection = () => (
   <section className="relative overflow-hidden bg-ink py-20 md:py-28">
     <div className="hazard absolute inset-x-0 top-0 h-3" />
     <div className="hazard absolute inset-x-0 bottom-0 h-3" />
-    <div
-      className="display pointer-events-none absolute left-1/2 top-40 -translate-x-1/2 -rotate-6 whitespace-nowrap text-[26vw] text-blood/[0.06]"
-      aria-hidden="true"
-    >
-      Top secret
-    </div>
 
     <div className="relative mx-auto max-w-5xl px-2 md:px-5">
       <RevealOnScroll>

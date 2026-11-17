@@ -34,11 +34,6 @@ const EVENTS = [
 const Biography = () => (
   <>
     <section id="bio" className="paper overflow-hidden py-20 md:py-32">
-      <img
-        src={ASSETS.samuraiLogo}
-        alt=""
-        className="sticker johnny-only bottom-12 left-[22%] hidden -rotate-12 lg:block"
-      />
       <div className="mx-auto max-w-[93.75rem] px-5 md:px-10">
         <SectionHead
           index="A1"
@@ -72,6 +67,11 @@ const Biography = () => (
           <RevealOnScroll direction="right">
             <div className="lg:sticky lg:top-24">
               <figure className="evidence mx-auto max-w-sm lg:mx-0 lg:max-w-md">
+                <img
+                  src={ASSETS.samuraiLogo}
+                  alt=""
+                  className="sticker johnny-only -right-8 top-1/3 rotate-12"
+                />
                 <span className="tape tape--tl" />
                 <span className="tape tape--tr" />
                 <div className="relative aspect-[4/5] overflow-hidden bg-black">
