@@ -14,6 +14,9 @@ import {
   Gauge,
 } from "lucide-react";
 import { useSettings } from "../context/SettingsContext";
+import { isGecko } from "../lib/perf";
+
+const GECKO = isGecko();
 
 interface SettingsModalProps {
   isOpen: boolean;
@@ -199,6 +202,14 @@ const SettingsModal = ({ isOpen, onClose, onOpenTerminal }: SettingsModalProps) 
                 icon={Activity}
               />
             </div>
+            {GECKO && (
+              <p className="mx-4 mb-3 border-l-2 border-blood pl-3 font-mono text-[0.6875rem] leading-relaxed text-bone">
+                <span className="font-bold text-blood">Ваш браузер на движке Firefox.</span>{" "}
+                Он считает этот фильтр на процессоре, а не на видеокарте: вся
+                страница перерисовывается заново каждый кадр, и FPS падает до
+                единиц. Для warp лучше браузер на Chromium.
+              </p>
+            )}
             <p className="px-4 pb-4 font-mono text-[0.625rem] leading-relaxed text-dust">
               Ресурсоёмкая экспериментальная функция: браузер заново прогоняет
               всю страницу через SVG displacement при каждом скролле и

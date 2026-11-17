@@ -990,15 +990,15 @@ article:hover > .evtag {
   overscroll-behavior: none;
 }
 /* Under warp every running animation re-filters the whole page each frame,
-   so looping ones are frozen. One-shot animations still have to play: frozen
-   at frame 0 the Samurai page stayed invisible (fadeIn from opacity 0) and
-   the unlock toast never ended. */
-.crt-barrel-surface * {
-  animation-play-state: paused !important;
-}
+   so the looping ones are frozen. Only those: pausing everything also froze
+   one-shot entrances on frame 0 (Samurai's fade-in, Kinetic words, the
+   unlock toast), leaving them invisible. Add new infinite animations here. */
 .crt-barrel-surface
-  :is([class*="animate-[fadeIn"], [class*="animate-[rise"], .view-toast, .smear-cut, .smear-cut *) {
-  animation-play-state: running !important;
+  :is(.stamp-ring, .animate-spin-slow, .marquee__track, .relic-frame__scan, .eq i, .animate-pulse, .animate-spin),
+.crt-barrel-surface .glitch::before,
+.crt-barrel-surface .glitch::after,
+.crt-barrel-surface .vinyl::after {
+  animation-play-state: paused !important;
 }
 body.crt-viewport-active {
   cursor: none;

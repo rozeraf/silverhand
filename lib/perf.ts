@@ -21,3 +21,12 @@ export const detectLowEnd = (): boolean => {
   if (touch && memory !== undefined && memory <= 4) return true;
   return cores <= 4;
 };
+
+/**
+ * Firefox and its forks (Zen, LibreWolf, Floorp…). Gecko's WebRender can't run
+ * the SVG displacement filter behind CRT warp on the GPU: it re-renders the
+ * whole page on the CPU every frame, so warp drops to a few FPS there. Feature
+ * test rather than user agent, so forks with their own UA are caught too.
+ */
+export const isGecko = (): boolean =>
+  typeof CSS !== "undefined" && CSS.supports("-moz-appearance", "none");
