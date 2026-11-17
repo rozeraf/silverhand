@@ -39,7 +39,7 @@ const Biography = () => (
         alt=""
         className="sticker johnny-only bottom-12 left-[22%] hidden -rotate-12 lg:block"
       />
-      <div className="mx-auto max-w-[1500px] px-5 md:px-10">
+      <div className="mx-auto max-w-[93.75rem] px-5 md:px-10">
         <SectionHead
           index="A1"
           kicker="Досье"
@@ -77,6 +77,9 @@ const Biography = () => (
                 <div className="relative aspect-[4/5] overflow-hidden bg-black">
                   <img
                     src={ASSETS.biographyPortrait}
+                    srcSet={ASSETS.srcSet.biographyPortrait}
+                    sizes="(min-width: 1024px) 28rem, 24rem"
+                    decoding="async"
                     alt="Портрет Джонни Сильверхенда"
                     loading="lazy"
                     className="h-full w-full object-cover"
@@ -85,7 +88,7 @@ const Biography = () => (
                     Deceased
                   </span>
                 </div>
-                <figcaption className="flex items-baseline justify-between gap-4 px-1 py-3 font-mono text-[11px] uppercase tracking-wider text-ink">
+                <figcaption className="flex items-baseline justify-between gap-4 px-1 py-3 font-mono text-[0.6875rem] uppercase tracking-wider text-ink">
                   <span className="font-bold">Linder, Robert John</span>
                   <span className="opacity-60">Exhibit 01</span>
                 </figcaption>
@@ -146,7 +149,7 @@ const Biography = () => (
                     <h3 className="font-display text-2xl font-bold uppercase leading-tight md:text-3xl">
                       {event.title}
                     </h3>
-                    <p className="mt-3 text-[15px] leading-relaxed text-ink/80 md:text-base">
+                    <p className="mt-3 text-[0.9375rem] leading-relaxed text-ink/80 md:text-base">
                       {event.description}
                     </p>
                     <p className="scrawl mt-4">{event.note}</p>
@@ -161,7 +164,7 @@ const Biography = () => (
     <div className="tear" aria-hidden="true" />
 
     <section className="relative overflow-hidden bg-blood pb-16 pt-24 text-black md:pb-24 md:pt-32">
-      <div className="mx-auto max-w-[1500px] px-5 md:px-10">
+      <div className="mx-auto max-w-[93.75rem] px-5 md:px-10">
         <RevealOnScroll>
           <div className="section-index mb-6">Memory_log_114</div>
           <Kinetic

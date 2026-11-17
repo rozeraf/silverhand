@@ -22,7 +22,7 @@ const Kinetic = ({
   className = "",
   step = 95,
 }: KineticProps) => {
-  const { enableAnimations } = useSettings();
+  const { motion: enableAnimations } = useSettings();
   const ref = useRef<HTMLElement>(null);
   const [on, setOn] = useState(false);
 

@@ -8,7 +8,7 @@ const LINKS = [
 
 const Footer = () => (
   <footer className="relative overflow-hidden bg-black pt-16 md:pt-24">
-    <div className="mx-auto max-w-[1500px] px-5 md:px-10">
+    <div className="mx-auto max-w-[93.75rem] px-5 md:px-10">
       <div className="grid gap-10 border-b border-line pb-12 md:grid-cols-12">
         <div className="md:col-span-5">
           <p className="section-index mb-4 text-blood">Конец записи</p>

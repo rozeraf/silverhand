@@ -11,6 +11,7 @@ import {
   ChevronRight,
   AlertTriangle,
   Tv,
+  Gauge,
 } from "lucide-react";
 import { useSettings } from "../context/SettingsContext";
 
@@ -72,6 +73,7 @@ const SettingsModal = ({ isOpen, onClose, onOpenTerminal }: SettingsModalProps) 
     enableCrtWarp,
     enableCustomCursor,
     enableAnimations,
+    performanceMode,
     crtWarp,
     updateSetting,
   } = useSettings();
@@ -79,12 +81,14 @@ const SettingsModal = ({ isOpen, onClose, onOpenTerminal }: SettingsModalProps) 
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-[200] flex items-center justify-center bg-black/80 p-3 backdrop-blur-sm animate-[fadeIn_0.2s_ease-out] md:p-6">
-      <div className="relative flex max-h-[92vh] w-full max-w-2xl flex-col border border-line bg-ink shadow-[12px_12px_0_var(--red)] animate-[rise_0.3s_ease-out]">
+    <div className="fixed inset-0 z-[200] flex items-center justify-center bg-black/85 p-3 animate-[fadeIn_0.2s_ease-out] md:p-6">
+      <div className="relative flex max-h-[92dvh] w-full max-w-2xl flex-col border border-line bg-ink shadow-[0.75rem_0.75rem_0_var(--red)] animate-[rise_0.3s_ease-out]">
         <div className="flex shrink-0 items-center justify-between border-b border-line px-5 py-4 md:px-8">
           <div>
             <div className="section-index text-blood">System_config</div>
-            <h3 className="display mt-2 text-4xl md:text-5xl">Настройки</h3>
+            <h3 className="display mt-2 text-4xl md:text-5xl [@media(max-height:32rem)]:hidden">
+              Настройки
+            </h3>
           </div>
           <button
             type="button"
@@ -127,12 +131,21 @@ const SettingsModal = ({ isOpen, onClose, onOpenTerminal }: SettingsModalProps) 
             />
           </button>
 
+          <ToggleOption
+            label="Performance mode"
+            description="Облегчённый режим для слабых устройств: без зерна, размытия, теней и анимаций появления. Включается сам, если устройство похоже на слабое."
+            value={performanceMode}
+            onChange={() => updateSetting("performanceMode", !performanceMode)}
+            icon={Gauge}
+          />
+
           <div className="label mb-1 mt-8 text-dust">Визуализация и FX</div>
           <ToggleOption
             label="Film grain"
             description="Плёночный шум и редкие сбои Relic на экране."
             value={enableNoise}
             onChange={() => updateSetting("enableNoise", !enableNoise)}
+            disabled={performanceMode}
             icon={Film}
           />
           <ToggleOption
@@ -151,6 +164,7 @@ const SettingsModal = ({ isOpen, onClose, onOpenTerminal }: SettingsModalProps) 
             onChange={() =>
               updateSetting("enableAnimations", !enableAnimations)
             }
+            disabled={performanceMode}
             icon={Zap}
           />
           <ToggleOption
@@ -180,12 +194,12 @@ const SettingsModal = ({ isOpen, onClose, onOpenTerminal }: SettingsModalProps) 
                     : "Сначала включите CRT display."
                 }
                 value={enableCrtWarp}
-                disabled={!enableScanlines}
+                disabled={!enableScanlines || performanceMode}
                 onChange={() => updateSetting("enableCrtWarp", !enableCrtWarp)}
                 icon={Activity}
               />
             </div>
-            <p className="px-4 pb-4 font-mono text-[10px] leading-relaxed text-dust">
+            <p className="px-4 pb-4 font-mono text-[0.625rem] leading-relaxed text-dust">
               Ресурсоёмкая экспериментальная функция: браузер заново прогоняет
               всю страницу через SVG displacement при каждом скролле и
               анимации, поверх работает fullscreen WebGL. FPS может сильно

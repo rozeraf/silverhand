@@ -98,13 +98,13 @@ const Samurai = ({ onBack }: SamuraiPageProps) => {
         </div>
 
         <div className="flex flex-1 flex-col justify-center px-5 py-10 md:px-10">
-          <div className="deck__cover relative mx-auto mb-10 aspect-square w-[62%] max-w-[340px]">
+          <div className="deck__cover relative mx-auto mb-10 aspect-square w-[62%] max-w-[21.25rem]">
             <div className="vinyl" />
             <img
               key={currentTrack.title}
               src={activeCover}
               alt={`Обложка: ${currentTrack.title}`}
-              className="relative z-10 h-full w-full border-2 border-black object-cover shadow-[10px_10px_0_#000] animate-[fadeIn_0.4s_ease-out]"
+              className="relative z-10 h-full w-full border-2 border-black object-cover shadow-[0.625rem_0.625rem_0_#000] animate-[fadeIn_0.4s_ease-out]"
             />
           </div>
 
@@ -163,7 +163,7 @@ const Samurai = ({ onBack }: SamuraiPageProps) => {
           </div>
         </div>
 
-        <p className="label border-t-2 border-black px-5 py-3 text-[9px] opacity-70 md:px-8">
+        <p className="label border-t-2 border-black px-5 py-3 text-[0.5625rem] opacity-70 md:px-8">
           Music rights: CD PROJEKT RED / REFUSED / respective copyright holders
         </p>
       </div>
@@ -173,7 +173,7 @@ const Samurai = ({ onBack }: SamuraiPageProps) => {
         <img
           src={ASSETS.samuraiLogo}
           alt=""
-          className="pointer-events-none absolute -right-24 -top-16 w-[520px] opacity-[0.06]"
+          className="pointer-events-none absolute -right-24 -top-16 w-[32.5rem] opacity-[0.06]"
         />
         <div className="relative px-5 py-12 md:px-12 md:py-16">
           <div className="section-index mb-6 text-blood">Est. 2003 · Night City</div>

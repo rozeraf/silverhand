@@ -73,6 +73,10 @@ const BOOT_TEXT = [
   "HINT: You must authenticate to proceed. Try: login <username>",
 ];
 
+// On phones, focusing the input pops the keyboard over the boot screen.
+const isTouch =
+  typeof matchMedia !== "undefined" && matchMedia("(pointer: coarse)").matches;
+
 const getStoredUser = (): TerminalUser => {
   const username = localStorage.getItem("username");
   if (username === "Silverhand") return SILVERHAND_USER;
@@ -171,7 +175,7 @@ const Terminal = ({
         setLines((prev) => [...prev, line]);
         if (index === BOOT_TEXT.length - 1) {
           setIsBooting(false);
-          schedule(() => inputRef.current?.focus(), 100);
+          if (!isTouch) schedule(() => inputRef.current?.focus(), 100);
         }
       }, delay);
     });
@@ -744,7 +748,7 @@ const Terminal = ({
       onClick={handleContainerClick}
     >
       {/* Status poster */}
-      <aside className="relative flex shrink-0 flex-col justify-between gap-6 overflow-hidden border-b border-line bg-black px-5 py-5 md:px-10 lg:border-b-0 lg:border-r lg:py-10">
+      <aside className="relative flex max-lg:[@media(max-height:32rem)]:hidden shrink-0 flex-col justify-between gap-6 overflow-hidden border-b border-line bg-black px-5 py-5 md:px-10 lg:border-b-0 lg:border-r lg:py-10">
         <div className="flex items-center justify-between gap-4">
           <span className="section-index text-blood">Relic biochip v2.0</span>
           <button
@@ -824,7 +828,7 @@ const Terminal = ({
 
         <div
           ref={scrollRef}
-          className="custom-scrollbar flex-1 overflow-y-auto px-5 py-5 text-sm leading-6 md:px-8 md:py-7 md:text-[15px] md:leading-7"
+          className="custom-scrollbar flex-1 overflow-y-auto px-5 py-5 text-sm leading-6 md:px-8 md:py-7 md:text-[0.9375rem] md:leading-7"
         >
           {lines.map((line, i) => {
             const isCommand = line.startsWith("$ ");
@@ -882,7 +886,7 @@ const Terminal = ({
                 onKeyDown={handleInputKeyDown}
                 aria-label="Команда терминала"
                 className="flex-1 border-none bg-transparent font-mono text-bone caret-blood outline-none"
-                autoFocus
+                autoFocus={!isTouch}
                 autoComplete="off"
                 spellCheck="false"
               />

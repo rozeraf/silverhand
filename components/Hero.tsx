@@ -27,15 +27,20 @@ const Ticker = () => (
 
 const Hero = ({ onOpenSamurai }: HeroProps) => (
   <section id="hero" className="hero">
+    {/* The red duotone is baked into the image: no CSS filter or blend mode. */}
     <div
       className="hero__photo"
-      style={{ backgroundImage: `url("${ASSETS.heroBackground}")` }}
+      style={
+        {
+          "--hero": `url("${ASSETS.heroBackground}")`,
+          "--hero-sm": `url("${ASSETS.heroBackgroundSmall}")`,
+        } as React.CSSProperties
+      }
     />
-    <div className="hero__duotone" />
     <div className="hero__halftone" />
     <div className="hero__shade" />
 
-    <div className="relative z-10 mx-auto flex w-full max-w-[1500px] flex-1 flex-col justify-end px-5 pb-10 pt-28 md:px-10 md:pb-14">
+    <div className="relative z-10 mx-auto flex w-full max-w-[93.75rem] flex-1 flex-col justify-end px-5 pb-10 pt-28 md:px-10 md:pb-14">
       <div className="mb-6 flex flex-wrap items-center gap-x-6 gap-y-2 md:mb-8">
         <span className="section-index text-blood">Engram 01</span>
         <span className="label text-bone/70">
@@ -70,42 +75,34 @@ const Hero = ({ onOpenSamurai }: HeroProps) => (
         </div>
 
         <div className="hidden items-end justify-end gap-6 md:flex">
-          <svg
-            viewBox="0 0 200 200"
-            className="h-36 w-36 text-bone lg:h-44 lg:w-44"
-            aria-hidden="true"
-          >
-            <defs>
-              <path
-                id="stamp-circle"
-                d="M100,100 m-78,0 a78,78 0 1,1 156,0 a78,78 0 1,1 -156,0"
-              />
-            </defs>
-            <text
-              className="stamp-ring"
-              style={{ transformOrigin: "100px 100px" }}
-              fill="currentColor"
-              fontFamily="JetBrains Mono, monospace"
-              fontSize="14.5"
-              fontWeight="700"
-              letterSpacing="3.4"
+          {/* The ring is its own element so its rotation stays on the compositor. */}
+          <div className="relative h-36 w-36 lg:h-44 lg:w-44" aria-hidden="true">
+            <svg
+              viewBox="0 0 200 200"
+              className="stamp-ring absolute inset-0 h-full w-full text-bone"
             >
-              <textPath href="#stamp-circle">
-                NEVER FADE AWAY ✦ SAMURAI ✦ NIGHT CITY ✦ 2077 ✦
-              </textPath>
-            </text>
-            <circle cx="100" cy="100" r="46" fill="#ff003c" />
-            <text
-              x="100"
-              y="117"
-              textAnchor="middle"
-              fill="#000"
-              fontSize="46"
-              fontWeight="700"
-            >
+              <defs>
+                <path
+                  id="stamp-circle"
+                  d="M100,100 m-78,0 a78,78 0 1,1 156,0 a78,78 0 1,1 -156,0"
+                />
+              </defs>
+              <text
+                fill="currentColor"
+                fontFamily="JetBrains Mono, monospace"
+                fontSize="14.5"
+                fontWeight="700"
+                letterSpacing="3.4"
+              >
+                <textPath href="#stamp-circle">
+                  NEVER FADE AWAY ✦ SAMURAI ✦ NIGHT CITY ✦ 2077 ✦
+                </textPath>
+              </text>
+            </svg>
+            <span className="absolute inset-[27%] flex items-center justify-center rounded-full bg-blood pb-[0.08em] text-[2.6rem] font-bold leading-none text-black lg:text-[3.2rem]">
               侍
-            </text>
-          </svg>
+            </span>
+          </div>
         </div>
       </div>
     </div>

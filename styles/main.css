@@ -58,7 +58,16 @@
 @layer base {
 html {
   scroll-behavior: smooth;
-  scroll-padding-top: 64px;
+  scroll-padding-top: 4rem;
+  scrollbar-gutter: stable;
+  /* One layout for every desktop: above ~1600×900 the whole page scales with
+     the screen (2K, 4K, ultrawide) instead of sitting small in the middle.
+     The vh term keeps ultrawide screens from growing taller than they are. */
+  font-size: clamp(100%, min(1vw, 1.78vh), 200%);
+}
+/* An overlay is open: the page behind it must not scroll. */
+html.scroll-locked {
+  overflow: hidden;
 }
 
 body {
@@ -138,7 +147,7 @@ button:not(:disabled),
 
 .noise-bg {
   position: fixed;
-  inset: -100px;
+  inset: -6.25rem;
   z-index: 45;
   pointer-events: none;
   background-image: var(--grain);
@@ -148,10 +157,10 @@ button:not(:disabled),
 }
 @keyframes grain-shift {
   0% { transform: translate(0, 0); }
-  20% { transform: translate(-40px, 30px); }
-  40% { transform: translate(30px, -60px); }
-  60% { transform: translate(-70px, -20px); }
-  80% { transform: translate(50px, 60px); }
+  20% { transform: translate(-2.5rem, 1.875rem); }
+  40% { transform: translate(1.875rem, -3.75rem); }
+  60% { transform: translate(-4.375rem, -1.25rem); }
+  80% { transform: translate(3.125rem, 3.75rem); }
   100% { transform: translate(0, 0); }
 }
 
@@ -167,7 +176,7 @@ button:not(:disabled),
   align-items: center;
   justify-content: center;
   gap: 0.6rem;
-  min-height: 48px;
+  min-height: 3rem;
   padding: 0 1.5rem;
   border: 1px solid var(--btn-fg);
   color: var(--btn-fg);
@@ -209,7 +218,7 @@ button:not(:disabled),
   background: var(--red);
 }
 .btn--sm {
-  min-height: 36px;
+  min-height: 2.25rem;
   padding: 0 1rem;
   font-size: 0.6875rem;
 }
@@ -223,8 +232,8 @@ button:not(:disabled),
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 36px;
-  height: 36px;
+  width: 2.25rem;
+  height: 2.25rem;
   color: var(--dust);
   border: 1px solid transparent;
   transition: color 0.2s, border-color 0.2s;
@@ -245,8 +254,15 @@ button:not(:disabled),
 }
 .nav--solid {
   background: rgba(10, 9, 8, 0.86);
-  backdrop-filter: blur(10px);
+  backdrop-filter: blur(0.625rem);
   border-bottom-color: var(--line);
+}
+/* Backdrop blur re-renders on every scrolled frame; phones get a solid bar. */
+@media (pointer: coarse) {
+  .nav--solid {
+    background: rgba(10, 9, 8, 0.96);
+    backdrop-filter: none;
+  }
 }
 .nav__progress {
   position: absolute;
@@ -306,11 +322,22 @@ button:not(:disabled),
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  padding: 88px 20px 28px;
+  padding: 5.5rem 1.25rem 1.75rem;
   background: var(--red);
   color: #000;
   clip-path: inset(0 0 100% 0);
   transition: clip-path 0.45s cubic-bezier(0.7, 0, 0.2, 1);
+}
+/* Short screens (phones held sideways): the menu scrolls and shrinks */
+@media (max-height: 32rem) {
+  .menu {
+    overflow-y: auto;
+    padding-top: 4.5rem;
+    gap: 1rem;
+  }
+  .menu__link {
+    font-size: 2rem;
+  }
 }
 .menu--open {
   clip-path: inset(0 0 0 0);
@@ -346,9 +373,14 @@ button:not(:disabled),
 .hero__photo {
   position: absolute;
   inset: 0;
+  background-image: var(--hero-sm);
   background-size: cover;
   background-position: 46% 18%;
-  filter: grayscale(1) contrast(1.35) brightness(0.95);
+}
+@media (min-width: 640px) {
+  .hero__photo {
+    background-image: var(--hero);
+  }
 }
 @media (min-width: 1024px) {
   /* Push the portrait to the right so the face clears the wordmark */
@@ -358,12 +390,6 @@ button:not(:disabled),
     -webkit-mask-image: linear-gradient(90deg, transparent, #000 22%);
     mask-image: linear-gradient(90deg, transparent, #000 22%);
   }
-}
-.hero__duotone {
-  position: absolute;
-  inset: 0;
-  background: var(--red);
-  mix-blend-mode: multiply;
 }
 .hero__halftone {
   position: absolute;
@@ -380,7 +406,8 @@ button:not(:disabled),
     linear-gradient(180deg, rgba(10, 9, 8, 0.7) 0%, rgba(10, 9, 8, 0) 22%);
 }
 .hero__title {
-  font-size: clamp(4.25rem, 17.6vw, 17.5rem);
+  /* SILVERHAND is ~4.8em wide: 17.6vw keeps it inside a 320px screen */
+  font-size: clamp(2.75rem, 17.6vw, 17.5rem);
   line-height: 0.8;
   letter-spacing: -0.025em;
 }
@@ -502,8 +529,8 @@ button:not(:disabled),
 .evidence {
   position: relative;
   background: #fff;
-  padding: 10px 10px 0;
-  box-shadow: 0 18px 40px -18px rgba(0, 0, 0, 0.55);
+  padding: 0.625rem 0.625rem 0;
+  box-shadow: 0 1.125rem 2.5rem -1.125rem rgba(0, 0, 0, 0.55);
   transform: rotate(-2deg);
   transition: transform 0.5s cubic-bezier(0.2, 0.8, 0.2, 1);
 }
@@ -519,19 +546,19 @@ button:not(:disabled),
 }
 .tape {
   position: absolute;
-  width: 110px;
-  height: 30px;
+  width: 6.875rem;
+  height: 1.875rem;
   background: rgba(252, 238, 10, 0.82);
   box-shadow: 0 1px 2px rgba(0, 0, 0, 0.25);
 }
 .tape--tl {
-  top: -14px;
-  left: -34px;
+  top: -0.875rem;
+  left: -2.125rem;
   transform: rotate(-38deg);
 }
 .tape--tr {
-  top: -12px;
-  right: -36px;
+  top: -0.75rem;
+  right: -2.25rem;
   transform: rotate(40deg);
 }
 .rubber-stamp {
@@ -587,7 +614,7 @@ button:not(:disabled),
   background-color: var(--bone-dim);
   color: var(--ink);
   font-family: var(--font-mono);
-  box-shadow: 0 30px 60px -30px #000, 0 0 0 1px rgba(0, 0, 0, 0.4);
+  box-shadow: 0 1.875rem 3.75rem -1.875rem #000, 0 0 0 1px rgba(0, 0, 0, 0.4);
 }
 @media (min-width: 768px) {
   .dossier-sheet {
@@ -620,8 +647,8 @@ button:not(:disabled),
 .hazard {
   background: repeating-linear-gradient(
     -45deg,
-    var(--yellow) 0 14px,
-    #000 14px 28px
+    var(--yellow) 0 0.875rem,
+    #000 0.875rem 1.75rem
   );
 }
 
@@ -634,7 +661,7 @@ button:not(:disabled),
   background-image:
     linear-gradient(rgba(233, 227, 211, 0.05) 1px, transparent 1px),
     linear-gradient(90deg, rgba(233, 227, 211, 0.05) 1px, transparent 1px);
-  background-size: 28px 28px;
+  background-size: 1.75rem 1.75rem;
   border: 1px solid var(--line);
 }
 .blueprint img {
@@ -647,19 +674,19 @@ button:not(:disabled),
 }
 /* Cut-out PNGs get a hard "sticker" offset on hover */
 .blueprint--cutout:hover img {
-  filter: grayscale(0) drop-shadow(10px 10px 0 var(--yellow));
+  filter: grayscale(0) drop-shadow(0.625rem 0.625rem 0 var(--yellow));
   transform: scale(1.04) translate(-4px, -4px);
 }
 .tick {
   position: absolute;
-  width: 14px;
-  height: 14px;
+  width: 0.875rem;
+  height: 0.875rem;
   border: 0 solid var(--red);
 }
-.tick--tl { top: 10px; left: 10px; border-top-width: 2px; border-left-width: 2px; }
-.tick--tr { top: 10px; right: 10px; border-top-width: 2px; border-right-width: 2px; }
-.tick--bl { bottom: 10px; left: 10px; border-bottom-width: 2px; border-left-width: 2px; }
-.tick--br { bottom: 10px; right: 10px; border-bottom-width: 2px; border-right-width: 2px; }
+.tick--tl { top: 0.625rem; left: 0.625rem; border-top-width: 2px; border-left-width: 2px; }
+.tick--tr { top: 0.625rem; right: 0.625rem; border-top-width: 2px; border-right-width: 2px; }
+.tick--bl { bottom: 0.625rem; left: 0.625rem; border-bottom-width: 2px; border-left-width: 2px; }
+.tick--br { bottom: 0.625rem; right: 0.625rem; border-bottom-width: 2px; border-right-width: 2px; }
 
 .spec {
   display: grid;
@@ -685,24 +712,24 @@ button:not(:disabled),
   display: flex;
   flex-direction: column;
   gap: 2px;
-  padding: 10px 14px 10px 30px;
+  padding: 0.625rem 0.875rem 0.625rem 1.875rem;
   background:
-    radial-gradient(circle at 14px 50%, var(--ink) 0 4px, transparent 4.5px),
+    radial-gradient(circle at 0.875rem 50%, var(--ink) 0 4px, transparent 4.5px),
     var(--bone);
   color: var(--ink);
   font-family: var(--font-mono);
-  font-size: 10px;
+  font-size: 0.625rem;
   letter-spacing: 0.14em;
   text-transform: uppercase;
   line-height: 1.3;
-  clip-path: polygon(12px 0, 100% 0, 100% 100%, 12px 100%, 0 72%, 0 28%);
+  clip-path: polygon(0.75rem 0, 100% 0, 100% 100%, 0.75rem 100%, 0 72%, 0 28%);
   transform: rotate(-4deg);
-  transform-origin: 14px 50%;
+  transform-origin: 0.875rem 50%;
   transition: transform 0.4s cubic-bezier(0.2, 0.8, 0.2, 1);
 }
 .evtag strong {
   font-family: var(--font-display);
-  font-size: 22px;
+  font-size: 1.375rem;
   letter-spacing: 0;
   line-height: 1;
 }
@@ -724,24 +751,66 @@ article:hover > .evtag {
 .relic-frame:hover img {
   transform: scale(1.03);
 }
-.relic-frame__scan {
+/* Scan beam: a hard bright line with a shaded trail above it, i.e. on the
+   side it came from. Colour comes from --beam (r, g, b). */
+.scanbeam {
+  --beam: 255, 0, 60;
   position: absolute;
   left: 0;
   right: 0;
-  top: -30%;
-  height: 30%;
-  z-index: 2;
-  background: linear-gradient(rgba(255, 0, 60, 0), rgba(255, 0, 60, 0.22));
-  border-bottom: 1px solid var(--red);
   pointer-events: none;
   will-change: transform;
-  animation: relic-scan 5.5s cubic-bezier(0.5, 0, 0.5, 1) infinite;
+  background: linear-gradient(
+    to top,
+    rgba(var(--beam), 0.36) 0,
+    rgba(var(--beam), 0.2) 9%,
+    rgba(var(--beam), 0.1) 26%,
+    rgba(var(--beam), 0.035) 58%,
+    rgba(var(--beam), 0) 100%
+  );
+}
+/* Raster texture inside the trail, densest next to the line */
+.scanbeam::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: repeating-linear-gradient(
+    rgba(var(--beam), 0.2) 0 1px,
+    transparent 1px 4px
+  );
+  -webkit-mask-image: linear-gradient(to top, #000, transparent 62%);
+  mask-image: linear-gradient(to top, #000, transparent 62%);
+}
+/* The line itself: white-hot core, coloured ends, a short glow */
+.scanbeam::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 2px;
+  background: linear-gradient(
+    90deg,
+    rgba(var(--beam), 0) 0,
+    rgba(var(--beam), 1) 6%,
+    #fff 50%,
+    rgba(var(--beam), 1) 94%,
+    rgba(var(--beam), 0) 100%
+  );
+  box-shadow: 0 0 0.6rem 1px rgba(var(--beam), 0.75);
+}
+.relic-frame__scan {
+  top: -34%;
+  height: 34%;
+  z-index: 2;
+  animation: relic-scan 6s linear infinite;
 }
 @keyframes relic-scan {
-  to { transform: translateY(440%); }
+  0% { transform: translateY(0); }
+  72%, 100% { transform: translateY(400%); }
 }
 .meter {
-  height: 10px;
+  height: 0.625rem;
   background: repeating-linear-gradient(90deg, var(--line) 0 3px, transparent 3px 6px);
 }
 /* The fill takes the element's text colour */
@@ -760,7 +829,7 @@ article:hover > .evtag {
   background:
     radial-gradient(circle, var(--red) 0 17%, #000 17.5% 19%, transparent 19.5%),
     repeating-radial-gradient(circle, #0b0b0b 0 2px, #1b1b1b 2px 3px);
-  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.6), 0 10px 30px rgba(0, 0, 0, 0.5);
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.6), 0 0.625rem 1.875rem rgba(0, 0, 0, 0.5);
   transform: translateX(0);
   transition: transform 0.7s cubic-bezier(0.2, 0.8, 0.2, 1);
 }
@@ -789,7 +858,7 @@ article:hover > .evtag {
   appearance: none;
   -webkit-appearance: none;
   width: 100%;
-  height: 18px;
+  height: 1.125rem;
   background: transparent;
   cursor: pointer;
 }
@@ -804,13 +873,13 @@ article:hover > .evtag {
 .seek::-webkit-slider-thumb {
   -webkit-appearance: none;
   width: 6px;
-  height: 18px;
+  height: 1.125rem;
   margin-top: -7px;
   background: #000;
 }
 .seek::-moz-range-thumb {
   width: 6px;
-  height: 18px;
+  height: 1.125rem;
   border: 0;
   border-radius: 0;
   background: #000;
@@ -819,7 +888,7 @@ article:hover > .evtag {
   display: inline-flex;
   align-items: flex-end;
   gap: 2px;
-  height: 14px;
+  height: 0.875rem;
 }
 .eq i {
   width: 3px;
@@ -843,14 +912,14 @@ article:hover > .evtag {
   to { opacity: 1; }
 }
 @keyframes rise {
-  from { opacity: 0; transform: translateY(18px); }
+  from { opacity: 0; transform: translateY(1.125rem); }
   to { opacity: 1; transform: none; }
 }
 .switch {
   position: relative;
   flex-shrink: 0;
-  width: 46px;
-  height: 24px;
+  width: 2.875rem;
+  height: 1.5rem;
   border: 1px solid var(--line);
   transition: border-color 0.2s, background-color 0.2s;
 }
@@ -859,8 +928,8 @@ article:hover > .evtag {
   position: absolute;
   top: 3px;
   left: 3px;
-  width: 16px;
-  height: 16px;
+  width: 1rem;
+  height: 1rem;
   background: var(--dust);
   transition: transform 0.25s cubic-bezier(0.2, 0.8, 0.2, 1), background-color 0.2s;
 }
@@ -869,7 +938,7 @@ article:hover > .evtag {
   background: rgba(255, 0, 60, 0.12);
 }
 .switch[aria-checked="true"]::after {
-  transform: translateX(22px);
+  transform: translateX(1.375rem);
   background: var(--red);
 }
 .switch:disabled {
@@ -910,8 +979,8 @@ body.crt-viewport-active {
       rgba(30, 65, 255, 0.035) 2px 3px
     );
   box-shadow:
-    inset 0 0 38px rgba(0, 0, 0, 0.35),
-    inset 0 0 10px rgba(255, 0, 60, 0.1);
+    inset 0 0 2.375rem rgba(0, 0, 0, 0.35),
+    inset 0 0 0.625rem rgba(255, 0, 60, 0.1);
 }
 .crt-lite__scanlines {
   position: absolute;
@@ -922,13 +991,10 @@ body.crt-viewport-active {
   animation: crt-lite-flicker 3.2s steps(1, end) infinite;
 }
 .crt-lite__band {
-  position: absolute;
-  left: 0;
-  right: 0;
   top: -25vh;
   height: 22vh;
-  background: linear-gradient(rgba(233, 227, 211, 0), rgba(233, 227, 211, 0.04), rgba(233, 227, 211, 0));
-  will-change: transform;
+  --beam: 233, 227, 211;
+  opacity: 0.4;
   animation: crt-lite-roll 9s linear infinite;
 }
 @keyframes crt-lite-roll {
@@ -1029,33 +1095,33 @@ html[data-view="johnny"] .scrawl {
 .sticker {
   position: absolute;
   z-index: 3;
-  width: clamp(64px, 8vw, 112px);
+  width: clamp(4rem, 8vw, 7rem);
   pointer-events: none;
   filter: drop-shadow(0 0 0 #fff) drop-shadow(2px 0 0 #fff) drop-shadow(-2px 0 0 #fff)
-    drop-shadow(0 2px 0 #fff) drop-shadow(0 -2px 0 #fff) drop-shadow(0 6px 10px rgba(0, 0, 0, 0.45));
+    drop-shadow(0 2px 0 #fff) drop-shadow(0 -2px 0 #fff) drop-shadow(0 6px 0.625rem rgba(0, 0, 0, 0.45));
 }
 
 .view-toast {
   position: fixed;
   left: 50%;
-  bottom: 28px;
+  bottom: 1.75rem;
   z-index: 300;
   display: flex;
   align-items: center;
-  gap: 14px;
-  padding: 14px 20px;
+  gap: 0.875rem;
+  padding: 0.875rem 1.25rem;
   background: var(--yellow);
   color: #000;
-  box-shadow: 8px 8px 0 #000;
+  box-shadow: 0.5rem 0.5rem 0 #000;
   transform: translateX(-50%);
   animation: toast 5.5s cubic-bezier(0.2, 0.8, 0.2, 1) both;
   pointer-events: none;
-  max-width: calc(100vw - 32px);
+  max-width: calc(100vw - 2rem);
 }
 @keyframes toast {
-  0% { opacity: 0; transform: translate(-50%, 30px); }
+  0% { opacity: 0; transform: translate(-50%, 1.875rem); }
   8%, 88% { opacity: 1; transform: translate(-50%, 0); }
-  100% { opacity: 0; transform: translate(-50%, 30px); }
+  100% { opacity: 0; transform: translate(-50%, 1.875rem); }
 }
 
 /* --- Torn paper edge ----------------------------------------------------- */
@@ -1063,8 +1129,8 @@ html[data-view="johnny"] .scrawl {
 .tear {
   position: relative;
   z-index: 2;
-  height: 22px;
-  margin-bottom: -22px;
+  height: 1.375rem;
+  margin-bottom: -1.375rem;
   background-color: var(--bone);
   /* Roughly the tone the grain overlay gives the sheet above, to hide the seam */
   background-image: linear-gradient(rgba(10, 9, 8, 0.04), rgba(10, 9, 8, 0.04));
@@ -1100,8 +1166,8 @@ html[data-view="johnny"] .scrawl {
 .relic-fx i:nth-child(3) { top: 71%; height: 11vh; background: rgba(0, 240, 255, 0.1); animation-delay: 0.12s; }
 .relic-fx b {
   position: absolute;
-  right: 20px;
-  bottom: 20px;
+  right: 1.25rem;
+  bottom: 1.25rem;
   display: flex;
   flex-direction: column;
   font-family: var(--font-mono);
@@ -1111,17 +1177,17 @@ html[data-view="johnny"] .scrawl {
   animation: relic-warn 31s steps(1) infinite;
 }
 .relic-fx b span:first-child {
-  padding: 6px 12px;
+  padding: 6px 0.75rem;
   background: var(--red);
   color: #000;
-  font-size: 15px;
+  font-size: 0.9375rem;
   letter-spacing: 0.2em;
 }
 .relic-fx b span:last-child {
-  padding: 4px 12px;
+  padding: 4px 0.75rem;
   background: #000;
   color: #fff;
-  font-size: 9px;
+  font-size: 0.5625rem;
   letter-spacing: 0.22em;
 }
 @keyframes relic-tear {
@@ -1197,20 +1263,80 @@ html[data-view="johnny"] .scrawl {
 /* --- Cursor -------------------------------------------------------------- */
 
 .cursor-ring {
-  width: 28px;
-  height: 28px;
+  width: 1.75rem;
+  height: 1.75rem;
   border: 1.5px solid var(--bone);
   border-radius: 50%;
   transition: width 0.2s, height 0.2s, border-color 0.2s, background-color 0.2s, transform 0.15s;
 }
 .cursor-ring--link {
-  width: 52px;
-  height: 52px;
+  width: 3.25rem;
+  height: 3.25rem;
   border-color: var(--red);
   background: rgba(255, 0, 60, 0.18);
 }
 .cursor-ring--down {
   transform: translate(-50%, -50%) scale(0.75);
+}
+
+/* --- Performance mode (html[data-perf="lite"]) ---------------------------
+   For weak phones: nothing that needs an extra render surface, a blur, a
+   blend or a per-frame repaint. Layout and colours stay the same. */
+
+html[data-perf="lite"] {
+  scroll-behavior: auto;
+}
+html[data-perf="lite"] .nav--solid {
+  background: rgba(10, 9, 8, 0.97);
+  backdrop-filter: none;
+}
+html[data-perf="lite"] :is(.paper, .dossier-sheet)::before,
+html[data-perf="lite"] .hero__halftone {
+  display: none;
+}
+html[data-perf="lite"] :is(.evidence, .dossier-sheet) {
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.35);
+}
+html[data-perf="lite"] .dossier-sheet {
+  transform: none;
+}
+html[data-perf="lite"] .rubber-stamp {
+  mix-blend-mode: normal;
+}
+html[data-perf="lite"] :is(.blueprint, .evidence) img {
+  filter: none;
+  transition: none;
+}
+html[data-perf="lite"] .sticker {
+  filter: none;
+}
+html[data-perf="lite"] .hero__photo {
+  -webkit-mask-image: none;
+  mask-image: none;
+}
+html[data-perf="lite"] .scanbeam::before {
+  display: none;
+}
+html[data-perf="lite"] .scanbeam::after {
+  box-shadow: none;
+}
+html[data-perf="lite"]
+  :is(
+    .glitch::before,
+    .glitch::after,
+    .stamp-ring,
+    .relic-frame__scan,
+    .scrawl,
+    .vinyl::after,
+    .eq i
+  ) {
+  animation: none !important;
+}
+html[data-perf="lite"] .relic-frame__scan {
+  display: none;
+}
+html[data-perf="lite"] .marquee__track {
+  animation-duration: 48s;
 }
 
 /* --- Motion preferences -------------------------------------------------- */

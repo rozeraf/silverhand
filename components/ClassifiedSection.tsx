@@ -150,7 +150,7 @@ const ClassifiedSection = () => (
                 <div className="text-xs font-bold uppercase tracking-[0.2em]">
                   Arasaka Secure Archive
                 </div>
-                <div className="mt-1 text-[11px] uppercase tracking-[0.2em] opacity-60">
+                <div className="mt-1 text-[0.6875rem] uppercase tracking-[0.2em] opacity-60">
                   File 9482-BETA-X · 20.08.2023 · Eyes only
                 </div>
               </div>
@@ -163,7 +163,7 @@ const ClassifiedSection = () => (
               Что произошло
               <br />в башне на самом деле
             </h2>
-            <p className="mt-5 max-w-2xl text-sm leading-7 md:text-[15px]">
+            <p className="mt-5 max-w-2xl text-sm leading-7 md:text-[0.9375rem]">
               Энграмма — не протокол. Она хранит события такими, какими их
               запомнил и пересказал себе Сильверхенд. Ниже то, что удалось
               восстановить по независимым источникам.
@@ -178,20 +178,20 @@ const ClassifiedSection = () => (
               </blockquote>
               <p
                 lang="en"
-                className="mt-4 text-xs leading-relaxed opacity-70 md:text-[13px]"
+                className="mt-4 text-xs leading-relaxed opacity-70 md:text-[0.8125rem]"
               >
                 “What you saw was his subjective view of what happened. A
                 warped account of events he locked away in his subconscious
                 and replayed time and again. It bears no resemblance to the
                 truth.”
               </p>
-              <figcaption className="mt-4 text-[11px] font-bold uppercase tracking-[0.2em] text-blood">
+              <figcaption className="mt-4 text-[0.6875rem] font-bold uppercase tracking-[0.2em] text-blood">
                 Альт Каннингем · Cyberpunk 2077
               </figcaption>
             </figure>
             <p className="scrawl mt-3">Альт. и ты туда же.</p>
 
-            <p className="mt-6 text-[11px] uppercase tracking-[0.2em] opacity-60">
+            <p className="mt-6 text-[0.6875rem] uppercase tracking-[0.2em] opacity-60">
               Наведите на закрашенные фрагменты, чтобы снять цензуру
             </p>
 
@@ -208,7 +208,7 @@ const ClassifiedSection = () => (
                     <h3 className="font-display text-2xl font-bold uppercase leading-tight md:text-3xl">
                       {item.title}
                     </h3>
-                    <p className="mt-3 text-sm leading-7 md:text-[15px] md:leading-8">
+                    <p className="mt-3 text-sm leading-7 md:text-[0.9375rem] md:leading-8">
                       {item.body}
                     </p>
                     <p className="scrawl mt-3">{item.scrawl}</p>
@@ -218,7 +218,7 @@ const ClassifiedSection = () => (
             </ol>
 
             <div className="mt-6 border-2 border-ink">
-              <div className="hidden bg-ink text-[11px] font-bold uppercase tracking-[0.16em] text-bone md:grid md:grid-cols-[9rem_1fr_1fr]">
+              <div className="hidden bg-ink text-[0.6875rem] font-bold uppercase tracking-[0.16em] text-bone md:grid md:grid-cols-[9rem_1fr_1fr]">
                 <span className="p-3" />
                 <span className="p-3">Помнит энграмма</span>
                 <span className="p-3 text-acid">Установлено</span>
@@ -228,17 +228,17 @@ const ClassifiedSection = () => (
                   key={topic}
                   className="border-t border-ink/30 text-sm leading-relaxed first:border-t-0 md:grid md:grid-cols-[9rem_1fr_1fr] md:first:border-t"
                 >
-                  <span className="block bg-ink px-3 py-2 text-[11px] font-bold uppercase tracking-[0.14em] text-bone md:bg-transparent md:p-3 md:text-ink">
+                  <span className="block bg-ink px-3 py-2 text-[0.6875rem] font-bold uppercase tracking-[0.14em] text-bone md:bg-transparent md:p-3 md:text-ink">
                     {topic}
                   </span>
                   <span className="block px-3 pt-3 opacity-60 md:p-3">
-                    <span className="mb-1 block text-[10px] font-bold uppercase tracking-[0.14em] md:hidden">
+                    <span className="mb-1 block text-[0.625rem] font-bold uppercase tracking-[0.14em] md:hidden">
                       Помнит энграмма
                     </span>
                     {memory}
                   </span>
                   <span className="block p-3 font-bold md:border-l md:border-ink/30">
-                    <span className="mb-1 block text-[10px] uppercase tracking-[0.14em] text-blood md:hidden">
+                    <span className="mb-1 block text-[0.625rem] uppercase tracking-[0.14em] text-blood md:hidden">
                       Установлено
                     </span>
                     {fact}
@@ -250,7 +250,7 @@ const ClassifiedSection = () => (
               красивая табличка. меня там не было, что ли?
             </p>
 
-            <footer className="mt-10 flex flex-col justify-between gap-2 border-t border-ink/30 pt-4 text-[11px] uppercase tracking-[0.16em] opacity-60 md:flex-row">
+            <footer className="mt-10 flex flex-col justify-between gap-2 border-t border-ink/30 pt-4 text-[0.6875rem] uppercase tracking-[0.16em] opacity-60 md:flex-row">
               <span>
                 Сведено по настольному канону Cyberpunk (R. Talsorian Games)
               </span>

@@ -14,7 +14,7 @@ const RevealOnScroll = ({
   delay = 0,
   direction = "up",
 }: RevealProps) => {
-  const { enableAnimations } = useSettings();
+  const { motion: enableAnimations } = useSettings();
   const [isVisible, setIsVisible] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
 

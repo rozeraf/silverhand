@@ -7,6 +7,7 @@ interface Item {
   code: string;
   name: string;
   image: string;
+  srcSet?: string;
   alt: string;
   text: string;
   specs: [string, string][];
@@ -21,6 +22,7 @@ const MALORIAN: Item = {
   code: "Malorian_Arms_3516",
   name: "Malorian Arms 3516",
   image: ASSETS.malorianGun,
+  srcSet: ASSETS.srcSet.malorianGun,
   alt: "Пистолет Malorian Arms 3516",
   cover: true,
   text: "Джонни хотел получить настолько мощный пистолет, что его отдача сломала бы кисть обычному человеку. Использовать Malorian в полную силу можно только удерживая его кибернетической серебряной рукой.",
@@ -38,6 +40,7 @@ const ITEMS: Item[] = [
     code: "Arm_Arasaka_Prototype",
     name: "Серебряная рука",
     image: ASSETS.silverArm,
+    srcSet: ASSETS.srcSet.silverArm,
     alt: "Кибернетическая рука Джонни Сильверхенда",
     cover: true,
     text: "Кибернетический протез левой руки, полученный после ранения во время Центральноамериканской войны. Это не просто замена конечности, а символ его статуса «хромированного рокера».",
@@ -53,6 +56,7 @@ const ITEMS: Item[] = [
     code: "Vest_JS // Armor_Lvl_4",
     name: "Бронежилет",
     image: ASSETS.vest,
+    srcSet: ASSETS.srcSet.vest,
     alt: "Бронежилет Джонни Сильверхенда",
     text: "Джонни редко появляется без своего фирменного пуленепробиваемого жилета поверх майки. Для него сцена и поле боя — это одно и то же. Он всегда ожидает выстрела и всегда готов ответить.",
     specs: [
@@ -76,7 +80,7 @@ const EvidenceTag = ({ no, className = "" }: { no: number; className?: string })
 
 const Details = ({ item }: { item: Item }) => (
   <>
-    <p className="text-[15px] leading-relaxed text-bone/75 md:text-base">
+    <p className="text-[0.9375rem] leading-relaxed text-bone/75 md:text-base">
       {item.text}
     </p>
     <dl className="spec mt-6">
@@ -102,7 +106,7 @@ const Arsenal = () => (
     id="arsenal"
     className="relative overflow-hidden bg-ink py-20 md:py-32"
   >
-    <div className="mx-auto max-w-[1500px] px-5 md:px-10">
+    <div className="mx-auto max-w-[93.75rem] px-5 md:px-10">
       <SectionHead
         index="B1"
         kicker="Арсенал"
@@ -127,6 +131,9 @@ const Arsenal = () => (
           <div className="blueprint aspect-[4/3] md:aspect-[21/9]">
             <img
               src={MALORIAN.image}
+              srcSet={MALORIAN.srcSet}
+              sizes="(min-width: 1500px) 93rem, 100vw"
+              decoding="async"
               alt={MALORIAN.alt}
               loading="lazy"
               className="absolute inset-0 h-full w-full object-cover"
@@ -167,6 +174,9 @@ const Arsenal = () => (
               >
                 <img
                   src={item.image}
+                  srcSet={item.srcSet}
+                  sizes="(min-width: 768px) 50vw, 100vw"
+                  decoding="async"
                   alt={item.alt}
                   loading="lazy"
                   className={`absolute inset-0 h-full w-full ${item.cover ? "object-cover" : "object-contain p-6 md:p-10"}`}

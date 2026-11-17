@@ -10,7 +10,7 @@ const CrtOverlay = () =>
   createPortal(
     <div className="crt-lite" aria-hidden="true">
       <div className="crt-lite__scanlines" />
-      <div className="crt-lite__band" />
+      <div className="crt-lite__band scanbeam" />
     </div>,
     document.body,
   );

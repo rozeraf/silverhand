@@ -17,7 +17,7 @@ const Engram = () => (
       Relic
     </div>
 
-    <div className="relative mx-auto max-w-[1500px] px-5 md:px-10">
+    <div className="relative mx-auto max-w-[93.75rem] px-5 md:px-10">
       <SectionHead
         className="text-blood"
         index="B2"
@@ -36,11 +36,14 @@ const Engram = () => (
         <figure className="relic-frame aspect-[4/3] sm:aspect-[16/9]">
           <img
             src={ASSETS.engramCard}
+            srcSet={ASSETS.srcSet.engramCard}
+            sizes="(min-width: 1500px) 93rem, 100vw"
+            decoding="async"
             alt="Биочип Relic производства Arasaka"
             loading="lazy"
             className="absolute inset-0 h-full w-full object-cover"
           />
-          <div className="relic-frame__scan" />
+          <div className="relic-frame__scan scanbeam" />
           <span className="tick tick--tr" />
 
           <span className="label absolute left-4 top-4 z-10 text-bone/70 md:left-8 md:top-8">
@@ -54,7 +57,7 @@ const Engram = () => (
             </div>
           </figcaption>
 
-          <div className="absolute bottom-4 right-4 z-10 hidden w-44 bg-black/75 p-3 backdrop-blur-sm sm:block md:bottom-8 md:right-8 md:w-64 md:p-5">
+          <div className="absolute bottom-4 right-4 z-10 hidden w-44 bg-black/80 p-3 sm:block md:bottom-8 md:right-8 md:w-64 md:p-5">
             <div className="label text-blood">Синхронизация</div>
             <div className="mt-1 font-display text-4xl font-bold leading-none text-blood md:text-7xl">
               86%
@@ -99,7 +102,7 @@ const Engram = () => (
                 step={160}
                 parts={["Это не душа."]}
               />
-              <p className="mt-6 max-w-2xl text-[15px] font-medium leading-relaxed md:text-lg">
+              <p className="mt-6 max-w-2xl text-[0.9375rem] font-medium leading-relaxed md:text-lg">
                 Это цифровая копия сознания, записанная на экспериментальный
                 биочип Arasaka. Код, имитирующий мыслительные процессы,
                 воспоминания и эмоции оригинального Джонни. Он заперт в
@@ -132,7 +135,7 @@ const Engram = () => (
               <i className="block h-full w-[14%] bg-bone" />
               <i className="block h-full flex-1 bg-blood" />
             </div>
-            <p className="mt-6 text-[15px] leading-relaxed text-bone/70 md:text-base">
+            <p className="mt-6 text-[0.9375rem] leading-relaxed text-bone/70 md:text-base">
               Начав как враги, борющиеся за контроль над одним телом, Ви и
               Джонни проходят путь до глубокой духовной связи. Биочип не просто
               убивает Ви — он смешивает две личности.
@@ -150,7 +153,7 @@ const Engram = () => (
               <ArrowRight className="text-blood" size={36} />
               <span className="display text-5xl md:text-6xl">Друг</span>
             </div>
-            <p className="mt-6 text-[15px] leading-relaxed text-bone/70 md:text-base">
+            <p className="mt-6 text-[0.9375rem] leading-relaxed text-bone/70 md:text-base">
               Почему мы любим энграмму больше, чем живого Сильверхенда? Потому
               что эта версия способна на рост. Под влиянием Ви цифровой призрак
               осознаёт свои ошибки и становится другом, готовым уйти во тьму
@@ -172,7 +175,7 @@ const Engram = () => (
                 step={130}
                 parts={["«Никогда не переставай", ["бороться»", "text-blood"]]}
               />
-              <p className="mt-6 max-w-2xl text-[15px] leading-relaxed text-ink/80 md:text-base">
+              <p className="mt-6 max-w-2xl text-[0.9375rem] leading-relaxed text-ink/80 md:text-base">
                 Это кредо, которое он передаёт нам. Энграмма доказывает, что
                 даже цифровая копия человека может проявить больше человечности,
                 чем живые люди в Найт-Сити.

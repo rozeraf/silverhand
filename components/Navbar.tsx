@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import { Pause, Play, Settings, Terminal as TerminalIcon } from "lucide-react";
 import { usePlayer } from "../context/PlayerContext";
+import { useEscape, useScrollLock } from "../hooks/useOverlay";
 import { useScramble } from "use-scramble";
 import SamuraiButton from "./SamuraiButton";
 import { ASSETS } from "../assets";
@@ -34,36 +35,60 @@ const Navbar = ({
   const [active, setActive] = useState(0);
   const navRef = useRef<HTMLElement>(null);
 
+  useScrollLock(isOpen);
+  useEscape(isOpen, () => setIsOpen(false));
+
   useEffect(() => {
     const scrollContainer = useInternalScroll
       ? document.querySelector<HTMLElement>(".crt-scroll-container")
       : null;
     const scrollTarget: Window | HTMLElement = scrollContainer || window;
 
-    const handleScroll = () => {
+    const sections = NAV_LINKS.map((link) =>
+      document.querySelector<HTMLElement>(link.href),
+    );
+    let frame = 0;
+
+    const update = () => {
+      frame = 0;
       const el = scrollContainer || document.documentElement;
       const scrollTop = scrollContainer ? el.scrollTop : window.scrollY;
       const max = el.scrollHeight - el.clientHeight;
       setScrolled(scrollTop > 40);
-
-      // Active link: the last section whose top has passed 40% of the screen.
-      const line = window.innerHeight * 0.4;
-      let current = 0;
-      NAV_LINKS.forEach((link, i) => {
-        const section = document.querySelector(link.href);
-        if (section && section.getBoundingClientRect().top <= line) current = i;
-      });
-      setActive(current);
       // Playback head: written straight to a CSS variable, no re-render.
       navRef.current?.style.setProperty(
         "--progress",
         max > 0 ? String(Math.min(1, scrollTop / max)) : "0",
       );
+
+      // Active link: the last section whose top has passed 40% of the screen.
+      const line = window.innerHeight * 0.4;
+      let current = 0;
+      sections.forEach((section, i) => {
+        // Sections are lazy-loaded, so look them up again until they exist.
+        const node =
+          section ??
+          (sections[i] = document.querySelector<HTMLElement>(
+            NAV_LINKS[i].href,
+          ));
+        if (node && node.getBoundingClientRect().top <= line) current = i;
+      });
+      setActive(current);
     };
 
-    handleScroll();
+    // At most one measurement per frame, however many scroll events arrive.
+    const handleScroll = () => {
+      if (!frame) frame = requestAnimationFrame(update);
+    };
+
+    update();
     scrollTarget.addEventListener("scroll", handleScroll, { passive: true });
-    return () => scrollTarget.removeEventListener("scroll", handleScroll);
+    window.addEventListener("resize", handleScroll);
+    return () => {
+      cancelAnimationFrame(frame);
+      scrollTarget.removeEventListener("scroll", handleScroll);
+      window.removeEventListener("resize", handleScroll);
+    };
   }, [useInternalScroll]);
 
   const { ref: logoRef, replay: replayLogo } = useScramble({
@@ -94,7 +119,7 @@ const Navbar = ({
         ref={navRef}
         className={`nav ${scrolled || isOpen ? "nav--solid" : ""}`}
       >
-        <div className="mx-auto flex h-14 max-w-[1500px] items-center justify-between gap-6 px-5 md:px-10">
+        <div className="mx-auto flex h-14 max-w-[93.75rem] items-center justify-between gap-6 px-5 md:px-10">
           <a
             href="#hero"
             onClick={(e) => handleNavClick(e, "#hero")}

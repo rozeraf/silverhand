@@ -1,4 +1,11 @@
-import React, { useState, Suspense, lazy, useEffect } from "react";
+import React, {
+  useState,
+  Suspense,
+  lazy,
+  useEffect,
+  useLayoutEffect,
+} from "react";
+import { useEscape, useScrollLock } from "./hooks/useOverlay";
 import Terminal from "./components/Terminal";
 import Navbar from "./components/Navbar";
 import Hero from "./components/Hero";
@@ -22,6 +29,7 @@ const App = () => {
     enableNoise,
     enableScanlines,
     enableCustomCursor,
+    performanceMode,
     crtWarp,
   } = useSettings();
 
@@ -45,6 +53,20 @@ const App = () => {
     // Boot sequence is decided once per page load.
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  // CSS switches to cheap rendering under html[data-perf="lite"].
+  useLayoutEffect(() => {
+    document.documentElement.dataset.perf = performanceMode ? "lite" : "full";
+  }, [performanceMode]);
+
+  const overlayOpen = showTerminal || showSettings || showSamuraiPage;
+  useScrollLock(overlayOpen);
+  // Escape closes the topmost overlay.
+  useEscape(overlayOpen, () => {
+    if (showSettings) setShowSettings(false);
+    else if (showTerminal) setShowTerminal(false);
+    else setShowSamuraiPage(false);
+  });
 
   const handleOpenTerminal = () => {
     setSkipBoot(true);
@@ -81,7 +103,7 @@ const App = () => {
       )}
 
       {crtWarp ? <CrtShader /> : enableScanlines && <CrtOverlay />}
-      {enableNoise && !crtWarp && (
+      {enableNoise && !crtWarp && !performanceMode && (
         <>
           <div className="noise-bg"></div>
           <div className="relic-fx" aria-hidden="true">
