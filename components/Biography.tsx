@@ -34,7 +34,7 @@ const EVENTS = [
 const Biography = () => (
   <>
     <section id="bio" className="paper overflow-hidden py-20 md:py-32">
-      <div className="mx-auto max-w-[93.75rem] px-5 md:px-10">
+      <div className="mx-auto max-w-(--page) px-5 md:px-10">
         <SectionHead
           index="A1"
           kicker="Досье"
@@ -164,7 +164,7 @@ const Biography = () => (
     <div className="tear" aria-hidden="true" />
 
     <section className="relative overflow-hidden bg-blood pb-16 pt-24 text-black md:pb-24 md:pt-32">
-      <div className="mx-auto max-w-[93.75rem] px-5 md:px-10">
+      <div className="mx-auto max-w-(--page) px-5 md:px-10">
         <RevealOnScroll>
           <div className="section-index mb-6">Memory_log_114</div>
           <Kinetic

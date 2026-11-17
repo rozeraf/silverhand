@@ -55,7 +55,7 @@ const Hero = ({ onOpenSamurai }: HeroProps) => (
     <div className="hero__halftone" />
     <div className="hero__shade" />
 
-    <div className="relative z-10 mx-auto flex w-full max-w-[93.75rem] flex-1 flex-col justify-end px-5 pb-10 pt-28 md:px-10 md:pb-14">
+    <div className="relative z-10 mx-auto flex w-full max-w-(--page) flex-1 flex-col justify-end px-5 pb-10 pt-28 md:px-10 md:pb-14">
       <div className="mb-6 flex flex-wrap items-center gap-x-6 gap-y-2 md:mb-8">
         <span className="section-index text-blood">Engram 01</span>
         <span className="label text-bone/70">

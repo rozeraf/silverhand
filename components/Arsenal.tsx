@@ -111,7 +111,7 @@ const Arsenal = () => (
     id="arsenal"
     className="relative overflow-hidden bg-ink py-20 md:py-32"
   >
-    <div className="mx-auto max-w-[93.75rem] px-5 md:px-10">
+    <div className="mx-auto max-w-(--page) px-5 md:px-10">
       <SectionHead
         index="B1"
         kicker="Арсенал"

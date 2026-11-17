@@ -17,7 +17,7 @@ const Engram = () => (
       Relic
     </div>
 
-    <div className="relative mx-auto max-w-[93.75rem] px-5 md:px-10">
+    <div className="relative mx-auto max-w-(--page) px-5 md:px-10">
       <SectionHead
         className="text-blood"
         index="B2"

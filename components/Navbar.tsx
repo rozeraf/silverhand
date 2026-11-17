@@ -119,7 +119,7 @@ const Navbar = ({
         ref={navRef}
         className={`nav ${scrolled || isOpen ? "nav--solid" : ""}`}
       >
-        <div className="mx-auto flex h-14 max-w-[93.75rem] items-center justify-between gap-6 px-5 md:px-10">
+        <div className="mx-auto flex h-14 max-w-(--page) items-center justify-between gap-6 px-5 md:px-10">
           <a
             href="#hero"
             onClick={(e) => handleNavClick(e, "#hero")}

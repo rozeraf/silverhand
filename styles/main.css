@@ -33,6 +33,12 @@
 }
 
 :root {
+  /* Page width. 93.75rem fills a 16:9 screen (the root size is capped by the
+     height there, so on 21:9 it alone would leave a 16:9 column between empty
+     bars). 86vw takes over only on wider screens: the content stretches but
+     stops short of the edges. Text blocks keep their own max-width, so line
+     length doesn't grow with it. */
+  --page: max(93.75rem, 86vw);
   --ink: #0a0908;
   --coal: #141210;
   --line: #2b2724;
