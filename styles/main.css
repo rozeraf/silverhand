@@ -1577,7 +1577,7 @@ html[data-marker] .circled.is-written::after {
   height: 1.75rem;
   border: 1.5px solid var(--bone);
   border-radius: 50%;
-  transition: width 0.2s, height 0.2s, border-color 0.2s, background-color 0.2s, transform 0.15s;
+  transition: width 0.2s, height 0.2s, border-color 0.2s, background-color 0.2s, scale 0.15s;
 }
 .cursor-ring--link {
   width: 3.25rem;
@@ -1585,8 +1585,12 @@ html[data-marker] .circled.is-written::after {
   border-color: var(--red);
   background: rgba(255, 0, 60, 0.18);
 }
+/* Shrink with the standalone `scale` property: the ring is centred by
+   Tailwind v4's -translate-* utilities, which use `translate`, so a
+   transform: translate(-50%, -50%) here stacked a second offset and the
+   ring jumped up-left of the dot on every click. */
 .cursor-ring--down {
-  transform: translate(-50%, -50%) scale(0.75);
+  scale: 0.75;
 }
 
 /* --- Performance mode (html[data-perf="lite"]) ---------------------------
