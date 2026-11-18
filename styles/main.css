@@ -1073,16 +1073,36 @@ article:hover > .evtag {
   background: var(--dust);
   transition: transform 0.25s cubic-bezier(0.2, 0.8, 0.2, 1), background-color 0.2s;
 }
-.switch[aria-checked="true"] {
+/* The settings row is the real switch (role="switch"); this is its visual
+   part and follows data-on, which shows the value actually in effect. */
+.switch[data-on="true"] {
   border-color: var(--red);
   background: rgba(255, 0, 60, 0.12);
 }
-.switch[aria-checked="true"]::after {
+.switch[data-on="true"]::after {
   transform: translateX(1.375rem);
   background: var(--red);
 }
-.switch:disabled {
+.setting {
+  cursor: pointer;
+}
+.setting:hover:not(:disabled) .setting__label {
+  color: var(--red);
+}
+.setting:hover:not(:disabled) .switch {
+  border-color: var(--red);
+}
+.setting:focus-visible {
+  outline: 1px solid var(--red);
+  outline-offset: 2px;
+}
+/* Locked by another setting: dimmed, but the reason (in acid) stays legible. */
+.setting:disabled {
   cursor: not-allowed;
+}
+.setting:disabled .setting__dim,
+.setting:disabled .switch {
+  opacity: 0.45;
 }
 
 /* --- CRT (geometry warp) ------------------------------------------------- */
