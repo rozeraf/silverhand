@@ -5,7 +5,7 @@ import React, {
   FormEvent,
   KeyboardEvent,
 } from "react";
-import { Terminal as TerminalIcon, X } from "lucide-react";
+import { ArrowRight, X } from "lucide-react";
 import {
   SILVERHAND_USER,
   GUEST_USER,
@@ -59,6 +59,23 @@ const COMMANDS = [
   "whoami",
   "write",
 ];
+
+const BOOT_TEXT = [
+  "INITIALIZING RELIC BIOCHIP v2.0...",
+  "CHECKING NEURAL LINK...",
+  "ESTABLISHING SECURE CONNECTION...",
+  "LOADING ENGRAM DATA...",
+  "SYSTEM BREACH DETECTED... IGNORING...",
+  "OVERRIDING SECURITY PROTOCOLS...",
+  "CONNECTION ESTABLISHED.",
+  " ",
+  "WELCOME TO NIGHT CITY ARCHIVES.",
+  "HINT: You must authenticate to proceed. Try: login <username>",
+];
+
+// On phones, focusing the input pops the keyboard over the boot screen.
+const isTouch =
+  typeof matchMedia !== "undefined" && matchMedia("(pointer: coarse)").matches;
 
 const getStoredUser = (): TerminalUser => {
   const username = localStorage.getItem("username");
@@ -123,8 +140,16 @@ const Terminal = ({
         : input,
     );
 
-  const handleContainerClick = () => {
-    if (!isBooting) inputRef.current?.focus();
+  // Clicking anywhere focuses the prompt, except when the click ends a text
+  // selection: focusing the input would drop the selection before it can be
+  // copied. On touch, tapping the output itself doesn't pop up the keyboard
+  // either, so long-press selection works there too.
+  const handleContainerClick = (event: React.MouseEvent) => {
+    if (isBooting) return;
+    const selection = window.getSelection();
+    if (selection && !selection.isCollapsed && selection.toString()) return;
+    if (isTouch && (event.target as HTMLElement).closest("[data-line]")) return;
+    inputRef.current?.focus();
   };
 
   useEffect(() => {
@@ -148,30 +173,17 @@ const Terminal = ({
       return;
     }
 
-    const bootText = [
-      "INITIALIZING RELIC BIOCHIP v2.0...",
-      "CHECKING NEURAL LINK...",
-      "ESTABLISHING SECURE CONNECTION...",
-      "LOADING ENGRAM DATA...",
-      "SYSTEM BREACH DETECTED... IGNORING...",
-      "OVERRIDING SECURITY PROTOCOLS...",
-      "CONNECTION ESTABLISHED.",
-      " ",
-      "WELCOME TO NIGHT CITY ARCHIVES.",
-      "HINT: You must authenticate to proceed. Try: login <username>",
-    ];
-
     let delay = 0;
     setLines([]);
     setIsBooting(true);
 
-    bootText.forEach((line, index) => {
+    BOOT_TEXT.forEach((line, index) => {
       delay += Math.random() * 300 + 100;
       schedule(() => {
         setLines((prev) => [...prev, line]);
-        if (index === bootText.length - 1) {
+        if (index === BOOT_TEXT.length - 1) {
           setIsBooting(false);
-          schedule(() => inputRef.current?.focus(), 100);
+          if (!isTouch) schedule(() => inputRef.current?.focus(), 100);
         }
       }, delay);
     });
@@ -194,6 +206,7 @@ const Terminal = ({
           `uid=${SILVERHAND_USER.uid}(${SILVERHAND_USER.username}) gid=1000(${SILVERHAND_USER.primaryGroup})`,
           `groups=${SILVERHAND_USER.groups.join(",")}`,
           `Home directory: ${SILVERHAND_USER.home}`,
+          "ENGRAM VIEW ENABLED: the archive is now shown through Silverhand's eyes.",
         ]);
         localStorage.setItem("username", "Silverhand");
         localStorage.setItem("authenticated", "true");
@@ -732,31 +745,98 @@ const Terminal = ({
 
   if (!isOpen) return null;
 
+  const bootProgress = isBooting
+    ? Math.min(1, lines.length / BOOT_TEXT.length)
+    : 1;
+  const isJohnny = sessionUser.username === SILVERHAND_USER.username;
+
   return (
     <div
-      className="fixed inset-0 z-[150] bg-black font-mono text-[#d7d7d7] p-4 md:p-8 flex flex-col overflow-hidden"
+      className="fixed inset-0 z-[150] flex flex-col bg-ink font-mono text-bone lg:grid lg:grid-cols-[minmax(0,5fr)_minmax(0,7fr)]"
       onClick={handleContainerClick}
     >
-      <div className="absolute inset-0 bg-[linear-gradient(rgba(18,16,16,0)_50%,rgba(0,0,0,0.25)_50%),linear-gradient(90deg,rgba(255,0,0,0.06),rgba(255,0,0,0.02),rgba(255,0,0,0.06))] bg-[size:100%_2px,3px_100%] pointer-events-none z-0"></div>
-      <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,transparent_50%,rgba(0,0,0,0.4)_100%)] pointer-events-none z-0"></div>
-
-      <div className="relative z-10 w-full max-w-4xl mx-auto h-full flex flex-col border-2 border-[#ff003c] bg-black/90 shadow-[0_0_20px_rgba(255,0,60,0.2)]">
-        <div className="flex items-center justify-between bg-[#ff003c] text-black px-4 py-1 shrink-0">
-          <div className="flex items-center gap-2 font-bold">
-            <TerminalIcon size={16} />
-            <span>NETWATCH_TERMINAL // CONNECTION_SECURE</span>
-          </div>
+      {/* Status poster */}
+      <aside className="relative flex max-lg:[@media(max-height:32rem)]:hidden shrink-0 flex-col justify-between gap-6 overflow-hidden border-b border-line bg-black px-5 py-5 md:px-10 lg:border-b-0 lg:border-r lg:py-10">
+        <div className="flex items-center justify-between gap-4">
+          <span className="section-index text-blood">Relic biochip v2.0</span>
           <button
+            type="button"
             onClick={onClose}
-            className="hover:bg-black hover:text-[#ff003c] p-1"
+            aria-label="Закрыть терминал"
+            className="icon-btn lg:hidden"
           >
-            <X size={16} />
+            <X size={18} />
+          </button>
+        </div>
+
+        <div>
+          {isBooting ? (
+            <>
+              <div className="label mb-2 text-dust">Загрузка энграммы</div>
+              <div className="display text-[clamp(4.5rem,13vw,12rem)] tabular-nums text-blood">
+                {Math.round(bootProgress * 100)}%
+              </div>
+            </>
+          ) : (
+            <h2 className="display text-[clamp(3rem,7.5vw,7.5rem)]">
+              <span className="block">Johnny</span>
+              <span className="glitch block text-blood" data-text="Silverhand">
+                Silverhand
+              </span>
+            </h2>
+          )}
+          <div className="meter mt-5 text-blood">
+            <i style={{ width: `${bootProgress * 100}%` }} />
+          </div>
+        </div>
+
+        <dl className="spec hidden lg:grid">
+          <dt>Канал</dt>
+          <dd>{isBooting ? "Устанавливается…" : "NetWatch // защищён"}</dd>
+          <dt>Пользователь</dt>
+          <dd>{sessionUser.username}</dd>
+          <dt>Режим архива</dt>
+          <dd className={isJohnny ? "text-acid" : ""}>
+            {isJohnny ? "Глазами Джонни" : "Официальная запись"}
+          </dd>
+          <dt>ФС</dt>
+          <dd>POSIX, права применяются</dd>
+        </dl>
+
+        <div className="hidden lg:block">
+          <p className="mb-4 max-w-sm font-sans text-sm leading-relaxed text-dust">
+            В архиве спрятана загадка. Наберите{" "}
+            <span className="text-bone">help</span>, чтобы осмотреться, или
+            просто войдите на сайт.
+          </p>
+          <button type="button" onClick={onClose} className="btn btn--red">
+            Войти на сайт <ArrowRight size={16} />
+          </button>
+        </div>
+      </aside>
+
+      {/* Console */}
+      <div className="relative flex min-h-0 flex-1 flex-col">
+        <div className="flex shrink-0 items-center justify-between border-b border-line px-5 py-3 md:px-8">
+          <span className="label text-dust">
+            NetWatch_terminal //{" "}
+            <span className={isBooting ? "text-acid" : "text-blood"}>
+              {isBooting ? "Booting" : "Online"}
+            </span>
+          </span>
+          <button
+            type="button"
+            onClick={onClose}
+            aria-label="Закрыть терминал"
+            className="icon-btn hidden lg:inline-flex"
+          >
+            <X size={18} />
           </button>
         </div>
 
         <div
           ref={scrollRef}
-          className="flex-1 overflow-y-auto p-4 md:p-6 font-mono text-sm md:text-base leading-6 md:leading-7 tracking-[0.01em] custom-scrollbar"
+          className="custom-scrollbar flex-1 overflow-y-auto px-5 py-5 text-sm leading-6 md:px-8 md:py-7 md:text-[0.9375rem] md:leading-7"
         >
           {lines.map((line, i) => {
             const isCommand = line.startsWith("$ ");
@@ -772,19 +852,27 @@ const Terminal = ({
             return (
               <div
                 key={i}
-                className={`break-words whitespace-pre-wrap ${
+                data-line
+                className={`whitespace-pre-wrap break-words ${
                   isCommand
-                    ? "mt-4 border-t border-[#ff003c]/15 pt-3 font-semibold text-[#00f0ff]"
+                    ? "mt-4 border-t border-line pt-3 font-bold text-bone"
                     : isError
-                      ? "text-[#ff5577]"
+                      ? "text-blood"
                       : isHeading
-                        ? "mt-2 font-semibold text-[#fcee0a]"
+                        ? "mt-2 font-bold text-acid"
                         : line === ""
                           ? "h-3"
-                          : "text-[#d7d7d7]"
+                          : "text-bone/75"
                 }`}
               >
-                {line || "\u00a0"}
+                {isCommand ? (
+                  <>
+                    <span className="text-blood">$</span>
+                    {line.slice(1)}
+                  </>
+                ) : (
+                  line || "\u00a0"
+                )}
               </div>
             );
           })}
@@ -792,35 +880,46 @@ const Terminal = ({
           {!isBooting && (
             <form
               onSubmit={handleSubmit}
-              className="flex items-center mt-4 border-t border-[#ff003c]/20 pt-3"
+              className="mt-4 border-t border-line pt-3"
             >
-              <span className="mr-2 whitespace-nowrap text-[#fcee0a]">
+              {/* Two-line prompt: the long user@host:path line on top, so the
+                  input below gets the full width (on phones it used to get a
+                  sliver). */}
+              <div className="break-all text-acid">
                 {authMode === "password"
-                  ? "PASSWORD $"
-                  : `${sessionUser.username}@NC_NET:${cwd} $`}
-              </span>
-              <input
+                  ? "PASSWORD"
+                  : `${sessionUser.username}@NC_NET:${cwd}`}
+              </div>
+              <div className="flex items-center">
+                <span className="mr-2 text-blood" aria-hidden="true">
+                  $
+                </span>
+                <input
                 ref={inputRef}
                 type={authMode === "password" ? "password" : "text"}
                 value={input}
                 onChange={(e) => setInput(e.target.value)}
                 onKeyDown={handleInputKeyDown}
-                className="bg-transparent border-none outline-none flex-1 text-[#00f0ff] font-mono caret-[#00f0ff]"
-                autoFocus
+                aria-label="Команда терминала"
+                className="min-w-0 flex-1 border-none bg-transparent font-mono text-bone caret-blood outline-none"
+                autoFocus={!isTouch}
                 autoComplete="off"
                 spellCheck="false"
-              />
+                />
+              </div>
             </form>
           )}
 
           {isBooting && (
-            <div className="w-2 h-4 bg-[#ff003c] animate-pulse inline-block mt-2"></div>
+            <div className="mt-2 inline-block h-4 w-2 animate-pulse bg-blood"></div>
           )}
         </div>
 
-        <div className="p-2 border-t border-[#ff003c]/30 text-xs text-[#fcee0a] flex justify-between uppercase">
-          <span>STATUS: {isBooting ? "BOOTING..." : "ONLINE"}</span>
-          <span>FS: POSIX // PERMISSIONS ENFORCED</span>
+        <div className="flex shrink-0 items-center justify-between gap-4 border-t border-line px-5 py-3 md:px-8 lg:hidden">
+          <span className="label text-dust">help — список команд</span>
+          <button type="button" onClick={onClose} className="btn btn--red btn--sm">
+            Войти на сайт <ArrowRight size={14} />
+          </button>
         </div>
       </div>
     </div>

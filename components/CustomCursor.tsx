@@ -2,6 +2,25 @@ import React, { useEffect, useState, useRef } from "react";
 import { createPortal } from "react-dom";
 import { useSettings } from "../context/SettingsContext";
 
+// Last known pointer position, tracked even while the site cursor is off, so
+// turning it on (or remounting it) puts it under the mouse straight away
+// instead of off-screen until the next move.
+const lastPointer = { x: -100, y: -100 };
+if (typeof document !== "undefined") {
+  document.addEventListener(
+    "mousemove",
+    (e) => {
+      lastPointer.x = e.clientX;
+      lastPointer.y = e.clientY;
+    },
+    { passive: true, capture: true },
+  );
+}
+
+/** Things that react to a click: the ring grows over them. */
+const INTERACTIVE =
+  'a, button, label, input, select, textarea, summary, [role="button"], [role="switch"], [role="tab"], [tabindex]:not([tabindex="-1"]), .redact';
+
 interface CustomCursorProps {
   forceEnabled?: boolean;
   applyCrtWarp?: boolean;
@@ -22,10 +41,10 @@ const CustomCursor = ({
   useEffect(() => {
     if (!isEnabled) return;
 
-    const mMove = (el: MouseEvent) => {
+    const place = (clientX: number, clientY: number) => {
       if (cursorRef.current) {
-        let x = el.clientX;
-        let y = el.clientY;
+        let x = clientX;
+        let y = clientY;
 
         if (applyCrtWarp) {
           const normalizedX = (x / window.innerWidth) * 2 - 1;
@@ -46,16 +65,13 @@ const CustomCursor = ({
 
         cursorRef.current.style.transform = `translate3d(${x}px, ${y}px, 0)`;
       }
+    };
+    place(lastPointer.x, lastPointer.y);
 
-      const target = el.target as HTMLElement;
-      const isLink =
-        target.tagName === "A" ||
-        target.tagName === "BUTTON" ||
-        target.closest("a") !== null ||
-        target.closest("button") !== null ||
-        target.getAttribute("role") === "button";
-
-      setLinkHovered(isLink);
+    const mMove = (el: MouseEvent) => {
+      place(el.clientX, el.clientY);
+      const target = el.target as Element | null;
+      setLinkHovered(!!target?.closest?.(INTERACTIVE));
     };
 
     const mDown = () => setClicked(true);
@@ -95,37 +111,10 @@ const CustomCursor = ({
         willChange: "transform",
       }}
     >
-      <div className="relative -translate-x-1/2 -translate-y-1/2 transition-all duration-150 ease-out">
-        <div
-          className={`w-1 h-1 bg-[#ff003c] rounded-full absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 ${clicked ? "scale-150" : "scale-100"}`}
-        />
-
-        <div
-          className={`
-            absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2
-            border border-[#00f0ff]
-            transition-all duration-300
-            ${linkHovered ? "w-8 h-8 rotate-45 border-[#fcee0a] border-2" : "w-5 h-5 rotate-0"}
-            ${clicked ? "scale-75" : "scale-100"}
-        `}
-        >
-          {!linkHovered && (
-            <>
-              <div className="absolute -top-[1px] -left-[1px] w-1.5 h-1.5 border-t border-l border-[#00f0ff]"></div>
-              <div className="absolute -top-[1px] -right-[1px] w-1.5 h-1.5 border-t border-r border-[#00f0ff]"></div>
-              <div className="absolute -bottom-[1px] -left-[1px] w-1.5 h-1.5 border-b border-l border-[#00f0ff]"></div>
-              <div className="absolute -bottom-[1px] -right-[1px] w-1.5 h-1.5 border-b border-r border-[#00f0ff]"></div>
-            </>
-          )}
-        </div>
-
-        <div
-          className={`absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[300vmax] h-[1px] bg-[#00f0ff] opacity-10 transition-opacity pointer-events-none ${clicked ? "opacity-30" : ""}`}
-        ></div>
-        <div
-          className={`absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[1px] h-[300vmax] bg-[#00f0ff] opacity-10 transition-opacity pointer-events-none ${clicked ? "opacity-30" : ""}`}
-        ></div>
-      </div>
+      <div className="absolute left-0 top-0 h-1.5 w-1.5 -translate-x-1/2 -translate-y-1/2 rounded-full bg-blood" />
+      <div
+        className={`cursor-ring absolute left-0 top-0 -translate-x-1/2 -translate-y-1/2 ${linkHovered ? "cursor-ring--link" : ""} ${clicked ? "cursor-ring--down" : ""}`}
+      />
     </div>,
     document.body,
   );

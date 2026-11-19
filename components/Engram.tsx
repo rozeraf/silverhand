@@ -1,191 +1,201 @@
-import React, { useState } from "react";
-import GlitchText from "./GlitchText";
+import React from "react";
+import { ArrowRight } from "lucide-react";
 import RevealOnScroll from "./RevealOnScroll";
-import { Network, Fingerprint, RefreshCcw, UserPlus } from "lucide-react";
+import SectionHead from "./SectionHead";
+import Kinetic from "./Kinetic";
 import { ASSETS } from "../assets";
-import { useSettings } from "../context/SettingsContext";
 
-const Engram = () => {
-  const { enableScanlines } = useSettings();
-  const [rotation, setRotation] = useState({ x: 0, y: 0 });
-
-  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
-    if (enableScanlines) return;
-    const card = e.currentTarget;
-    const rect = card.getBoundingClientRect();
-    const x = e.clientX - rect.left;
-    const y = e.clientY - rect.top;
-
-    const centerX = rect.width / 2;
-    const centerY = rect.height / 2;
-
-    const rotateX = ((y - centerY) / centerY) * -10;
-    const rotateY = ((x - centerX) / centerX) * 10;
-
-    setRotation({ x: rotateX, y: rotateY });
-  };
-
-  const handleMouseLeave = () => {
-    setRotation({ x: 0, y: 0 });
-  };
-
-  return (
-    <section
-      id="engram"
-      className="py-16 md:py-24 bg-[#050505] relative border-t border-[#fcee0a]/20 overflow-hidden"
+const Engram = () => (
+  <section
+    id="engram"
+    className="relative overflow-hidden border-t border-line bg-[#070505] py-20 md:py-32"
+  >
+    <div
+      className="display outline-text pointer-events-none absolute -right-[4vw] top-10 text-[30vw] leading-none text-blood/15"
+      aria-hidden="true"
     >
-      <div className="absolute right-0 top-0 w-full md:w-1/3 h-full bg-[#00f0ff]/5 transform skew-x-12 pointer-events-none"></div>
+      Relic
+    </div>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-        <RevealOnScroll className="flex flex-col md:flex-row justify-between items-start md:items-end mb-12 md:mb-16 border-b border-[#333] pb-6 md:pb-8">
-          <div className="max-w-2xl">
-            <h2 className="text-[#fcee0a] font-cyber text-lg md:text-xl mb-2 flex items-center gap-2">
-              <span className="w-2 h-2 bg-[#fcee0a] animate-ping"></span>
-              ПРОЕКТ RELIC
-            </h2>
-            <GlitchText
-              text="ЭНГРАММА И ВТОРАЯ ЖИЗНЬ"
-              as="h2"
-              className="text-3xl md:text-5xl font-black uppercase text-white leading-tight"
-              color="white"
-            />
-          </div>
-          <div className="mt-4 md:mt-0 md:block text-left md:text-right">
-            <p className="text-[#00f0ff] font-mono text-[10px] md:text-xs">
-              SECURE_DATA_SHARD
-              <br />
-              ENCRYPTED_Lv5
-            </p>
-          </div>
-        </RevealOnScroll>
+    <div className="relative mx-auto max-w-(--page) px-5 md:px-10">
+      <SectionHead
+        className="text-blood"
+        index="B2"
+        kicker="Проект Relic"
+        title={
+          <span className="text-bone">
+            Энграмма
+            <br />и вторая жизнь
+          </span>
+        }
+        aside={<>Secure_data_shard · Encrypted_Lv5</>}
+      />
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 md:gap-16 items-start md:items-center">
-          <RevealOnScroll
-            direction="right"
-            className="relative order-1 perspective-1000"
-          >
-            <div className="absolute inset-0 bg-[#00f0ff] blur-[60px] md:blur-[100px] opacity-10 rounded-full"></div>
+      {/* The chip itself, in its own colours */}
+      <RevealOnScroll>
+        <figure className="relic-frame aspect-[4/3] sm:aspect-[16/9]">
+          <img
+            src={ASSETS.engramCard}
+            srcSet={ASSETS.srcSet.engramCard}
+            sizes="(min-width: 1500px) 93rem, 100vw"
+            decoding="async"
+            alt="Биочип Relic производства Arasaka"
+            loading="lazy"
+            className="absolute inset-0 h-full w-full object-cover"
+          />
+          <div className="relic-frame__scan scanbeam" />
+          <span className="tick tick--tr" />
 
-            <div
-              className="relative border-2 border-[#333] bg-[#111] p-1 md:p-2 shadow-[0_0_20px_rgba(0,240,255,0.1)] transition-transform duration-100 ease-out max-w-sm mx-auto lg:max-w-none"
-              onMouseMove={handleMouseMove}
-              onMouseLeave={handleMouseLeave}
-              style={{
-                transform: enableScanlines
-                  ? "none"
-                  : `rotateX(${rotation.x}deg) rotateY(${rotation.y}deg)`,
-                transformStyle: enableScanlines ? "flat" : "preserve-3d",
-              }}
-            >
-              <div className="relative overflow-hidden group">
-                <img
-                  src={ASSETS.engramCard}
-                  alt="Relic Biochip"
-                  loading="lazy"
-                  className="w-full h-auto grayscale group-hover:grayscale-0 transition-all duration-700 contrast-125 scale-100 group-hover:scale-105"
-                />
-                <div className="absolute inset-0 bg-[#ff003c] mix-blend-multiply opacity-0 group-hover:opacity-20 transition-opacity"></div>
-                <div className="absolute inset-0 bg-[#00f0ff] mix-blend-screen opacity-0 group-hover:opacity-20 transition-opacity translate-x-1"></div>
-              </div>
+          <span className="label absolute left-4 top-4 z-10 text-bone/70 md:left-8 md:top-8">
+            Biochip // Relic 2.0 · Arasaka
+          </span>
 
-              <div className="absolute bottom-2 left-2 md:bottom-4 md:left-4 bg-black/90 px-3 py-1 md:px-4 md:py-2 border-l-2 border-[#ff003c] backdrop-blur-sm transform translate-z-10">
-                <span className="text-white font-mono text-[10px] md:text-xs block">
-                  SUBJECT: V & SILVERHAND
-                </span>
-                <span className="text-[#ff003c] font-mono text-[10px] md:text-xs animate-pulse">
-                  SYNCHRONIZATION: 86%
-                </span>
-              </div>
+          <figcaption className="absolute bottom-4 left-4 z-10 hidden sm:block md:bottom-8 md:left-8">
+            <div className="label text-blood">Subject</div>
+            <div className="font-display text-2xl font-bold uppercase leading-tight md:text-5xl">
+              V &amp; Silverhand
             </div>
+          </figcaption>
 
-            <div className="grid grid-cols-2 gap-3 md:gap-4 mt-6 md:mt-8 max-w-sm mx-auto lg:max-w-none">
-              <div className="bg-[#1a1a1a] p-3 md:p-4 border-b-2 border-[#fcee0a] hover:bg-[#222] transition-colors group cursor-crosshair">
-                <h4 className="text-[#fcee0a] text-xs md:text-sm font-bold mb-1 flex justify-between">
-                  ТИП ДАННЫХ
-                  <span className="opacity-0 group-hover:opacity-100 transition-opacity text-[10px]">
-                    [SCAN]
-                  </span>
-                </h4>
-                <p className="text-[10px] md:text-xs text-gray-400">
-                  Псевдо-личность, Конструкт
-                </p>
-              </div>
-              <div className="bg-[#1a1a1a] p-3 md:p-4 border-b-2 border-[#00f0ff] hover:bg-[#222] transition-colors group cursor-crosshair">
-                <h4 className="text-[#00f0ff] text-xs md:text-sm font-bold mb-1 flex justify-between">
-                  СТАТУС
-                  <span className="opacity-0 group-hover:opacity-100 transition-opacity text-[10px]">
-                    [ACTIVE]
-                  </span>
-                </h4>
-                <p className="text-[10px] md:text-xs text-gray-400">
-                  Перезапись носителя
-                </p>
-              </div>
+          <div className="absolute bottom-4 right-4 z-10 hidden w-44 bg-black/80 p-3 sm:block md:bottom-8 md:right-8 md:w-64 md:p-5">
+            <div className="label text-blood">Синхронизация</div>
+            <div className="mt-1 font-display text-4xl font-bold leading-none text-blood md:text-7xl">
+              86%
             </div>
-          </RevealOnScroll>
+            <div className="meter mt-2 text-blood md:mt-3">
+              <i style={{ width: "86%" }} />
+            </div>
+            <div className="label mt-2 hidden text-dust md:block">
+              Статус: <span className="text-bone">перезапись носителя</span>
+            </div>
+          </div>
+        </figure>
 
-          <div className="order-2 space-y-8 md:space-y-10">
-            {[
-              {
-                icon: <Network size={20} />,
-                title: "Что такое Энграмма?",
-                text: "Это не душа. Это цифровая копия сознания, записанная на экспериментальный биочип Arasaka. Код, имитирующий мыслительные процессы, воспоминания и эмоции оригинального Джонни. Он заперт в микросхеме, пока несчастный случай не подключает его к нервной системе Ви.",
-                color: "text-[#ff003c]",
-                ring: "group-hover:ring-[#ff003c]",
-              },
-              {
-                icon: <UserPlus size={20} />,
-                title: "Симбиоз с Ви",
-                text: "Начав как враги, борющиеся за контроль над одним телом, Ви и Джонни проходят путь до глубокой духовной связи. Биочип не просто убивает Ви — он смешивает две личности. Ви становится жестче и решительнее, а Джонни... Джонни учится тому, чего был лишен при жизни: эмпатии.",
-                color: "text-[#00f0ff]",
-                ring: "group-hover:ring-[#00f0ff]",
-              },
-              {
-                icon: <RefreshCcw size={20} />,
-                title: "Трансформация",
-                text: "Почему мы любим энграмму больше, чем живого Сильверхенда? Потому что эта версия способна на рост. Под влиянием Ви цифровой призрак осознает свои ошибки. От самовлюбленного нарцисса он эволюционирует в друга, готового уйти во тьму киберпространства, чтобы дать Ви шанс на жизнь.",
-                color: "text-[#fcee0a]",
-                ring: "group-hover:ring-[#fcee0a]",
-              },
-              {
-                icon: <Fingerprint size={20} />,
-                title: "Наследие",
-                text: '"Никогда не переставай бороться." — это кредо, которое он передает нам. Энграмма доказывает, что даже цифровая копия человека может проявить больше человечности, чем живые люди в Найт-Сити.',
-                color: "text-white",
-                ring: "group-hover:ring-white",
-              },
-            ].map((item, idx) => (
-              <RevealOnScroll
-                key={idx}
-                delay={idx * 150}
-                direction="left"
-                className="flex gap-4 group"
-              >
-                <div className="flex-shrink-0 mt-1 relative">
-                  <div
-                    className={`w-8 h-8 md:w-10 md:h-10 bg-[#222] flex items-center justify-center ${item.color} group-hover:scale-110 transition-transform duration-300 ring-1 ring-transparent ${item.ring}`}
-                  >
-                    {React.cloneElement(item.icon as React.ReactElement<any>, {
-                      size: 18,
-                    })}
-                  </div>
-                  <div className="absolute inset-0 bg-current opacity-20 blur-lg rounded-full transform scale-0 group-hover:scale-150 transition-transform"></div>
-                </div>
-                <div>
-                  <h3 className="text-xl md:text-2xl font-cyber font-bold text-white mb-2 group-hover:translate-x-2 transition-transform">
-                    {item.title}
-                  </h3>
-                  <p className="text-gray-400 leading-relaxed text-xs md:text-sm lg:text-base">
-                    {item.text}
-                  </p>
-                </div>
-              </RevealOnScroll>
-            ))}
+        {/* On phones the readouts sit under the image instead of over the chip */}
+        <div className="mt-4 flex items-end justify-between gap-4 sm:hidden">
+          <div>
+            <div className="label text-blood">Subject</div>
+            <div className="font-display text-2xl font-bold uppercase leading-tight">
+              V &amp; Silverhand
+            </div>
+          </div>
+          <div className="w-32 text-right">
+            <div className="font-display text-4xl font-bold leading-none text-blood">
+              86%
+            </div>
+            <div className="meter mt-2 text-blood">
+              <i style={{ width: "86%" }} />
+            </div>
           </div>
         </div>
+      </RevealOnScroll>
+
+      {/* Four theses, four different shapes */}
+      <div className="mt-5 grid grid-cols-1 gap-5 lg:grid-cols-12">
+        <RevealOnScroll className="lg:col-span-7">
+          <article className="flex h-full flex-col justify-between bg-blood p-7 text-black md:p-10">
+            <div className="label font-bold">01 · Что такое энграмма?</div>
+            <div>
+              <Kinetic
+                as="h3"
+                className="display mt-10 block text-[clamp(3.5rem,8vw,7.5rem)]"
+                step={160}
+                parts={["Это не душа."]}
+              />
+              <p className="mt-6 max-w-2xl text-[0.9375rem] font-medium leading-relaxed md:text-lg">
+                Это цифровая копия сознания, записанная на экспериментальный
+                биочип Arasaka. Код, имитирующий мыслительные процессы,
+                воспоминания и эмоции оригинального Джонни. Он заперт в
+                микросхеме, пока несчастный случай не подключает его к нервной
+                системе Ви.
+              </p>
+            </div>
+          </article>
+        </RevealOnScroll>
+
+        <RevealOnScroll delay={120} className="lg:col-span-5">
+          <article className="flex h-full flex-col border border-line p-7 md:p-10">
+            <div className="label text-blood">02 · Симбиоз с Ви</div>
+            <div className="mt-8 grid grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)] items-end gap-3">
+              <div>
+                <div className="display text-[clamp(2rem,9vw,4rem)] lg:text-[clamp(2rem,3.5vw,4.25rem)]">
+                  Ви
+                </div>
+                <div className="label mt-2 text-dust">жёстче, решительнее</div>
+              </div>
+              <span className="display pb-7 text-2xl text-blood md:text-3xl">×</span>
+              <div className="text-right">
+                <div className="display text-[clamp(2rem,9vw,4rem)] text-blood lg:text-[clamp(2rem,3.5vw,4.25rem)]">
+                  Джонни
+                </div>
+                <div className="label mt-2 text-dust">учится эмпатии</div>
+              </div>
+            </div>
+            <div className="mt-5 flex h-2">
+              <i className="block h-full w-[14%] bg-bone" />
+              <i className="block h-full flex-1 bg-blood" />
+            </div>
+            <p className="mt-6 text-[0.9375rem] leading-relaxed text-bone/70 md:text-base">
+              Начав как враги, борющиеся за контроль над одним телом, Ви и
+              Джонни проходят путь до глубокой духовной связи. Биочип не просто
+              убивает Ви — он смешивает две личности.
+            </p>
+          </article>
+        </RevealOnScroll>
+
+        <RevealOnScroll className="lg:col-span-5">
+          <article className="flex h-full flex-col border border-line p-7 md:p-10">
+            <div className="label text-blood">03 · Трансформация</div>
+            <div className="mt-8 flex flex-wrap items-center gap-x-5 gap-y-2">
+              <span className="display outline-text text-5xl text-bone/60 md:text-6xl">
+                Нарцисс
+              </span>
+              <ArrowRight className="text-blood" size={36} />
+              <span className="display text-5xl md:text-6xl">Друг</span>
+            </div>
+            <p className="mt-6 text-[0.9375rem] leading-relaxed text-bone/70 md:text-base">
+              Почему мы любим энграмму больше, чем живого Сильверхенда? Потому
+              что эта версия способна на рост. Под влиянием Ви цифровой призрак
+              осознаёт свои ошибки и становится другом, готовым уйти во тьму
+              киберпространства, чтобы дать Ви шанс на жизнь.
+            </p>
+            <p className="scrawl scrawl--dark mt-auto pt-6">
+              «нарцисс». ладно. было дело.
+            </p>
+          </article>
+        </RevealOnScroll>
+
+        <RevealOnScroll delay={120} className="lg:col-span-7">
+          <article className="paper flex h-full flex-col justify-between p-7 md:p-10">
+            <div className="label font-bold">04 · Наследие</div>
+            <div>
+              <Kinetic
+                as="blockquote"
+                className="display mt-10 text-[clamp(2.75rem,6vw,5.5rem)]"
+                step={130}
+                parts={["«Никогда не переставай", ["бороться»", "text-blood"]]}
+              />
+              <p className="mt-6 max-w-2xl text-[0.9375rem] leading-relaxed text-ink/80 md:text-base">
+                Это кредо, которое он передаёт нам. Энграмма доказывает, что
+                даже цифровая копия человека может проявить больше человечности,
+                чем живые люди в Найт-Сити.
+              </p>
+            </div>
+          </article>
+        </RevealOnScroll>
       </div>
-    </section>
-  );
-};
+
+      <div className="mt-8 flex flex-col justify-between gap-4 md:flex-row md:items-end">
+        <dl className="spec md:min-w-[26rem]">
+          <dt>Тип данных</dt>
+          <dd>Псевдоличность, конструкт</dd>
+        </dl>
+        <p className="scrawl scrawl--dark scrawl--right">
+          я не «конструкт». я — это я.
+        </p>
+      </div>
+    </div>
+  </section>
+);
 
 export default Engram;

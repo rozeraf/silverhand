@@ -1,5 +1,7 @@
-import React, { useState, useEffect } from "react";
-import { Menu, X, Settings, Terminal as TerminalIcon } from "lucide-react";
+import React, { useState, useEffect, useRef } from "react";
+import { Pause, Play, Settings, Terminal as TerminalIcon } from "lucide-react";
+import { usePlayer } from "../context/PlayerContext";
+import { useEscape, useScrollLock } from "../hooks/useOverlay";
 import { useScramble } from "use-scramble";
 import SamuraiButton from "./SamuraiButton";
 import { ASSETS } from "../assets";
@@ -9,16 +11,32 @@ interface NavbarProps {
   onOpenSettings?: () => void;
   onOpenTerminal?: () => void;
   useInternalScroll?: boolean;
+  /** Logged in as Silverhand: the site is shown through his eyes. */
+  johnnyView?: boolean;
 }
+
+const NAV_LINKS = [
+  { name: "Главная", href: "#hero" },
+  { name: "Досье", href: "#bio" },
+  { name: "Арсенал", href: "#arsenal" },
+  { name: "Энграмма", href: "#engram" },
+];
 
 const Navbar = ({
   onOpenSamurai,
   onOpenSettings,
   onOpenTerminal,
   useInternalScroll = false,
+  johnnyView = false,
 }: NavbarProps) => {
+  const player = usePlayer();
   const [isOpen, setIsOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const [active, setActive] = useState(0);
+  const navRef = useRef<HTMLElement>(null);
+
+  useScrollLock(isOpen);
+  useEscape(isOpen, () => setIsOpen(false));
 
   useEffect(() => {
     const scrollContainer = useInternalScroll
@@ -26,17 +44,51 @@ const Navbar = ({
       : null;
     const scrollTarget: Window | HTMLElement = scrollContainer || window;
 
-    const handleScroll = () => {
-      const scrollTop =
-        scrollTarget instanceof Window
-          ? window.scrollY
-          : scrollTarget.scrollTop;
-      setScrolled(scrollTop > 50);
+    const sections = NAV_LINKS.map((link) =>
+      document.querySelector<HTMLElement>(link.href),
+    );
+    let frame = 0;
+
+    const update = () => {
+      frame = 0;
+      const el = scrollContainer || document.documentElement;
+      const scrollTop = scrollContainer ? el.scrollTop : window.scrollY;
+      const max = el.scrollHeight - el.clientHeight;
+      setScrolled(scrollTop > 40);
+      // Playback head: written straight to a CSS variable, no re-render.
+      navRef.current?.style.setProperty(
+        "--progress",
+        max > 0 ? String(Math.min(1, scrollTop / max)) : "0",
+      );
+
+      // Active link: the last section whose top has passed 40% of the screen.
+      const line = window.innerHeight * 0.4;
+      let current = 0;
+      sections.forEach((section, i) => {
+        // Sections are lazy-loaded, so look them up again until they exist.
+        const node =
+          section ??
+          (sections[i] = document.querySelector<HTMLElement>(
+            NAV_LINKS[i].href,
+          ));
+        if (node && node.getBoundingClientRect().top <= line) current = i;
+      });
+      setActive(current);
     };
 
-    handleScroll();
+    // At most one measurement per frame, however many scroll events arrive.
+    const handleScroll = () => {
+      if (!frame) frame = requestAnimationFrame(update);
+    };
+
+    update();
     scrollTarget.addEventListener("scroll", handleScroll, { passive: true });
-    return () => scrollTarget.removeEventListener("scroll", handleScroll);
+    window.addEventListener("resize", handleScroll);
+    return () => {
+      cancelAnimationFrame(frame);
+      scrollTarget.removeEventListener("scroll", handleScroll);
+      window.removeEventListener("resize", handleScroll);
+    };
   }, [useInternalScroll]);
 
   const { ref: logoRef, replay: replayLogo } = useScramble({
@@ -52,161 +104,177 @@ const Navbar = ({
     playOnMount: !useInternalScroll,
   });
 
-  const navLinks = [
-    { name: "ГЛАВНАЯ", href: "#hero" },
-    { name: "БИОГРАФИЯ", href: "#bio" },
-    { name: "АРСЕНАЛ", href: "#arsenal" },
-    { name: "ЭНГРАММА", href: "#engram" },
-  ];
-
   const handleNavClick = (
     e: React.MouseEvent<HTMLAnchorElement>,
     href: string,
   ) => {
     e.preventDefault();
     setIsOpen(false);
-    const element = document.querySelector(href);
-    if (element) {
-      element.scrollIntoView({ behavior: "smooth" });
-    }
+    document.querySelector(href)?.scrollIntoView({ behavior: "smooth" });
   };
 
   return (
-    <nav
-      className={`fixed w-full z-40 transition-all duration-300 border-b border-transparent ${
-        scrolled
-          ? "bg-black/80 backdrop-blur-md border-[#ff003c]/30 py-2"
-          : "bg-transparent py-4"
-      }`}
-    >
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
-        <div
-          className={`absolute top-0 left-0 w-4 h-4 border-t-2 border-l-2 border-[#fcee0a] transition-opacity ${scrolled ? "opacity-100" : "opacity-0"}`}
-        ></div>
-        <div
-          className={`absolute top-0 right-0 w-4 h-4 border-t-2 border-r-2 border-[#fcee0a] transition-opacity ${scrolled ? "opacity-100" : "opacity-0"}`}
-        ></div>
-
-        <div className="flex items-center justify-between h-16">
-          <div
-            className="flex-shrink-0 flex items-center gap-2 cursor-pointer group"
+    <>
+      <nav
+        ref={navRef}
+        className={`nav ${scrolled || isOpen ? "nav--solid" : ""}`}
+      >
+        <div className="mx-auto flex h-14 max-w-(--page) items-center justify-between gap-6 px-5 md:px-10">
+          <a
+            href="#hero"
+            onClick={(e) => handleNavClick(e, "#hero")}
             onMouseEnter={replayLogo}
+            className="flex items-center gap-2.5"
           >
             <img
               src={ASSETS.navLogo}
-              alt="Samurai Logo"
-              className="h-8 w-8 object-contain transition-all duration-300 group-hover:drop-shadow-[0_0_8px_#ff003c]"
+              alt=""
+              className="h-7 w-7 object-contain"
             />
             <span
               ref={logoRef}
-              className="font-cyber text-2xl font-bold tracking-widest text-white group-hover:text-[#00f0ff] transition-colors"
+              className="font-display text-xl font-bold tracking-[0.12em] text-bone"
             >
               SILVERHAND
             </span>
+          </a>
+
+          <div className="hidden items-center gap-9 lg:flex">
+            {NAV_LINKS.map((link, i) => (
+              <a
+                key={link.href}
+                href={link.href}
+                onClick={(e) => handleNavClick(e, link.href)}
+                aria-current={active === i ? "true" : undefined}
+                className={`nav__link ${active === i ? "nav__link--active" : ""}`}
+              >
+                <span>0{i + 1}</span>
+                <span>{link.name}</span>
+              </a>
+            ))}
           </div>
 
-          <div className="hidden md:flex items-center">
-            <div className="ml-10 flex items-baseline space-x-8 mr-8">
-              {navLinks.map((link) => (
-                <a
-                  key={link.name}
-                  href={link.href}
-                  onClick={(e) => handleNavClick(e, link.href)}
-                  className="relative group font-cyber text-sm tracking-wider text-gray-300 px-3 py-2 transition-colors duration-200 overflow-hidden"
+          <div className="flex items-center gap-1.5">
+            {player.hasStarted ? (
+              <span className="mr-2 hidden items-center border border-line md:flex">
+                <button
+                  type="button"
+                  onClick={player.toggle}
+                  aria-label={player.isPlaying ? "Пауза" : "Воспроизвести"}
+                  className="flex h-9 w-9 items-center justify-center text-blood hover:bg-blood hover:text-black"
                 >
-                  <span className="relative z-10 group-hover:text-[#0b0b0b] transition-colors duration-200">
-                    {link.name}
+                  {player.isPlaying ? (
+                    <Pause size={14} fill="currentColor" />
+                  ) : (
+                    <Play size={14} fill="currentColor" />
+                  )}
+                </button>
+                <button
+                  type="button"
+                  onClick={onOpenSamurai}
+                  title="Открыть плеер"
+                  className="label flex h-9 max-w-[13rem] items-center gap-2.5 border-l border-line px-3 text-bone hover:text-blood"
+                >
+                  <span
+                    className={`eq text-blood ${player.isPlaying ? "" : "eq--paused"}`}
+                  >
+                    <i />
+                    <i />
+                    <i />
                   </span>
-                  <span className="absolute inset-0 bg-[#00f0ff] transform -skew-x-12 -translate-x-full group-hover:translate-x-0 transition-transform duration-300 ease-out z-0 origin-left"></span>
-                </a>
-              ))}
-            </div>
-
-            <div className="flex items-center gap-4">
-              <button
-                onClick={onOpenTerminal}
-                className="text-gray-400 hover:text-[#00f0ff] transition-all duration-300 hover:scale-110"
-                aria-label="Terminal"
-                title="Access Terminal"
+                  <span className="truncate">{player.track.title}</span>
+                </button>
+              </span>
+            ) : null}
+            {johnnyView && (
+              <span
+                className="label mr-2 hidden bg-acid px-2 py-1 font-bold text-black sm:inline"
+                title="Вы вошли как Silverhand"
               >
-                <TerminalIcon size={20} />
-              </button>
-
-              <button
-                onClick={onOpenSettings}
-                className="text-gray-400 hover:text-[#fcee0a] hover:rotate-90 transition-all duration-300"
-                aria-label="Settings"
-              >
-                <Settings size={22} />
-              </button>
-
-              <SamuraiButton onClick={onOpenSamurai} />
-            </div>
-          </div>
-
-          <div className="-mr-2 flex md:hidden gap-2">
+                Глазами Джонни
+              </span>
+            )}
             <button
-              onClick={onOpenSettings}
-              className="bg-black/50 inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-[#fcee0a] border border-transparent focus:outline-none"
+              type="button"
+              onClick={onOpenTerminal}
+              className="icon-btn hidden sm:inline-flex"
+              aria-label="Терминал"
+              title="Терминал"
             >
-              <Settings size={22} />
+              <TerminalIcon size={18} />
             </button>
             <button
-              onClick={() => setIsOpen(!isOpen)}
-              className="bg-black/50 inline-flex items-center justify-center p-2 rounded-md text-[#fcee0a] border border-[#fcee0a]/50 hover:bg-[#fcee0a]/10 focus:outline-none"
+              type="button"
+              onClick={onOpenSettings}
+              className="icon-btn"
+              aria-label="Настройки"
+              title="Настройки"
             >
-              {isOpen ? <X size={24} /> : <Menu size={24} />}
+              <Settings size={18} />
+            </button>
+            <SamuraiButton
+              onClick={onOpenSamurai}
+              small
+              className="ml-2 hidden sm:inline-flex"
+            />
+            <button
+              type="button"
+              onClick={() => setIsOpen(!isOpen)}
+              className="label ml-2 h-9 border border-bone/40 px-3 text-bone lg:hidden"
+              aria-expanded={isOpen}
+              aria-label="Меню"
+            >
+              {isOpen ? "Закрыть" : "Меню"}
             </button>
           </div>
         </div>
-      </div>
+        <div className="nav__progress" />
+      </nav>
 
       <div
-        className={`md:hidden fixed inset-x-0 top-[72px] bg-black/95 backdrop-blur-xl border-b border-[#00f0ff] transition-all duration-300 ease-in-out transform origin-top ${isOpen ? "scale-y-100 opacity-100" : "scale-y-0 opacity-0"}`}
+        className={`menu lg:hidden ${isOpen ? "menu--open" : ""}`}
+        aria-hidden={!isOpen}
       >
-        <div className="px-4 pt-4 pb-6 space-y-4">
-          {navLinks.map((link) => (
+        <div>
+          {NAV_LINKS.map((link, i) => (
             <a
-              key={link.name}
+              key={link.href}
               href={link.href}
+              tabIndex={isOpen ? 0 : -1}
               onClick={(e) => handleNavClick(e, link.href)}
-              className="font-cyber text-gray-300 hover:text-[#0b0b0b] hover:bg-[#fcee0a] block px-3 py-3 text-lg font-medium border-l-2 border-transparent hover:border-[#00f0ff] transition-all"
+              className="menu__link"
             >
+              <span>0{i + 1}</span>
               {link.name}
             </a>
           ))}
-          <div className="pt-2 flex flex-col gap-4">
-            <div className="flex gap-4">
-              <button
-                onClick={() => {
-                  onOpenTerminal?.();
-                  setIsOpen(false);
-                }}
-                className="flex-1 flex items-center justify-center gap-2 text-gray-300 hover:text-[#00f0ff] font-cyber px-3 py-2 border border-gray-800 hover:border-[#00f0ff] transition-colors"
-              >
-                <TerminalIcon size={18} /> TERMINAL
-              </button>
-              <button
-                onClick={() => {
-                  onOpenSettings?.();
-                  setIsOpen(false);
-                }}
-                className="flex-1 flex items-center justify-center gap-2 text-gray-300 hover:text-[#fcee0a] font-cyber px-3 py-2 border border-gray-800 hover:border-[#fcee0a] transition-colors"
-              >
-                <Settings size={18} /> SETTINGS
-              </button>
-            </div>
-            <SamuraiButton
-              onClick={() => {
-                onOpenSamurai();
-                setIsOpen(false);
-              }}
-              className="w-full"
-            />
-          </div>
+        </div>
+        <div className="flex flex-col gap-3">
+          <button
+            type="button"
+            tabIndex={isOpen ? 0 : -1}
+            onClick={() => {
+              setIsOpen(false);
+              onOpenSamurai();
+            }}
+            className="btn btn--ink w-full"
+          >
+            Samurai — слушать
+          </button>
+          <button
+            type="button"
+            tabIndex={isOpen ? 0 : -1}
+            onClick={() => {
+              setIsOpen(false);
+              onOpenTerminal?.();
+            }}
+            className="btn btn--ink w-full"
+          >
+            <TerminalIcon size={16} /> Терминал
+          </button>
         </div>
       </div>
-    </nav>
+    </>
   );
 };
 

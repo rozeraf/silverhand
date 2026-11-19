@@ -1,23 +1,25 @@
 import React from "react";
-import { Zap } from "lucide-react";
+import { Disc3 } from "lucide-react";
 
 interface SamuraiButtonProps {
   onClick: () => void;
   className?: string;
+  small?: boolean;
 }
 
-const SamuraiButton = ({ onClick, className = "" }: SamuraiButtonProps) => {
-  return (
-    <button
-      onClick={onClick}
-      className={`cp-yellow-button ${className}`}
-    >
-      <span className="flex items-center gap-2">
-        <Zap size={18} fill="currentColor" className="hidden sm:block" />
-        SAMURAI
-      </span>
-    </button>
-  );
-};
+const SamuraiButton = ({
+  onClick,
+  className = "",
+  small = false,
+}: SamuraiButtonProps) => (
+  <button
+    type="button"
+    onClick={onClick}
+    className={`btn btn--red ${small ? "btn--sm" : ""} ${className}`}
+  >
+    <Disc3 size={small ? 14 : 18} />
+    Samurai
+  </button>
+);
 
 export default SamuraiButton;

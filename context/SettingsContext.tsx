@@ -1,14 +1,23 @@
 import React, { createContext, useContext, useState, useEffect } from "react";
+import { detectLowEnd } from "../lib/perf";
 
 interface Settings {
   bootSequence: boolean;
   enableNoise: boolean;
   enableScanlines: boolean;
+  /** Heavy CRT mode: WebGL + SVG barrel warp of the whole page. Only matters with enableScanlines. */
+  enableCrtWarp: boolean;
   enableCustomCursor: boolean;
   enableAnimations: boolean;
+  /** Lite rendering for weak devices; defaults to a hardware guess. */
+  performanceMode: boolean;
 }
 
 interface SettingsContextType extends Settings {
+  /** True when the heavy CRT geometry mode is actually active. */
+  crtWarp: boolean;
+  /** Scroll reveals and word-by-word type are on. */
+  motion: boolean;
   updateSetting: (key: keyof Settings, value: boolean) => void;
   resetSettings: () => void;
 }
@@ -17,8 +26,10 @@ const defaultSettings: Settings = {
   bootSequence: true,
   enableNoise: true,
   enableScanlines: false,
+  enableCrtWarp: false,
   enableCustomCursor: true,
   enableAnimations: true,
+  performanceMode: detectLowEnd(),
 };
 
 const SettingsContext = createContext<SettingsContextType | undefined>(
@@ -63,7 +74,16 @@ export const SettingsProvider = ({
 
   return (
     <SettingsContext.Provider
-      value={{ ...settings, updateSetting, resetSettings }}
+      value={{
+        ...settings,
+        crtWarp:
+          settings.enableScanlines &&
+          settings.enableCrtWarp &&
+          !settings.performanceMode,
+        motion: settings.enableAnimations && !settings.performanceMode,
+        updateSetting,
+        resetSettings,
+      }}
     >
       {children}
     </SettingsContext.Provider>

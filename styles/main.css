@@ -1,0 +1,1711 @@
+/* ==========================================================================
+   Johnny Silverhand: The Engram — global styles
+   Direction: a punk zine about a dead rocker, read through a failing biochip.
+   Red leads (the Relic chip itself is red), bone "paper" sections break up the
+   dark, cyan is only for system glitches and the boot screen.
+   Layout utilities come from the Tailwind CDN; signature pieces live here.
+   ========================================================================== */
+
+@import "tailwindcss";
+
+/* Tailwind is built locally (no CDN). Order is fixed by cascade layers:
+   base < components (everything in this file) < utilities, so a utility class
+   always wins over a component class, in dev and in production alike. */
+@theme {
+  --color-ink: #0a0908;
+  --color-coal: #141210;
+  --color-line: #2b2724;
+  --color-bone: #e9e3d3;
+  --color-dust: #8d867a;
+  --color-blood: #ff003c;
+  --color-acid: #fcee0a;
+  --color-relic: #00f0ff;
+  --color-cp-yellow: #fcee0a;
+  --color-cp-blue: #00f0ff;
+  --color-cp-red: #ff003c;
+  --color-cp-bg: #0a0908;
+
+  --font-display: "Oswald", "Impact", sans-serif;
+  --font-cyber: "Oswald", "Impact", sans-serif;
+  --font-sans: "Golos Text", system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, monospace;
+  --font-hand: "Caveat", "Segoe Script", cursive;
+}
+
+:root {
+  /* Page width. 93.75rem fills a 16:9 screen (the root size is capped by the
+     height there, so on 21:9 it alone would leave a 16:9 column between empty
+     bars). 86vw takes over only on wider screens: the content stretches but
+     stops short of the edges. Text blocks keep their own max-width, so line
+     length doesn't grow with it. */
+  --page: max(93.75rem, 86vw);
+  --ink: #0a0908;
+  --coal: #141210;
+  --line: #2b2724;
+  --bone: #e9e3d3;
+  --bone-dim: #d6cebb;
+  --dust: #8d867a;
+  --red: #ff003c;
+  --yellow: #fcee0a;
+  --cyan: #00f0ff;
+
+  /* Legacy aliases still used by the terminal and CRT pieces */
+  --cp-yellow: var(--yellow);
+  --cp-blue: var(--cyan);
+  --cp-red: var(--red);
+  --cp-bg: var(--ink);
+
+  --tear: polygon(0 0, 100% 0, 100.0% 87%, 98.6% 51%, 96.3% 42%, 94.7% 71%, 92.8% 44%, 90.8% 68%, 88.5% 37%, 86.0% 46%, 83.7% 68%, 81.4% 47%, 80.0% 41%, 77.8% 70%, 76.7% 47%, 75.7% 48%, 73.9% 63%, 71.8% 40%, 69.5% 99%, 67.4% 83%, 65.1% 41%, 63.4% 40%, 61.2% 70%, 60.2% 64%, 58.0% 71%, 57.0% 96%, 56.1% 90%, 53.6% 84%, 51.1% 70%, 49.9% 66%, 47.7% 85%, 46.3% 97%, 45.4% 67%, 44.5% 58%, 41.9% 43%, 39.4% 94%, 37.3% 39%, 35.7% 80%, 34.7% 54%, 33.7% 90%, 31.3% 95%, 29.1% 72%, 28.2% 66%, 26.1% 84%, 25.2% 36%, 24.3% 95%, 23.3% 60%, 21.6% 92%, 20.6% 52%, 18.4% 41%, 17.3% 37%, 14.7% 50%, 13.0% 60%, 10.5% 81%, 8.6% 67%, 7.3% 90%, 6.3% 75%, 5.0% 53%, 3.4% 47%, 1.5% 40%, 0.7% 44%, 0 93%);
+
+  /* Straight top, torn bottom: the last sheet of the file. */
+  --torn-bottom: polygon(0 0, 100% 0, 100.0% calc(100% - 0.18rem), 97.2% calc(100% - 0.33rem), 94.4% calc(100% - 0.72rem), 92.1% calc(100% - 0.50rem), 91.0% calc(100% - 0.80rem), 88.2% calc(100% - 0.33rem), 87.1% calc(100% - 0.39rem), 84.6% calc(100% - 0.74rem), 83.1% calc(100% - 0.28rem), 81.5% calc(100% - 0.37rem), 80.1% calc(100% - 0.78rem), 78.6% calc(100% - 0.49rem), 77.4% calc(100% - 0.67rem), 76.2% calc(100% - 0.06rem), 74.0% calc(100% - 0.82rem), 71.7% calc(100% - 0.67rem), 69.7% calc(100% - 0.88rem), 68.1% calc(100% - 0.02rem), 65.8% calc(100% - 0.46rem), 64.4% calc(100% - 0.07rem), 62.1% calc(100% - 0.22rem), 60.8% calc(100% - 0.88rem), 57.6% calc(100% - 0.14rem), 56.6% calc(100% - 0.66rem), 54.6% calc(100% - 0.67rem), 53.5% calc(100% - 0.83rem), 50.9% calc(100% - 0.80rem), 49.8% calc(100% - 0.48rem), 46.9% calc(100% - 0.04rem), 44.4% calc(100% - 0.49rem), 42.2% calc(100% - 0.49rem), 40.3% calc(100% - 0.70rem), 38.3% calc(100% - 0.56rem), 35.6% calc(100% - 0.54rem), 34.0% calc(100% - 0.80rem), 30.8% calc(100% - 0.22rem), 29.4% calc(100% - 0.27rem), 27.3% calc(100% - 0.45rem), 24.1% calc(100% - 0.63rem), 21.9% calc(100% - 0.19rem), 19.8% calc(100% - 0.79rem), 17.6% calc(100% - 0.02rem), 15.9% calc(100% - 0.04rem), 13.8% calc(100% - 0.83rem), 10.9% calc(100% - 0.03rem), 8.0% calc(100% - 0.24rem), 5.0% calc(100% - 0.34rem), 2.3% calc(100% - 0.47rem), 1.0% calc(100% - 0.45rem), 0% calc(100% - 0.40rem));
+  --torn-a: polygon(0.0% 0.19rem, 2.5% 0.39rem, 4.9% 0.21rem, 7.5% 0.08rem, 9.9% 0.26rem, 13.0% 0.04rem, 14.9% 0.04rem, 18.1% 0.29rem, 19.4% 0.41rem, 22.9% 0.27rem, 25.6% 0.07rem, 26.8% 0.22rem, 28.1% 0.08rem, 29.9% 0.01rem, 32.2% 0.19rem, 35.5% 0.22rem, 38.2% 0.21rem, 41.0% 0.19rem, 42.9% 0.42rem, 46.4% 0.35rem, 49.3% 0.13rem, 51.1% 0.12rem, 52.5% 0.32rem, 54.6% 0.36rem, 56.8% 0.40rem, 60.0% 0.00rem, 61.7% 0.38rem, 64.0% 0.41rem, 66.2% 0.03rem, 68.9% 0.33rem, 70.7% 0.04rem, 72.7% 0.40rem, 75.7% 0.05rem, 77.5% 0.04rem, 78.9% 0.33rem, 80.5% 0.23rem, 82.8% 0.08rem, 85.7% 0.06rem, 88.5% 0.05rem, 90.7% 0.09rem, 92.5% 0.41rem, 95.7% 0.13rem, 99.0% 0.09rem, 100% 0.36rem, 100.0% calc(100% - 0.32rem), 98.6% calc(100% - 0.49rem), 96.8% calc(100% - 0.13rem), 93.8% calc(100% - 0.16rem), 91.9% calc(100% - 0.04rem), 90.5% calc(100% - 0.29rem), 88.7% calc(100% - 0.30rem), 86.6% calc(100% - 0.23rem), 83.1% calc(100% - 0.24rem), 80.5% calc(100% - 0.43rem), 78.9% calc(100% - 0.08rem), 75.5% calc(100% - 0.41rem), 73.7% calc(100% - 0.09rem), 70.7% calc(100% - 0.47rem), 69.0% calc(100% - 0.48rem), 65.7% calc(100% - 0.30rem), 63.5% calc(100% - 0.05rem), 62.2% calc(100% - 0.48rem), 60.5% calc(100% - 0.35rem), 58.6% calc(100% - 0.41rem), 56.0% calc(100% - 0.15rem), 54.4% calc(100% - 0.36rem), 53.0% calc(100% - 0.11rem), 50.5% calc(100% - 0.43rem), 47.8% calc(100% - 0.14rem), 44.4% calc(100% - 0.10rem), 43.2% calc(100% - 0.13rem), 40.9% calc(100% - 0.03rem), 39.3% calc(100% - 0.18rem), 36.7% calc(100% - 0.07rem), 34.6% calc(100% - 0.45rem), 31.1% calc(100% - 0.33rem), 28.2% calc(100% - 0.29rem), 26.7% calc(100% - 0.02rem), 25.4% calc(100% - 0.46rem), 22.5% calc(100% - 0.48rem), 21.3% calc(100% - 0.32rem), 18.9% calc(100% - 0.37rem), 17.0% calc(100% - 0.50rem), 15.6% calc(100% - 0.27rem), 12.6% calc(100% - 0.45rem), 9.7% calc(100% - 0.35rem), 6.6% calc(100% - 0.46rem), 4.5% calc(100% - 0.34rem), 1.1% calc(100% - 0.44rem), 0% calc(100% - 0.40rem));
+  --torn-b: polygon(0.0% 0.08rem, 2.8% 0.14rem, 4.5% 0.21rem, 6.8% 0.20rem, 9.1% 0.11rem, 11.0% 0.29rem, 12.9% 0.28rem, 16.0% 0.36rem, 19.5% 0.10rem, 21.3% 0.31rem, 23.8% 0.08rem, 26.7% 0.37rem, 29.9% 0.09rem, 31.8% 0.00rem, 35.3% 0.09rem, 38.3% 0.23rem, 40.9% 0.22rem, 44.1% 0.25rem, 46.0% 0.05rem, 48.4% 0.39rem, 49.9% 0.29rem, 52.6% 0.07rem, 54.3% 0.29rem, 56.6% 0.17rem, 58.9% 0.04rem, 61.8% 0.25rem, 64.3% 0.14rem, 67.4% 0.35rem, 69.9% 0.04rem, 71.5% 0.06rem, 72.9% 0.27rem, 75.4% 0.09rem, 78.8% 0.26rem, 81.9% 0.34rem, 84.7% 0.22rem, 88.3% 0.06rem, 91.1% 0.37rem, 93.5% 0.34rem, 95.1% 0.17rem, 97.0% 0.17rem, 99.9% 0.06rem, 100% 0.36rem, 100.0% calc(100% - 0.15rem), 98.5% calc(100% - 0.50rem), 96.0% calc(100% - 0.01rem), 93.4% calc(100% - 0.07rem), 91.8% calc(100% - 0.37rem), 89.1% calc(100% - 0.21rem), 86.6% calc(100% - 0.28rem), 84.3% calc(100% - 0.05rem), 81.3% calc(100% - 0.39rem), 79.1% calc(100% - 0.20rem), 76.4% calc(100% - 0.24rem), 74.2% calc(100% - 0.44rem), 70.8% calc(100% - 0.08rem), 69.2% calc(100% - 0.39rem), 65.7% calc(100% - 0.37rem), 63.8% calc(100% - 0.03rem), 60.6% calc(100% - 0.47rem), 57.6% calc(100% - 0.37rem), 54.1% calc(100% - 0.26rem), 50.6% calc(100% - 0.13rem), 49.3% calc(100% - 0.42rem), 46.4% calc(100% - 0.40rem), 44.9% calc(100% - 0.15rem), 42.3% calc(100% - 0.03rem), 40.3% calc(100% - 0.30rem), 36.8% calc(100% - 0.36rem), 34.7% calc(100% - 0.20rem), 32.2% calc(100% - 0.37rem), 28.7% calc(100% - 0.01rem), 25.2% calc(100% - 0.40rem), 23.9% calc(100% - 0.13rem), 22.1% calc(100% - 0.11rem), 20.5% calc(100% - 0.07rem), 17.7% calc(100% - 0.22rem), 16.2% calc(100% - 0.42rem), 13.0% calc(100% - 0.13rem), 9.8% calc(100% - 0.39rem), 7.3% calc(100% - 0.04rem), 4.4% calc(100% - 0.44rem), 1.1% calc(100% - 0.47rem), 0% calc(100% - 0.49rem));
+  --torn-c: polygon(0.0% 0.16rem, 3.4% 0.35rem, 5.1% 0.37rem, 7.9% 0.02rem, 11.4% 0.11rem, 13.3% 0.18rem, 15.9% 0.05rem, 18.7% 0.35rem, 21.2% 0.33rem, 23.9% 0.35rem, 25.5% 0.15rem, 27.8% 0.04rem, 31.4% 0.27rem, 32.8% 0.24rem, 35.0% 0.08rem, 36.6% 0.19rem, 38.0% 0.24rem, 40.4% 0.05rem, 43.7% 0.02rem, 45.3% 0.34rem, 47.0% 0.18rem, 49.6% 0.18rem, 52.0% 0.21rem, 54.3% 0.02rem, 57.5% 0.12rem, 58.8% 0.17rem, 62.0% 0.26rem, 64.3% 0.20rem, 66.0% 0.26rem, 68.0% 0.03rem, 69.5% 0.04rem, 72.4% 0.37rem, 75.4% 0.09rem, 76.9% 0.40rem, 79.0% 0.07rem, 81.6% 0.26rem, 84.1% 0.19rem, 86.0% 0.21rem, 88.3% 0.29rem, 90.6% 0.15rem, 94.2% 0.05rem, 97.2% 0.18rem, 100% 0.30rem, 100.0% calc(100% - 0.28rem), 97.3% calc(100% - 0.11rem), 96.1% calc(100% - 0.37rem), 94.3% calc(100% - 0.06rem), 91.1% calc(100% - 0.30rem), 89.9% calc(100% - 0.26rem), 88.3% calc(100% - 0.43rem), 86.4% calc(100% - 0.47rem), 83.7% calc(100% - 0.04rem), 81.6% calc(100% - 0.48rem), 78.7% calc(100% - 0.08rem), 76.6% calc(100% - 0.14rem), 75.2% calc(100% - 0.30rem), 72.3% calc(100% - 0.11rem), 69.8% calc(100% - 0.43rem), 66.4% calc(100% - 0.09rem), 65.1% calc(100% - 0.46rem), 63.1% calc(100% - 0.08rem), 60.0% calc(100% - 0.13rem), 57.0% calc(100% - 0.35rem), 55.1% calc(100% - 0.23rem), 53.2% calc(100% - 0.40rem), 51.4% calc(100% - 0.14rem), 48.1% calc(100% - 0.14rem), 45.8% calc(100% - 0.26rem), 44.6% calc(100% - 0.14rem), 41.7% calc(100% - 0.49rem), 39.6% calc(100% - 0.24rem), 38.3% calc(100% - 0.24rem), 36.2% calc(100% - 0.25rem), 34.3% calc(100% - 0.16rem), 30.9% calc(100% - 0.39rem), 28.9% calc(100% - 0.04rem), 27.5% calc(100% - 0.05rem), 26.0% calc(100% - 0.29rem), 23.6% calc(100% - 0.06rem), 20.3% calc(100% - 0.34rem), 17.4% calc(100% - 0.45rem), 15.4% calc(100% - 0.45rem), 11.9% calc(100% - 0.45rem), 10.6% calc(100% - 0.43rem), 7.0% calc(100% - 0.05rem), 3.7% calc(100% - 0.41rem), 2.4% calc(100% - 0.35rem), 0% calc(100% - 0.37rem));
+  /* Redaction: a felt-marker stroke, and the highlighter it turns into when
+     revealed. Plain SVG paths, no filters (see the grain note below). */
+  --marker-stroke: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 20' preserveAspectRatio='none'%3E%3Cpath d='M1.5 4.6C14 2.9 27 5.2 41 3.6S72 2.7 86 4.1 97.6 3.4 98.8 5.2 99.4 13.8 98.4 15.6C84 17.4 70 14.9 55 16.6S22 17.8 9 16.1 0.6 15.8 0.9 12.4 0.4 6 1.5 4.6Z' fill='%230a0908' fill-opacity='0.96'/%3E%3Cpath d='M3 7.2C30 6.1 60 7.6 97 6.6' stroke='%234a433b' stroke-width='.7' stroke-opacity='.35' fill='none'/%3E%3Cpath d='M2 12.6C35 13.5 64 11.9 98 12.9' stroke='%234a433b' stroke-width='.6' stroke-opacity='.3' fill='none'/%3E%3C/svg%3E");
+  --marker-highlight: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 20' preserveAspectRatio='none'%3E%3Cpath d='M1.5 4.6C14 2.9 27 5.2 41 3.6S72 2.7 86 4.1 97.6 3.4 98.8 5.2 99.4 13.8 98.4 15.6C84 17.4 70 14.9 55 16.6S22 17.8 9 16.1 0.6 15.8 0.9 12.4 0.4 6 1.5 4.6Z' fill='%23fcee0a' fill-opacity='0.55'/%3E%3C/svg%3E");
+  /* Film grain / paper fibre. These used to be inline SVGs with
+     feTurbulence; Firefox recomputes that noise on every repaint, and under
+     the CRT warp filter every frame repaints the whole page, which cost more
+     than everything else on it. Same noise, rendered once to a tile. */
+  --grain: url("./grain-light.webp");
+  --grain-dark: url("./grain-dark.webp");
+}
+
+@layer base {
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 4rem;
+  scrollbar-gutter: stable;
+  /* One layout for every desktop: above ~1600×900 the whole page scales with
+     the screen (2K, 4K, ultrawide) instead of sitting small in the middle.
+     The vh term keeps ultrawide screens from growing taller than they are. */
+  font-size: clamp(100%, min(1vw, 1.78vh), 200%);
+}
+/* An overlay is open: the page behind it must not scroll. */
+html.scroll-locked {
+  overflow: hidden;
+}
+
+body {
+  background-color: var(--ink);
+  color: var(--bone);
+  font-family: var(--font-sans);
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* No single word left alone on the last line of a paragraph */
+p {
+  text-wrap: pretty;
+}
+
+::selection {
+  background: var(--red);
+  color: #000;
+}
+
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: #000;
+}
+::-webkit-scrollbar-thumb {
+  background: var(--red);
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--bone);
+}
+
+:focus-visible {
+  outline: 2px solid var(--yellow);
+  outline-offset: 3px;
+}
+
+button:not(:disabled),
+[role="switch"]:not(:disabled) {
+  cursor: pointer;
+}
+}
+
+@layer components {
+/* --- Typography ---------------------------------------------------------- */
+
+.display {
+  font-family: var(--font-display);
+  font-weight: 700;
+  text-transform: uppercase;
+  /* 0.88 let the breve of Й and the dots of Ё hit the line above */
+  line-height: 0.94;
+  letter-spacing: -0.015em;
+  text-wrap: balance;
+}
+
+.label {
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  font-weight: 500;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+
+.outline-text {
+  -webkit-text-fill-color: transparent;
+  -webkit-text-stroke: 0.014em currentColor;
+  paint-order: stroke fill;
+}
+
+/* Kept for the terminal / overlays that still use these names */
+.custom-scrollbar {
+  scrollbar-width: thin;
+  scrollbar-color: var(--red) transparent;
+}
+.writing-vertical {
+  writing-mode: vertical-rl;
+}
+
+/* --- Film grain ---------------------------------------------------------- */
+
+.noise-bg {
+  position: fixed;
+  inset: -6.25rem;
+  z-index: 45;
+  pointer-events: none;
+  background-image: var(--grain);
+  opacity: 0.07;
+  will-change: transform;
+  animation: grain-shift 0.9s steps(6) infinite;
+}
+@keyframes grain-shift {
+  0% { transform: translate(0, 0); }
+  20% { transform: translate(-2.5rem, 1.875rem); }
+  40% { transform: translate(1.875rem, -3.75rem); }
+  60% { transform: translate(-4.375rem, -1.25rem); }
+  80% { transform: translate(3.125rem, 3.75rem); }
+  100% { transform: translate(0, 0); }
+}
+
+/* --- Buttons ------------------------------------------------------------- */
+
+.btn {
+  --btn-fg: var(--bone);
+  --btn-fill: var(--bone);
+  --btn-fill-fg: var(--ink);
+  position: relative;
+  isolation: isolate;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.6rem;
+  min-height: 3rem;
+  padding: 0 1.5rem;
+  border: 1px solid var(--btn-fg);
+  color: var(--btn-fg);
+  font-family: var(--font-mono);
+  font-size: 0.8125rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  overflow: hidden;
+  cursor: pointer;
+  transition: color 0.25s ease;
+}
+.btn::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: var(--btn-fill);
+  transform: translateY(101%);
+  transition: transform 0.25s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+.btn:hover,
+.btn:focus-visible {
+  color: var(--btn-fill-fg);
+}
+.btn:hover::before,
+.btn:focus-visible::before {
+  transform: translateY(0);
+}
+.btn:active {
+  transform: translateY(1px);
+}
+.btn--red {
+  --btn-fg: #000;
+  --btn-fill: var(--bone);
+  --btn-fill-fg: #000;
+  border-color: var(--red);
+  background: var(--red);
+}
+.btn--sm {
+  min-height: 2.25rem;
+  padding: 0 1rem;
+  font-size: 0.6875rem;
+}
+.btn--ink {
+  --btn-fg: var(--ink);
+  --btn-fill: var(--ink);
+  --btn-fill-fg: var(--yellow);
+}
+
+.icon-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.25rem;
+  height: 2.25rem;
+  color: var(--dust);
+  border: 1px solid transparent;
+  transition: color 0.2s, border-color 0.2s;
+}
+.icon-btn:hover {
+  color: var(--bone);
+  border-color: var(--line);
+}
+
+/* --- Navbar -------------------------------------------------------------- */
+
+.nav {
+  position: fixed;
+  inset: 0 0 auto 0;
+  z-index: 50;
+  border-bottom: 1px solid transparent;
+  transition: background-color 0.3s, border-color 0.3s;
+}
+.nav--solid {
+  background: rgba(10, 9, 8, 0.86);
+  backdrop-filter: blur(0.625rem);
+  border-bottom-color: var(--line);
+}
+/* Backdrop blur re-renders on every scrolled frame; phones get a solid bar. */
+@media (pointer: coarse) {
+  .nav--solid {
+    background: rgba(10, 9, 8, 0.96);
+    backdrop-filter: none;
+  }
+}
+.nav__progress {
+  position: absolute;
+  left: 0;
+  bottom: -2px;
+  height: 2px;
+  width: 100%;
+  background: var(--red);
+  transform-origin: left;
+  transform: scaleX(var(--progress, 0));
+}
+.nav__link {
+  position: relative;
+  display: inline-flex;
+  align-items: baseline;
+  gap: 0.5rem;
+  padding: 0.5rem 0;
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--bone);
+  opacity: 0.75;
+  transition: opacity 0.2s;
+}
+.nav__link span:first-child {
+  color: var(--red);
+  font-size: 0.625rem;
+}
+.nav__link::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 2px;
+  height: 1px;
+  background: var(--red);
+  transform: scaleX(0);
+  transform-origin: right;
+  transition: transform 0.3s ease;
+}
+.nav__link:hover,
+.nav__link--active {
+  opacity: 1;
+}
+.nav__link--active::after,
+.nav__link:hover::after {
+  transform: scaleX(1);
+  transform-origin: left;
+}
+
+.menu {
+  position: fixed;
+  inset: 0;
+  z-index: 49;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 5.5rem 1.25rem 1.75rem;
+  background: var(--red);
+  color: #000;
+  clip-path: inset(0 0 100% 0);
+  transition: clip-path 0.45s cubic-bezier(0.7, 0, 0.2, 1);
+}
+/* Short screens (phones held sideways): the menu scrolls and shrinks */
+@media (max-height: 32rem) {
+  .menu {
+    overflow-y: auto;
+    padding-top: 4.5rem;
+    gap: 1rem;
+  }
+  .menu__link {
+    font-size: 2rem;
+  }
+}
+.menu--open {
+  clip-path: inset(0 0 0 0);
+}
+.menu__link {
+  display: flex;
+  align-items: baseline;
+  gap: 0.75rem;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: clamp(2.75rem, 14vw, 5rem);
+  line-height: 1;
+  text-transform: uppercase;
+  border-bottom: 2px solid #000;
+  padding: 0.35rem 0;
+}
+.menu__link span:first-child {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  letter-spacing: 0.1em;
+}
+
+/* --- Hero ---------------------------------------------------------------- */
+
+.hero {
+  position: relative;
+  min-height: 100svh;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  background: #000;
+}
+.hero__photo {
+  position: absolute;
+  inset: 0;
+  background-image: var(--hero-sm);
+  background-size: cover;
+  background-position: 46% 18%;
+}
+@media (min-width: 640px) {
+  .hero__photo {
+    background-image: var(--hero);
+  }
+}
+@media (min-width: 1024px) {
+  /* Push the portrait to the right so the face clears the wordmark */
+  .hero__photo {
+    left: 30%;
+    background-position: 50% 18%;
+    -webkit-mask-image: linear-gradient(90deg, transparent, #000 22%);
+    mask-image: linear-gradient(90deg, transparent, #000 22%);
+  }
+}
+.hero__halftone {
+  position: absolute;
+  inset: 0;
+  background-image: radial-gradient(rgba(0, 0, 0, 0.55) 1px, transparent 1.4px);
+  background-size: 5px 5px;
+}
+.hero__shade {
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(90deg, rgba(10, 9, 8, 0.92) 0%, rgba(10, 9, 8, 0.55) 38%, rgba(10, 9, 8, 0) 70%),
+    linear-gradient(0deg, rgba(10, 9, 8, 1) 0%, rgba(10, 9, 8, 0) 34%),
+    linear-gradient(180deg, rgba(10, 9, 8, 0.7) 0%, rgba(10, 9, 8, 0) 22%);
+}
+.hero__title {
+  /* SILVERHAND is ~4.8em wide: 17.6vw keeps it inside a 320px screen */
+  font-size: clamp(2.75rem, 17.6vw, 17.5rem);
+  line-height: 0.8;
+  letter-spacing: -0.025em;
+}
+.hero__title-red {
+  color: var(--red);
+  white-space: nowrap;
+  margin-left: clamp(0rem, 3.5vw, 4rem);
+}
+
+/* Glitch: two offset copies that only flash for a moment each cycle */
+.glitch {
+  position: relative;
+  display: inline-block;
+}
+.glitch::before,
+.glitch::after {
+  content: attr(data-text);
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  pointer-events: none;
+}
+.glitch::before {
+  color: var(--cyan);
+  animation: glitch-a 5.5s steps(1) infinite;
+}
+.glitch::after {
+  color: var(--yellow);
+  animation: glitch-b 5.5s steps(1) infinite;
+}
+@keyframes glitch-a {
+  0%, 91%, 100% { opacity: 0; transform: none; clip-path: none; }
+  92% { opacity: 0.9; transform: translate(-0.035em, 0.01em); clip-path: inset(8% 0 62% 0); }
+  94% { opacity: 0.9; transform: translate(0.03em, -0.01em); clip-path: inset(55% 0 12% 0); }
+  96% { opacity: 0.9; transform: translate(-0.02em, 0); clip-path: inset(30% 0 40% 0); }
+  97% { opacity: 0; }
+}
+@keyframes glitch-b {
+  0%, 92%, 100% { opacity: 0; transform: none; clip-path: none; }
+  93% { opacity: 0.85; transform: translate(0.04em, 0); clip-path: inset(40% 0 35% 0); }
+  95% { opacity: 0.85; transform: translate(-0.03em, 0.015em); clip-path: inset(72% 0 6% 0); }
+  96.5% { opacity: 0; }
+}
+
+.stamp-ring {
+  animation: spin 28s linear infinite;
+}
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+.animate-spin-slow {
+  animation: spin 14s linear infinite;
+}
+
+/* --- Marquee ------------------------------------------------------------- */
+
+.marquee {
+  overflow: hidden;
+  white-space: nowrap;
+  user-select: none;
+}
+.marquee__track {
+  display: inline-flex;
+  will-change: transform;
+  animation: marquee 32s linear infinite;
+}
+.marquee__track > span {
+  display: inline-flex;
+  align-items: center;
+  gap: 1.5rem;
+  padding-right: 1.5rem;
+}
+@keyframes marquee {
+  to { transform: translateX(-50%); }
+}
+
+/* --- Section furniture --------------------------------------------------- */
+
+.section-index {
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.75rem;
+  white-space: nowrap;
+}
+.section-index::before {
+  content: "";
+  width: 2.5rem;
+  height: 2px;
+  background: currentColor;
+}
+.section-title {
+  font-size: clamp(2.75rem, 9vw, 8rem);
+}
+
+/* --- Paper (dossier) ----------------------------------------------------- */
+
+.paper {
+  position: relative;
+  background-color: var(--bone);
+  color: var(--ink);
+}
+.paper::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background-image: var(--grain-dark);
+  opacity: 0.16;
+}
+.paper > * {
+  position: relative;
+}
+
+.evidence {
+  position: relative;
+  background: #fff;
+  padding: 0.625rem 0.625rem 0;
+  box-shadow: 0 1.125rem 2.5rem -1.125rem rgba(0, 0, 0, 0.55);
+  transform: rotate(-2deg);
+  transition: transform 0.5s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+.evidence:hover {
+  transform: rotate(0deg) scale(1.01);
+}
+.evidence img {
+  filter: grayscale(1) contrast(1.2);
+  transition: filter 0.6s;
+}
+.evidence:hover img {
+  filter: grayscale(0) contrast(1.05);
+}
+/* The portrait is a transparent cut-out: give it a studio backdrop. */
+.evidence__backdrop {
+  background: radial-gradient(
+    ellipse 70% 60% at 50% 38%,
+    #6b6660 0%,
+    #3a3733 55%,
+    #161412 100%
+  );
+}
+.tape {
+  position: absolute;
+  width: 6.875rem;
+  height: 1.875rem;
+  background: rgba(252, 238, 10, 0.82);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.25);
+}
+.tape--tl {
+  top: -0.875rem;
+  left: -2.125rem;
+  transform: rotate(-38deg);
+}
+.tape--tr {
+  top: -0.75rem;
+  right: -2.25rem;
+  transform: rotate(40deg);
+}
+.rubber-stamp {
+  display: inline-block;
+  padding: 0.25em 0.6em 0.2em;
+  border: 4px solid var(--red);
+  color: var(--red);
+  font-family: var(--font-display);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  line-height: 1;
+  transform: rotate(-11deg);
+  opacity: 0.82;
+  mix-blend-mode: multiply;
+}
+/* On top of a dark photo multiply would vanish */
+.rubber-stamp--photo {
+  mix-blend-mode: normal;
+  opacity: 0.95;
+}
+
+.year-row {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 0.75rem 2rem;
+  padding: 1.75rem 0;
+  border-top: 2px solid var(--ink);
+}
+.year-row__year {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: clamp(4.5rem, 11vw, 8.5rem);
+  line-height: 0.8;
+  letter-spacing: -0.03em;
+  transition: color 0.25s;
+}
+.year-row:hover .year-row__year {
+  color: var(--red);
+}
+@media (min-width: 768px) {
+  .year-row {
+    grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.4fr);
+    align-items: start;
+    padding: 2.25rem 0;
+  }
+}
+
+/* --- Classified document ------------------------------------------------- */
+
+/* Old paper: yellowed toward the edges, a faint nicotine tint, one pale
+   stain per sheet (placed by --stain-x/-y, sized by --stain). Kept subtle on
+   purpose: aged, not a prop from a horror film. */
+.dossier-sheet {
+  --stain-x: 82%;
+  --stain-y: 18%;
+  --stain: 11rem;
+  position: relative;
+  background-color: var(--bone-dim);
+  background-image:
+    radial-gradient(
+      var(--stain) calc(var(--stain) * 0.72) at var(--stain-x) var(--stain-y),
+      rgba(150, 104, 28, 0.13),
+      rgba(150, 104, 28, 0.07) 45%,
+      transparent 72%
+    ),
+    radial-gradient(ellipse at 50% 45%, transparent 52%, rgba(128, 92, 30, 0.2) 100%),
+    linear-gradient(rgba(196, 156, 74, 0.07), rgba(196, 156, 74, 0.07));
+  color: var(--ink);
+  font-family: var(--font-mono);
+  box-shadow: 0 1.875rem 3.75rem -1.875rem #000, 0 0 0 1px rgba(0, 0, 0, 0.4);
+}
+/* The cover also carries the ring of a mug once left on it. */
+.dossier-cover {
+  background-image:
+    radial-gradient(
+      circle 4.6rem at 84% 70%,
+      transparent 86%,
+      rgba(120, 78, 22, 0.16) 90%,
+      rgba(120, 78, 22, 0.05) 95%,
+      transparent 98%
+    ),
+    radial-gradient(
+      var(--stain) calc(var(--stain) * 0.72) at var(--stain-x) var(--stain-y),
+      rgba(150, 104, 28, 0.13),
+      rgba(150, 104, 28, 0.07) 45%,
+      transparent 72%
+    ),
+    radial-gradient(ellipse at 50% 45%, transparent 52%, rgba(128, 92, 30, 0.2) 100%),
+    linear-gradient(rgba(196, 156, 74, 0.07), rgba(196, 156, 74, 0.07));
+}
+/* Finding slips: torn top and bottom (three tear patterns), so the shadow
+   comes from a drop-shadow on the wrapper; box-shadow would be clipped. */
+.dossier-slip {
+  position: relative;
+  filter: drop-shadow(0 1rem 1.25rem rgba(0, 0, 0, 0.6));
+}
+.dossier-slip > .dossier-sheet {
+  clip-path: var(--torn-a);
+  box-shadow: none;
+}
+.dossier-slip:nth-child(3n + 2) > .dossier-sheet {
+  clip-path: var(--torn-b);
+  --stain-x: 14%;
+  --stain-y: 78%;
+  --stain: 9rem;
+}
+.dossier-slip:nth-child(3n) > .dossier-sheet {
+  clip-path: var(--torn-c);
+  --stain-x: 62%;
+  --stain-y: 92%;
+  --stain: 13rem;
+}
+/* The memo ends the file torn off at the bottom. The tear is cut out of the
+   sheet itself, so the yellowing, stain and grain run right to the edge (a
+   separate flat strip used to sit under it and showed the seam). */
+.dossier-memo-wrap {
+  filter: drop-shadow(0 1.25rem 1.6rem rgba(0, 0, 0, 0.6));
+}
+.dossier-memo {
+  clip-path: var(--torn-bottom);
+  box-shadow: none;
+  padding-bottom: 3.25rem;
+  --stain-x: 12%;
+  --stain-y: 88%;
+  --stain: 14rem;
+}
+.dossier-slip:nth-child(4n) > .dossier-sheet {
+  --stain-x: 36%;
+  --stain-y: 6%;
+}
+@media (min-width: 768px) {
+  .dossier-sheet {
+    transform: rotate(-0.6deg);
+  }
+}
+/* Finding slips and the memo lie slightly askew, each its own way, like
+   papers spread on a desk. */
+@media (min-width: 768px) {
+  .dossier-slip:nth-child(odd) {
+    transform: rotate(-0.4deg);
+    margin-right: 2.5rem;
+  }
+  .dossier-slip:nth-child(even) {
+    transform: rotate(0.6deg);
+    margin-left: 2.5rem;
+  }
+  .dossier-slip:nth-child(3n) {
+    margin-right: 5rem;
+  }
+  .dossier-memo {
+    transform: rotate(0.3deg);
+  }
+}
+.dossier-sheet::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background-image: var(--grain-dark);
+  opacity: 0.22;
+}
+/* Blacked out with a marker, not a box: a wobbly stroke per line (clone
+   gives every line fragment its own). Revealing swaps it for a highlighter. */
+.redact {
+  background: var(--marker-stroke) center / 100% 100% no-repeat;
+  color: transparent;
+  padding: 0.05em 0.3em;
+  margin: 0 -0.1em;
+  cursor: help;
+  transition: color 0.3s;
+  -webkit-box-decoration-break: clone;
+  box-decoration-break: clone;
+}
+.redact:hover,
+.redact:focus {
+  background-image: var(--marker-highlight);
+  color: var(--ink);
+  outline: none;
+}
+.hazard {
+  background: repeating-linear-gradient(
+    -45deg,
+    var(--yellow) 0 0.875rem,
+    #000 0.875rem 1.75rem
+  );
+}
+
+/* --- Arsenal ------------------------------------------------------------- */
+
+.blueprint {
+  position: relative;
+  overflow: hidden;
+  background-color: var(--coal);
+  background-image:
+    linear-gradient(rgba(233, 227, 211, 0.05) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(233, 227, 211, 0.05) 1px, transparent 1px);
+  background-size: 1.75rem 1.75rem;
+  border: 1px solid var(--line);
+}
+/* Every state lists the same filter functions in the same order: if the lists
+   differ, the browser can't interpolate and the filter snaps in one frame. */
+.blueprint img {
+  filter: grayscale(1) contrast(1.15) brightness(1.15);
+  transition: filter 0.6s, transform 0.8s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+.blueprint:hover img {
+  filter: grayscale(0) contrast(1.05) brightness(1);
+  transform: scale(1.05);
+}
+/* Cut-out PNGs get a hard "sticker" offset on hover: the yellow copy sits
+   hidden right behind the image and slides out from under it. */
+.blueprint--cutout img {
+  filter: grayscale(1) contrast(1.15) brightness(1.15)
+    drop-shadow(0 0 0 rgba(252, 238, 10, 0));
+  transition:
+    filter 0.5s cubic-bezier(0.4, 0, 0.2, 1),
+    transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.blueprint--cutout:hover img {
+  filter: grayscale(0) contrast(1.05) brightness(1)
+    drop-shadow(0.625rem 0.625rem 0 var(--yellow));
+  transform: scale(1.04) translate(-4px, -4px);
+}
+.tick {
+  position: absolute;
+  width: 0.875rem;
+  height: 0.875rem;
+  border: 0 solid var(--red);
+}
+.tick--tl { top: 0.625rem; left: 0.625rem; border-top-width: 2px; border-left-width: 2px; }
+.tick--tr { top: 0.625rem; right: 0.625rem; border-top-width: 2px; border-right-width: 2px; }
+.tick--bl { bottom: 0.625rem; left: 0.625rem; border-bottom-width: 2px; border-left-width: 2px; }
+.tick--br { bottom: 0.625rem; right: 0.625rem; border-bottom-width: 2px; border-right-width: 2px; }
+
+.spec {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 0.5rem 1.25rem;
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+.spec dt {
+  color: var(--dust);
+}
+.spec dd {
+  text-align: right;
+  border-bottom: 1px dashed var(--line);
+  padding-bottom: 0.35rem;
+}
+
+.evtag {
+  position: absolute;
+  z-index: 3;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 0.625rem 0.875rem 0.625rem 1.875rem;
+  background:
+    radial-gradient(circle at 0.875rem 50%, var(--ink) 0 4px, transparent 4.5px),
+    var(--bone);
+  color: var(--ink);
+  font-family: var(--font-mono);
+  font-size: 0.625rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  line-height: 1.3;
+  clip-path: polygon(0.75rem 0, 100% 0, 100% 100%, 0.75rem 100%, 0 72%, 0 28%);
+  transform: rotate(-4deg);
+  transform-origin: 0.875rem 50%;
+  transition: transform 0.4s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+.evtag strong {
+  font-family: var(--font-display);
+  font-size: 1.375rem;
+  letter-spacing: 0;
+  line-height: 1;
+}
+article:hover > .evtag {
+  transform: rotate(3deg);
+}
+
+/* --- Engram -------------------------------------------------------------- */
+
+.relic-frame {
+  position: relative;
+  overflow: hidden;
+  border: 1px solid rgba(255, 0, 60, 0.4);
+  background: #000;
+}
+.relic-frame img {
+  transition: transform 1.2s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+.relic-frame:hover img {
+  transform: scale(1.03);
+}
+/* Scan beam: a hard bright line with a shaded trail above it, i.e. on the
+   side it came from. Colour comes from --beam (r, g, b). */
+.scanbeam {
+  --beam: 255, 0, 60;
+  position: absolute;
+  left: 0;
+  right: 0;
+  pointer-events: none;
+  will-change: transform;
+  background: linear-gradient(
+    to top,
+    rgba(var(--beam), 0.36) 0,
+    rgba(var(--beam), 0.2) 9%,
+    rgba(var(--beam), 0.1) 26%,
+    rgba(var(--beam), 0.035) 58%,
+    rgba(var(--beam), 0) 100%
+  );
+}
+/* Raster texture inside the trail, densest next to the line */
+.scanbeam::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: repeating-linear-gradient(
+    rgba(var(--beam), 0.2) 0 1px,
+    transparent 1px 4px
+  );
+  -webkit-mask-image: linear-gradient(to top, #000, transparent 62%);
+  mask-image: linear-gradient(to top, #000, transparent 62%);
+}
+/* The line itself: white-hot core, coloured ends, a short glow */
+.scanbeam::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 2px;
+  background: linear-gradient(
+    90deg,
+    rgba(var(--beam), 0) 0,
+    rgba(var(--beam), 1) 6%,
+    #fff 50%,
+    rgba(var(--beam), 1) 94%,
+    rgba(var(--beam), 0) 100%
+  );
+  box-shadow: 0 0 0.6rem 1px rgba(var(--beam), 0.75);
+}
+.relic-frame__scan {
+  top: -34%;
+  height: 34%;
+  z-index: 2;
+  animation: relic-scan 6s linear infinite;
+}
+@keyframes relic-scan {
+  0% { transform: translateY(0); }
+  72%, 100% { transform: translateY(400%); }
+}
+.meter {
+  height: 0.625rem;
+  background: repeating-linear-gradient(90deg, var(--line) 0 3px, transparent 3px 6px);
+}
+/* The fill takes the element's text colour */
+.meter > i {
+  display: block;
+  height: 100%;
+  background: repeating-linear-gradient(90deg, currentColor 0 3px, transparent 3px 6px);
+}
+
+/* --- Samurai player ------------------------------------------------------ */
+
+.vinyl {
+  position: absolute;
+  inset: 4%;
+  border-radius: 50%;
+  background:
+    radial-gradient(circle, var(--red) 0 17%, #000 17.5% 19%, transparent 19.5%),
+    repeating-radial-gradient(circle, #0b0b0b 0 2px, #1b1b1b 2px 3px);
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.6), 0 0.625rem 1.875rem rgba(0, 0, 0, 0.5);
+  transform: translateX(0);
+  transition: transform 0.7s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+.vinyl::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background: conic-gradient(from 20deg, transparent 0 8%, rgba(255, 255, 255, 0.14) 12%, transparent 16% 58%, rgba(255, 255, 255, 0.1) 62%, transparent 66%);
+  animation: spin 2.4s linear infinite;
+  animation-play-state: paused;
+}
+.deck__cover {
+  transition: transform 0.7s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+.deck--playing .deck__cover {
+  transform: translateX(-14%);
+}
+.deck--playing .vinyl {
+  transform: translateX(34%);
+}
+.deck--playing .vinyl::after {
+  animation-play-state: running;
+}
+.seek {
+  appearance: none;
+  -webkit-appearance: none;
+  width: 100%;
+  height: 1.125rem;
+  background: transparent;
+  cursor: pointer;
+}
+.seek::-webkit-slider-runnable-track {
+  height: 4px;
+  background: linear-gradient(90deg, #000 var(--p, 0%), rgba(0, 0, 0, 0.25) var(--p, 0%));
+}
+.seek::-moz-range-track {
+  height: 4px;
+  background: linear-gradient(90deg, #000 var(--p, 0%), rgba(0, 0, 0, 0.25) var(--p, 0%));
+}
+.seek::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 6px;
+  height: 1.125rem;
+  margin-top: -7px;
+  background: #000;
+}
+.seek::-moz-range-thumb {
+  width: 6px;
+  height: 1.125rem;
+  border: 0;
+  border-radius: 0;
+  background: #000;
+}
+.eq {
+  display: inline-flex;
+  align-items: flex-end;
+  gap: 2px;
+  height: 0.875rem;
+}
+.eq i {
+  width: 3px;
+  height: 100%;
+  background: currentColor;
+  transform-origin: bottom;
+  animation: eq 0.9s ease-in-out infinite;
+}
+.eq i:nth-child(2) { animation-delay: -0.3s; }
+.eq i:nth-child(3) { animation-delay: -0.6s; }
+.eq--paused i { animation-play-state: paused; }
+@keyframes eq {
+  0%, 100% { transform: scaleY(0.25); }
+  50% { transform: scaleY(1); }
+}
+
+/* --- Overlays ------------------------------------------------------------ */
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+@keyframes rise {
+  from { opacity: 0; transform: translateY(1.125rem); }
+  to { opacity: 1; transform: none; }
+}
+.switch {
+  position: relative;
+  flex-shrink: 0;
+  width: 2.875rem;
+  height: 1.5rem;
+  border: 1px solid var(--line);
+  transition: border-color 0.2s, background-color 0.2s;
+}
+.switch::after {
+  content: "";
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  width: 1rem;
+  height: 1rem;
+  background: var(--dust);
+  transition: transform 0.25s cubic-bezier(0.2, 0.8, 0.2, 1), background-color 0.2s;
+}
+/* The settings row is the real switch (role="switch"); this is its visual
+   part and follows data-on, which shows the value actually in effect. */
+.switch[data-on="true"] {
+  border-color: var(--red);
+  background: rgba(255, 0, 60, 0.12);
+}
+.switch[data-on="true"]::after {
+  transform: translateX(1.375rem);
+  background: var(--red);
+}
+.setting {
+  cursor: pointer;
+}
+.setting:hover:not(:disabled) .setting__label {
+  color: var(--red);
+}
+.setting:hover:not(:disabled) .switch {
+  border-color: var(--red);
+}
+.setting:focus-visible {
+  outline: 1px solid var(--red);
+  outline-offset: 2px;
+}
+/* Locked by another setting: dimmed, but the reason (in acid) stays legible. */
+.setting:disabled {
+  cursor: not-allowed;
+}
+.setting:disabled .setting__dim,
+.setting:disabled .switch {
+  opacity: 0.45;
+}
+
+/* --- CRT (geometry warp) ------------------------------------------------- */
+
+.crt-barrel-surface {
+  background: #000;
+  filter: url("#crt-barrel-distortion");
+  contain: layout paint style;
+  overscroll-behavior: none;
+}
+/* Under warp every running animation re-filters the whole page each frame,
+   so the looping ones are frozen. Only those: pausing everything also froze
+   one-shot entrances on frame 0 (Samurai's fade-in, Kinetic words, the
+   unlock toast), leaving them invisible. Add new infinite animations here. */
+.crt-barrel-surface
+  :is(.stamp-ring, .animate-spin-slow, .marquee__track, .relic-frame__scan, .eq i, .animate-pulse, .animate-spin),
+.crt-barrel-surface .glitch::before,
+.crt-barrel-surface .glitch::after,
+.crt-barrel-surface .vinyl::after {
+  animation-play-state: paused !important;
+}
+body.crt-viewport-active {
+  cursor: none;
+  overflow: hidden;
+}
+/* While the site cursor is on (Smart cursor or warp), the system one never
+   shows: buttons, links, inputs and .redact set their own cursor and used to
+   bring it back on hover. Mouse devices only; CustomCursor isn't rendered on
+   touch screens. */
+@media (hover: hover) {
+  html[data-cursor="custom"],
+  html[data-cursor="custom"] *,
+  html[data-cursor="custom"] *::before,
+  html[data-cursor="custom"] *::after {
+    cursor: none !important;
+  }
+}
+
+/* --- CRT lite: one static layer + two compositor-only animated layers ---- */
+
+.crt-lite {
+  position: fixed;
+  inset: 0;
+  z-index: 9995;
+  pointer-events: none;
+  overflow: hidden;
+  /* Aperture grille, as on a Trinitron: vertical R/G/B phosphor stripes with
+     a dark wire between triads. Plain alpha, no blend mode, so scrolling
+     doesn't have to re-blend the page under it. */
+  background:
+    radial-gradient(ellipse at center, rgba(0, 0, 0, 0) 68%, rgba(0, 0, 0, 0.32) 100%),
+    repeating-linear-gradient(
+      90deg,
+      rgba(255, 30, 40, 0.055) 0 1px,
+      rgba(40, 255, 70, 0.045) 1px 2px,
+      rgba(40, 80, 255, 0.06) 2px 3px,
+      rgba(0, 0, 0, 0.12) 3px 4px
+    );
+}
+/* The tube's rounded corners. The effects cover the whole rectangle and the
+   bezel paints the corners outside the rounding dark, as on a real set. It
+   used to be the other way round (the overlay itself clipped to the rounded
+   shape), which left the corners uncovered and brighter than the screen. */
+.crt-lite::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  /* Smaller on phones, whose own screen corners are already rounded. */
+  border-radius: clamp(1rem, 3.5vmin, 2.5rem);
+  box-shadow:
+    0 0 0 3rem #050404,
+    inset 0 0 2.375rem rgba(0, 0, 0, 0.35),
+    inset 0 0 0.625rem rgba(255, 0, 60, 0.1);
+}
+/* Scanlines: on a real tube the lit line and the dark gap are about the same
+   height and the line has soft, rounded edges, so the darkening ramps in and
+   out instead of being a hard hairline. The pitch follows the root font size
+   (bigger screens get proportionally thicker lines, not a fine moiré), rounded
+   to whole pixels so the pattern doesn't beat against the pixel grid. */
+.crt-lite__scanlines {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    rgba(0, 0, 0, 0) 0%,
+    rgba(0, 0, 0, 0) 28%,
+    rgba(0, 0, 0, 0.16) 42%,
+    rgba(0, 0, 0, 0.34) 60%,
+    rgba(0, 0, 0, 0.34) 78%,
+    rgba(0, 0, 0, 0.14) 92%,
+    rgba(0, 0, 0, 0) 100%
+  );
+  /* Older browsers drop the round() line at parse time and keep 4px. */
+  background-size: 100% 4px;
+  background-size: 100% round(down, 0.25rem, 1px);
+  will-change: opacity;
+  animation: crt-lite-flicker 3.2s steps(1, end) infinite;
+}
+/* Convergence error: bright edges fringe cyan on one side and red on the
+   other. Only on poster headings, where it reads as the tube and not as blur;
+   a static text-shadow costs one paint. */
+html[data-crt="lite"] .display {
+  text-shadow:
+    -0.09rem 0 rgba(0, 235, 255, 0.3),
+    0.09rem 0 rgba(255, 0, 60, 0.4);
+}
+html[data-crt="lite"] .outline-text {
+  text-shadow: none;
+}
+/* Full-screen sweep: a thin line with a short trail. A tall trail read as a
+   grey slab with a hard edge sliding over the page. */
+.crt-lite__band {
+  top: -7vh;
+  height: 7vh;
+  --beam: 233, 227, 211;
+  opacity: 0.32;
+  animation: crt-lite-roll 11s linear infinite;
+}
+/* Sweeps down in ~4 s, then the screen rests before the next pass */
+@keyframes crt-lite-roll {
+  0% { transform: translateY(0); }
+  38%, 100% { transform: translateY(115vh); }
+}
+@keyframes crt-lite-flicker {
+  0%, 100% { opacity: 1; }
+  47% { opacity: 0.86; }
+  49% { opacity: 1; }
+  83% { opacity: 0.92; }
+  84% { opacity: 1; }
+}
+
+/* --- Johnny's marker: the second voice over the official record ---------- */
+
+.scrawl {
+  --ink: var(--red);
+  display: inline-block;
+  font-family: var(--font-hand);
+  font-weight: 700;
+  font-size: clamp(1.5rem, 2.2vw, 2rem);
+  line-height: 1;
+  color: var(--ink);
+  transform: rotate(-3deg);
+  transform-origin: left center;
+}
+.scrawl--dark {
+  --ink: var(--yellow);
+}
+.scrawl--right {
+  transform: rotate(2.5deg);
+}
+.scrawl::before {
+  content: "↳ ";
+  font-family: var(--font-mono);
+  font-size: 0.6em;
+  opacity: 0.7;
+}
+.scrawl--bare::before {
+  content: none;
+}
+/* Struck through by hand: two slightly crooked strokes */
+.struck {
+  position: relative;
+  white-space: nowrap;
+}
+.struck::before,
+.struck::after {
+  content: "";
+  position: absolute;
+  left: -4%;
+  right: -4%;
+  top: 52%;
+  height: 2px;
+  background: var(--red);
+  transform: rotate(-2.5deg);
+}
+.struck::after {
+  top: 44%;
+  transform: rotate(1.5deg);
+}
+/* Hand-drawn ring around a word */
+.circled {
+  position: relative;
+  white-space: nowrap;
+}
+.circled::after {
+  content: "";
+  position: absolute;
+  /* Wide enough that the ellipse clears the first and last letters */
+  inset: -0.35em -0.85em;
+  border: 2px solid var(--red);
+  border-radius: 50% 46% 52% 48% / 60% 52% 48% 40%;
+  transform: rotate(-2deg);
+  pointer-events: none;
+}
+
+/* Two views of the same archive. By default the site is the official record;
+   logging in as Silverhand (html[data-view="johnny"]) turns his marker on. */
+html:not([data-view="johnny"]) .scrawl,
+html:not([data-view="johnny"]) .johnny-only {
+  display: none !important;
+}
+html:not([data-view="johnny"]) .struck::before,
+html:not([data-view="johnny"]) .struck::after,
+html:not([data-view="johnny"]) .circled::after {
+  content: none;
+}
+html[data-view="johnny"] .official-only {
+  display: none !important;
+}
+/* --- Marker writing (hooks/useMarkerWriting.ts) ----------------------------
+   With html[data-marker] the hook writes each mark when it scrolls into view:
+   blank until it gets .is-written, then drawn at --write-dur after
+   --write-delay. Without the attribute (performance mode, reduced motion,
+   official view) every rule below is inert and the marks are static. */
+@property --ink-at {
+  syntax: "<length-percentage>";
+  inherits: true;
+  initial-value: 100%;
+}
+@property --ring-at {
+  syntax: "<angle>";
+  inherits: true;
+  initial-value: 368deg;
+}
+
+/* Notes: ink fills the letters left to right through background-clip, so the
+   element itself isn't masked and the marker tip (::after) stays visible. */
+html[data-marker] .scrawl {
+  color: transparent;
+  background: linear-gradient(
+      90deg,
+      var(--ink) var(--ink-at),
+      transparent calc(var(--ink-at) + 0.08em)
+    )
+    no-repeat;
+  -webkit-background-clip: text;
+  background-clip: text;
+}
+html[data-marker] .scrawl:not(.is-written) {
+  --ink-at: -0.1em;
+}
+html[data-marker] .scrawl.is-written {
+  animation: marker-write var(--write-dur) var(--write-delay) linear both;
+}
+html[data-marker] .scrawl.is-written::after {
+  content: "";
+  position: absolute;
+  left: var(--ink-at);
+  top: 40%;
+  width: 0.2em;
+  height: 0.2em;
+  margin-left: -0.06em;
+  border-radius: 50%;
+  background: var(--ink);
+  animation: marker-tip var(--write-dur) var(--write-delay) linear both;
+  pointer-events: none;
+}
+/* A hand doesn't move at a constant speed: short holds between bursts. */
+@keyframes marker-write {
+  0% { --ink-at: -0.1em; }
+  20% { --ink-at: 24%; }
+  26% { --ink-at: 27%; }
+  55% { --ink-at: 61%; }
+  61% { --ink-at: 63%; }
+  100% { --ink-at: 100%; }
+}
+@keyframes marker-tip {
+  0% { opacity: 0; transform: translateY(0); }
+  6% { opacity: 0.95; }
+  30% { transform: translateY(-0.12em); }
+  60% { transform: translateY(0.1em); }
+  88% { opacity: 0.95; }
+  100% { opacity: 0; transform: translateY(0); }
+}
+
+/* Strike-throughs: each stroke is pulled from left to right, the second one
+   a beat after the first. */
+html[data-marker] .struck::before,
+html[data-marker] .struck::after {
+  transform-origin: left center;
+}
+html[data-marker] .struck:not(.is-written)::before {
+  transform: rotate(-2.5deg) scaleX(0);
+}
+html[data-marker] .struck:not(.is-written)::after {
+  transform: rotate(1.5deg) scaleX(0);
+}
+html[data-marker] .struck.is-written::before {
+  animation: struck-a calc(var(--write-dur) * 0.6) var(--write-delay) cubic-bezier(0.5, 0, 0.3, 1) both;
+}
+html[data-marker] .struck.is-written::after {
+  animation: struck-b calc(var(--write-dur) * 0.5)
+    calc(var(--write-delay) + var(--write-dur) * 0.5) cubic-bezier(0.5, 0, 0.3, 1) both;
+}
+@keyframes struck-a {
+  from { transform: rotate(-2.5deg) scaleX(0); }
+  to { transform: rotate(-2.5deg) scaleX(1); }
+}
+@keyframes struck-b {
+  from { transform: rotate(1.5deg) scaleX(0); }
+  to { transform: rotate(1.5deg) scaleX(1); }
+}
+
+/* Rings: a conic mask sweeps round the ellipse like a pen going round it,
+   with a soft leading edge and a slight overshoot past the start. */
+html[data-marker] .circled::after {
+  -webkit-mask-image: conic-gradient(from 210deg, #000 var(--ring-at), transparent calc(var(--ring-at) + 10deg));
+  mask-image: conic-gradient(from 210deg, #000 var(--ring-at), transparent calc(var(--ring-at) + 10deg));
+}
+html[data-marker] .circled:not(.is-written)::after {
+  --ring-at: 0deg;
+}
+html[data-marker] .circled.is-written::after {
+  animation: ring-draw var(--write-dur) var(--write-delay) cubic-bezier(0.45, 0.05, 0.35, 1) both;
+}
+@keyframes ring-draw {
+  from { --ring-at: 0deg; }
+  to { --ring-at: 368deg; }
+}
+
+.sticker {
+  position: absolute;
+  z-index: 3;
+  width: clamp(4rem, 8vw, 7rem);
+  pointer-events: none;
+  filter: drop-shadow(0 0 0 #fff) drop-shadow(2px 0 0 #fff) drop-shadow(-2px 0 0 #fff)
+    drop-shadow(0 2px 0 #fff) drop-shadow(0 -2px 0 #fff) drop-shadow(0 6px 0.625rem rgba(0, 0, 0, 0.45));
+}
+
+.view-toast {
+  position: fixed;
+  left: 50%;
+  bottom: 1.75rem;
+  z-index: 300;
+  display: flex;
+  align-items: center;
+  gap: 0.875rem;
+  padding: 0.875rem 1.25rem;
+  background: var(--yellow);
+  color: #000;
+  box-shadow: 0.5rem 0.5rem 0 #000;
+  transform: translateX(-50%);
+  animation: toast 5.5s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+  pointer-events: none;
+  max-width: calc(100vw - 2rem);
+}
+@keyframes toast {
+  0% { opacity: 0; transform: translate(-50%, 1.875rem); }
+  8%, 88% { opacity: 1; transform: translate(-50%, 0); }
+  100% { opacity: 0; transform: translate(-50%, 1.875rem); }
+}
+
+/* --- Torn paper edge ----------------------------------------------------- */
+
+.tear {
+  position: relative;
+  z-index: 2;
+  height: 1.375rem;
+  margin-bottom: -1.375rem;
+  background-color: var(--bone);
+  /* Roughly the tone the grain overlay gives the sheet above, to hide the seam */
+  background-image: linear-gradient(rgba(10, 9, 8, 0.04), rgba(10, 9, 8, 0.04));
+  clip-path: var(--tear);
+  pointer-events: none;
+}
+.tear--sheet {
+  position: absolute;
+  inset: 100% 0 auto 0;
+  margin: -1px 0 0;
+  background-color: var(--bone-dim);
+}
+
+/* --- Relic malfunction: a rare screen tear, compositor-only -------------- */
+
+.relic-fx {
+  position: fixed;
+  inset: 0;
+  z-index: 46;
+  pointer-events: none;
+  overflow: hidden;
+}
+.relic-fx i {
+  position: absolute;
+  left: -5%;
+  right: -5%;
+  opacity: 0;
+  will-change: transform, opacity;
+  animation: relic-tear 31s steps(1) infinite;
+}
+.relic-fx i:nth-child(1) { top: 18%; height: 7vh; background: rgba(0, 240, 255, 0.16); }
+.relic-fx i:nth-child(2) { top: 47%; height: 2vh; background: rgba(255, 0, 60, 0.3); animation-delay: 0.06s; }
+.relic-fx i:nth-child(3) { top: 71%; height: 11vh; background: rgba(0, 240, 255, 0.1); animation-delay: 0.12s; }
+.relic-fx b {
+  position: absolute;
+  right: 1.25rem;
+  bottom: 1.25rem;
+  display: flex;
+  flex-direction: column;
+  font-family: var(--font-mono);
+  font-weight: 700;
+  text-transform: uppercase;
+  opacity: 0;
+  animation: relic-warn 31s steps(1) infinite;
+}
+.relic-fx b span:first-child {
+  padding: 6px 0.75rem;
+  background: var(--red);
+  color: #000;
+  font-size: 0.9375rem;
+  letter-spacing: 0.2em;
+}
+.relic-fx b span:last-child {
+  padding: 4px 0.75rem;
+  background: #000;
+  color: #fff;
+  font-size: 0.5625rem;
+  letter-spacing: 0.22em;
+}
+@keyframes relic-tear {
+  0%, 96.4%, 100% { opacity: 0; transform: none; }
+  96.5% { opacity: 1; transform: translateX(-3%); }
+  96.9% { opacity: 1; transform: translateX(4%) scaleY(0.4); }
+  97.3% { opacity: 0; }
+  97.7% { opacity: 1; transform: translateX(-1%) scaleY(1.6); }
+  98% { opacity: 0; }
+}
+@keyframes relic-warn {
+  0%, 96.4%, 100% { opacity: 0; }
+  96.5%, 99.4% { opacity: 1; }
+  97.6% { opacity: 0; }
+  97.9% { opacity: 1; }
+}
+
+/* --- Kinetic type: words land one by one, as lyrics do in fan edits ------- */
+
+.kinetic__w {
+  display: inline-block;
+  margin-right: 0.24em;
+  opacity: 0;
+}
+.kinetic--on .kinetic__w {
+  animation: kinetic-in 0.34s cubic-bezier(0.2, 0.9, 0.2, 1) both;
+  animation-delay: calc(var(--i) * var(--step, 95ms));
+}
+.kinetic--static .kinetic__w {
+  opacity: 1;
+}
+@keyframes kinetic-in {
+  0% { opacity: 0; transform: translateY(0.4em) skewX(-10deg) scale(1.08); }
+  55% { opacity: 1; }
+  100% { opacity: 1; transform: none; }
+}
+
+/* --- Smear cut: a one-frame-style tear when the view switches ------------- */
+
+.smear-cut {
+  position: fixed;
+  inset: 0;
+  z-index: 290;
+  pointer-events: none;
+  overflow: hidden;
+  animation: smear-out 0.6s steps(1) both;
+}
+.smear-cut i {
+  position: absolute;
+  left: -20%;
+  right: -20%;
+  background: linear-gradient(90deg, #000, var(--red) 18%, #fff 34%, var(--red) 46%, #000 62%, var(--red) 80%, #fff);
+  will-change: transform;
+  animation: smear 0.6s steps(5) both;
+}
+.smear-cut i:nth-child(1) { top: 0; height: 13%; }
+.smear-cut i:nth-child(2) { top: 13%; height: 6%; animation-direction: reverse; background-color: #000; }
+.smear-cut i:nth-child(3) { top: 24%; height: 22%; animation-delay: -0.1s; }
+.smear-cut i:nth-child(4) { top: 46%; height: 4%; animation-direction: reverse; }
+.smear-cut i:nth-child(5) { top: 56%; height: 17%; animation-delay: -0.2s; }
+.smear-cut i:nth-child(6) { top: 78%; height: 22%; animation-direction: reverse; }
+@keyframes smear {
+  0% { transform: translateX(-12%) scaleX(1.6); }
+  100% { transform: translateX(12%) scaleX(1); }
+}
+@keyframes smear-out {
+  0%, 70% { opacity: 1; }
+  71%, 78% { opacity: 0; }
+  79%, 88% { opacity: 0.7; }
+  89%, 100% { opacity: 0; }
+}
+
+/* --- Cursor -------------------------------------------------------------- */
+
+.cursor-ring {
+  width: 1.75rem;
+  height: 1.75rem;
+  border: 1.5px solid var(--bone);
+  border-radius: 50%;
+  transition: width 0.2s, height 0.2s, border-color 0.2s, background-color 0.2s, scale 0.15s;
+}
+.cursor-ring--link {
+  width: 3.25rem;
+  height: 3.25rem;
+  border-color: var(--red);
+  background: rgba(255, 0, 60, 0.18);
+}
+/* Shrink with the standalone `scale` property: the ring is centred by
+   Tailwind v4's -translate-* utilities, which use `translate`, so a
+   transform: translate(-50%, -50%) here stacked a second offset and the
+   ring jumped up-left of the dot on every click. */
+.cursor-ring--down {
+  scale: 0.75;
+}
+
+/* --- Performance mode (html[data-perf="lite"]) ---------------------------
+   For weak phones: nothing that needs an extra render surface, a blur, a
+   blend or a per-frame repaint. Layout and colours stay the same. */
+
+html[data-perf="lite"] {
+  scroll-behavior: auto;
+}
+html[data-perf="lite"] .nav--solid {
+  background: rgba(10, 9, 8, 0.97);
+  backdrop-filter: none;
+}
+html[data-perf="lite"] :is(.paper, .dossier-sheet)::before,
+html[data-perf="lite"] .hero__halftone {
+  display: none;
+}
+html[data-perf="lite"] :is(.dossier-slip, .dossier-memo-wrap) {
+  filter: none;
+}
+html[data-perf="lite"] :is(.evidence, .dossier-sheet) {
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.35);
+}
+html[data-perf="lite"] .dossier-sheet {
+  transform: none;
+}
+html[data-perf="lite"] .rubber-stamp {
+  mix-blend-mode: normal;
+}
+html[data-perf="lite"] :is(.blueprint, .evidence) img {
+  filter: none;
+  transition: none;
+}
+/* A static grayscale on one photo is cheap; keep the evidence look. */
+html[data-perf="lite"] .evidence__backdrop img {
+  filter: grayscale(1) contrast(1.2);
+}
+html[data-perf="lite"] .sticker {
+  filter: none;
+}
+html[data-perf="lite"] .hero__photo {
+  -webkit-mask-image: none;
+  mask-image: none;
+}
+html[data-perf="lite"] .scanbeam::before {
+  display: none;
+}
+html[data-perf="lite"] .scanbeam::after {
+  box-shadow: none;
+}
+html[data-perf="lite"]
+  :is(
+    .glitch::before,
+    .glitch::after,
+    .stamp-ring,
+    .relic-frame__scan,
+    .scrawl,
+    .vinyl::after,
+    .eq i
+  ) {
+  animation: none !important;
+}
+html[data-perf="lite"] .relic-frame__scan {
+  display: none;
+}
+html[data-perf="lite"] .marquee__track {
+  animation-duration: 48s;
+}
+
+/* --- Motion preferences -------------------------------------------------- */
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  .noise-bg,
+  .marquee__track,
+  .stamp-ring,
+  .glitch::before,
+  .glitch::after,
+  .relic-frame__scan,
+  .eq i,
+  .vinyl::after,
+  .crt-lite__scanlines,
+  .crt-lite__band,
+  .relic-fx i,
+  .relic-fx b,
+  .smear-cut,
+  .smear-cut i {
+    animation: none;
+  }
+  .smear-cut {
+    display: none;
+  }
+  .kinetic__w {
+    opacity: 1;
+    animation: none !important;
+  }
+}
+}
