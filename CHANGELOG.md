@@ -3,6 +3,66 @@
 Все заметные изменения проекта. Формат — [Keep a Changelog](https://keepachangelog.com/ru/1.1.0/), версии — [SemVer](https://semver.org/lang/ru/).
 Файл генерируется [git-cliff](https://git-cliff.org) из Conventional Commits, руками не редактируется.
 
+## [1.1.0] - 2026-11-19
+
+### Новое
+
+- **crt:** Add lightweight CRT mode and make geometry warp opt-in ([`6b3dc07`](https://github.com/rozeraf/silverhand/commit/6b3dc07e4f062f0677071d8d39e04dbfef86c8c2))
+- **ui:** Reimagine the site as a punk zine read through a failing biochip ([`8d8285d`](https://github.com/rozeraf/silverhand/commit/8d8285d5be835d28fd0997e0b8ec3cf08cf70d6c))
+- **ui:** Give the zine a second voice and a failing biochip ([`4e2e5cc`](https://github.com/rozeraf/silverhand/commit/4e2e5cc432f87aeceb2d36c4784c4a35fe9f9c1e))
+- Johnny's view, persistent player, evidence locker and Relic boot ([`f460772`](https://github.com/rozeraf/silverhand/commit/f460772dee5aac3d0c1d7ffe44c7c9f6a9614233))
+- **classified:** Restore Alt Cunningham's in-game quote about the engram ([`5d093f4`](https://github.com/rozeraf/silverhand/commit/5d093f488be28ff548bc99ecb4af0f5f5c7a0b4e))
+- **engram:** Red Relic section with the chip in its own colours ([`5b8039b`](https://github.com/rozeraf/silverhand/commit/5b8039b5ee1e5d64d0a0dac56565d6b511a6a8ab))
+- **engram:** Use the clean high-resolution Relic image ([`0597b35`](https://github.com/rozeraf/silverhand/commit/0597b35970c80368bab3f26718ae3257c601ce81))
+- **ui:** Motion and details borrowed from fan edits ([`fb5f64c`](https://github.com/rozeraf/silverhand/commit/fb5f64c4c27ef0a7f69b56269a5a5e23cca0a28f))
+- **ui:** Performance mode, screen-scaled layout and a new scan beam ([`afa29da`](https://github.com/rozeraf/silverhand/commit/afa29da679ad6c5f131e9f71c84197bc4ebde0d2))
+- **ui:** Johnny's marks write themselves as they scroll into view ([`aa26803`](https://github.com/rozeraf/silverhand/commit/aa268038ba73349b78a7c8be28f116fd41847521))
+- **classified:** Lay the archive out as a case file on a desk ([`109fa23`](https://github.com/rozeraf/silverhand/commit/109fa2354451fbaaf2e09d9f501844a8374915ca))
+- **settings:** Show effective values and regroup the settings menu ([`08a94f3`](https://github.com/rozeraf/silverhand/commit/08a94f34343a37de9780ff800ff6e2de67eca06a))
+
+### Исправления
+
+- **ui:** Self-host fonts instead of loading them from Google Fonts ([`c5a3e26`](https://github.com/rozeraf/silverhand/commit/c5a3e261e8429866c442b35c48c041223e2d9ba7))
+- **ui:** Details from a full-page review ([`12f49b1`](https://github.com/rozeraf/silverhand/commit/12f49b15159ef5c55008117a7fec70e9a82d25c7))
+- **bio:** Restore the portrait's transparency lost in WebP conversion ([`7a515f2`](https://github.com/rozeraf/silverhand/commit/7a515f2214924b6575cfdd587b527ec3bcfe09ee))
+- **ui:** Smooth evidence hover-out and a CRT look modelled on real tubes ([`7eb7c7d`](https://github.com/rozeraf/silverhand/commit/7eb7c7dee325ba71cba616fbecda61faf43099f1))
+- **ui:** Full-screen overlays replace the page instead of covering it ([`adc56f4`](https://github.com/rozeraf/silverhand/commit/adc56f4e532574a5f2394febcbceeb88e392037c))
+- **arsenal:** Correct item wording for accuracy ([`78c8e4e`](https://github.com/rozeraf/silverhand/commit/78c8e4e31a23d5c079ed1314525013e051945756))
+- **terminal:** Two-line prompt and copyable output ([`2244a21`](https://github.com/rozeraf/silverhand/commit/2244a218e8cabf5a91b3bace047c088480fe8eb4))
+- **crt:** Keep warp on the terminal and the Samurai page ([`8e71aad`](https://github.com/rozeraf/silverhand/commit/8e71aadc4db67b7926db261f8a09953c1fe1b14a))
+- **crt:** Pause only looping animations under warp, warn on Gecko ([`b4dd6d8`](https://github.com/rozeraf/silverhand/commit/b4dd6d86a598441488f61c2a29ce76365dce34dd))
+- **cursor:** Never show the system cursor while the site cursor is on ([`b48f8cc`](https://github.com/rozeraf/silverhand/commit/b48f8ccbc7c9e68de228005442906b66b6abfc27))
+- **crt:** Visible curved scanlines in warp, no dark screen in dev ([`e66f7fa`](https://github.com/rozeraf/silverhand/commit/e66f7fa36d6cdd45442f3784382542fb84571a93))
+- **crt:** Anti-alias the warp so thin lines don't break into dashes ([`57b55b9`](https://github.com/rozeraf/silverhand/commit/57b55b966d14422e817b01b362b4e62e098210d1))
+- **crt:** Dark tube corners instead of uncovered bright ones ([`c07d6fb`](https://github.com/rozeraf/silverhand/commit/c07d6fb89f11d3e6a6954a812e177d33b97a45e4))
+- **classified:** Tear the memo's edge from the sheet itself ([`192d0b4`](https://github.com/rozeraf/silverhand/commit/192d0b441d394c0505d5814cefb86a293efcb46f))
+- **cursor:** Shrink the ring around the dot on click ([`128c2ff`](https://github.com/rozeraf/silverhand/commit/128c2ffe9a62df7458563415f52d60206bef98ca))
+
+### Производительность
+
+- **crt:** Raster grain tiles instead of SVG feTurbulence ([`e63f983`](https://github.com/rozeraf/silverhand/commit/e63f9835214287f049a614cf1c38196b8955cb04))
+
+### Рефакторинг
+
+- **ui:** Build Tailwind locally and fix what a close review turned up ([`d8de41e`](https://github.com/rozeraf/silverhand/commit/d8de41e1d6f1a75bc4acdba57b6ba39b5aa47992))
+
+### Оформление
+
+- **crt:** Thin sweep line instead of a tall slab, softer vignette ([`215d8ae`](https://github.com/rozeraf/silverhand/commit/215d8ae692f96d1f580e223f291aa6d979822597))
+- **ui:** Stretch page content on ultrawide screens ([`8f0facf`](https://github.com/rozeraf/silverhand/commit/8f0facfca1e960efa91ca7a0f3cceb80da339cc3))
+- **ui:** Write Johnny's marks one at a time, faster and crisper ([`cb0c04d`](https://github.com/rozeraf/silverhand/commit/cb0c04daff6dbd4f2cba54c88fe79da6c9ac767e))
+- **classified:** Aged torn papers, marker redactions, headline first ([`d1a8546`](https://github.com/rozeraf/silverhand/commit/d1a854622fe95e5565edd5d90e58cb679c26d1a1))
+- **engram:** Sharper Relic render from an upscaled source ([`3f36382`](https://github.com/rozeraf/silverhand/commit/3f36382468a268c7bd5eb57de67189b0170ee51a))
+
+### Документация
+
+- Describe changelog and release process ([`c9910e0`](https://github.com/rozeraf/silverhand/commit/c9910e0e35b9dbb2e10a717b493982d7355a6c51))
+- Describe the two CRT modes ([`fa01768`](https://github.com/rozeraf/silverhand/commit/fa0176800f7333e44ccbd22363f32f1c4d1c8b02))
+
+### CI и сборка
+
+- Generate changelog and GitHub releases with git-cliff ([`87f5627`](https://github.com/rozeraf/silverhand/commit/87f5627adc32857d9cb373d6af5c4f618f78bf34))
+
 ## [1.0.1] - 2026-11-16
 
 ### Исправления
@@ -87,6 +147,7 @@
 
 - **site:** Add copyright notices and refresh vest asset ([`6e6d1f8`](https://github.com/rozeraf/silverhand/commit/6e6d1f8466fb9f646176762f37128a5f6e427a89))
 
+[1.1.0]: https://github.com/rozeraf/silverhand/compare/v1.0.1...v1.1.0
 [1.0.1]: https://github.com/rozeraf/silverhand/compare/v1.0.0...v1.0.1
 [1.0.0]: https://github.com/rozeraf/silverhand/releases/tag/v1.0.0
 
